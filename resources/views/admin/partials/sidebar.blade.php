@@ -6,6 +6,7 @@
     <a href="{{ route('admin.about.index') }}">About Page Edit</a>
     <a href="{{ route('admin.seo.index') }}">SEO Settings</a>
     <a href="{{ route('admin.blogs.index') }}">Blogs</a>
+    <a href="{{ route('admin.pricing.index') }}">Pricing Plans</a>
     @can('manage roles', 'admin')
     <a href="{{ route('admin.role-permission.index') }}">Roles & Permissions</a>
 @endcan

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\PricingPlanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -64,6 +65,12 @@ Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('adm
 Route::post('/admin/blogs/{id}/update', [BlogController::class, 'update'])->name('admin.blogs.update');
 Route::get('/admin/blogs/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
 
+Route::get('/admin/pricing-plans', [PricingPlanController::class, 'index'])->name('admin.pricing.index');
+Route::get('/admin/pricing-plans/create', [PricingPlanController::class, 'create'])->name('admin.pricing.create');
+Route::post('/admin/pricing-plans/store', [PricingPlanController::class, 'store'])->name('admin.pricing.store');
+Route::get('/admin/pricing-plans/{id}/edit', [PricingPlanController::class, 'edit'])->name('admin.pricing.edit');
+Route::post('/admin/pricing-plans/{id}/update', [PricingPlanController::class, 'update'])->name('admin.pricing.update');
+Route::get('/admin/pricing-plans/{id}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
 });
 
 require __DIR__.'/auth.php';
