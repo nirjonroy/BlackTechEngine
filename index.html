@@ -40,545 +40,392 @@
               500: '#06B6D4',
             },
             dark: {
-              bg: '#0B0F19',
-              surface: '#0F172A',
-              card: '#1E293B',
-              border: '#334155',
-              hover: '#243247'
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
             }
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
           }
         }
       }
     }
   </script>
 
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- STICKY FROSTED GLASS TOP NAVIGATION -->
-  <header class="sticky top-0 z-40 glass-nav transition-colors duration-300">
+  <!-- UNIFIED HEADER NAVIGATION (SHARED ACROSS ALL PUBLIC PAGES) -->
+  <header class="sticky top-0 z-40 bte-glass-nav transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
       <!-- Brand Logo -->
       <a href="index.html" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
         <div>
-          <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
-          <span class="block text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">Autopilot AI SEO</span>
+          <span class="font-heading text-2xl font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">Autonomous SEO & GEO SaaS</span>
         </div>
       </a>
 
-      <!-- Desktop Navigation Links -->
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
-        <a href="index.html" class="text-indigo-600 dark:text-indigo-400 font-semibold transition-colors">Home</a>
-        <a href="#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
-        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+      <!-- Desktop Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" class="text-indigo-600 dark:text-indigo-400 font-bold">Home</a>
+        <a href="features.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
         <a href="about.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
+        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
         <a href="blog.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
         <a href="affiliate.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1.5">
           <span>Affiliates</span>
-          <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30">30%</span>
+          <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30">30%</span>
         </a>
       </nav>
 
       <!-- Right Utility Actions -->
-      <div class="flex items-center gap-3">
-        <!-- Interactive Theme Switcher Button -->
-        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
+      <div class="flex items-center gap-3.5">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
         </button>
 
-        <!-- Login -->
-        <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
           Sign In
         </a>
 
-        <!-- CTA Start Free Trial -->
-        <a href="signup.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+        <a href="signup.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
           <span>Start Autopilot</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </a>
 
-        <!-- Mobile Menu Hamburger -->
-        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+        <!-- Mobile Hamburger -->
+        <button id="mobileMenuBtn" class="lg:hidden p-2.5 rounded-xl text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
           <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Dropdown Menu -->
-    <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 space-y-3 bg-white/95 dark:bg-[#0B0F19]/95 border-b border-slate-200 dark:border-slate-800">
-      <a href="index.html" class="block py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400">Home</a>
-      <a href="#features" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-300">Features</a>
-      <a href="pricing.html" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-300">Pricing</a>
-      <a href="about.html" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-300">About GEO</a>
-      <a href="blog.html" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-300">Blog</a>
-      <a href="affiliate.html" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-300">Affiliate Partner</a>
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobileMenu" class="hidden lg:hidden px-6 pt-3 pb-6 space-y-3 bg-white dark:bg-[#0E1526] border-b border-slate-200 dark:border-slate-800">
+      <a href="index.html" class="block py-2 text-sm font-bold text-indigo-600 dark:text-indigo-400">Home</a>
+      <a href="features.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Features</a>
+      <a href="about.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">About GEO</a>
+      <a href="pricing.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Pricing</a>
+      <a href="blog.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Blog</a>
+      <a href="affiliate.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Affiliate Partner (30%)</a>
       <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-3">
-        <a href="login.html" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-semibold">Sign In</a>
-        <a href="signup.html" class="w-1/2 text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold">Get Started</a>
+        <a href="login.html" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Sign In</a>
+        <a href="signup.html" class="w-1/2 text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold">Start Free</a>
       </div>
     </div>
   </header>
 
   <!-- HERO SECTION -->
-  <section class="relative pt-16 pb-24 overflow-hidden">
-    <!-- Background Glow Blobs -->
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-indigo-600/20 via-violet-600/20 to-cyan-400/10 blur-[130px] rounded-full pointer-events-none"></div>
+  <section class="relative pt-20 pb-28 overflow-hidden">
+    <!-- Ambient Glow Blobs -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[400px] bg-gradient-to-tr from-indigo-600/20 via-violet-600/20 to-cyan-400/15 blur-[140px] rounded-full pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       
-      <!-- Top Announcement Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-8 animate-float">
-        <span class="flex h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span>Introducing GEO 3.0: Dominate ChatGPT, Gemini & Google</span>
+      <!-- Top Announcement Pill -->
+      <div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-bold uppercase tracking-wider mb-8 animate-float">
+        <span class="flex h-2.5 w-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span>GEO 3.0 Live: Dominate ChatGPT, Gemini & Perplexity Search</span>
       </div>
 
-      <!-- Headline -->
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.12]">
-        Put Your SEO & Social Content on <span class="gradient-text">100% Autopilot</span>
+      <!-- Main Headline -->
+      <h1 class="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.1]">
+        Put Your SEO & Social Content on <span class="gradient-text-primary">100% Autopilot</span>
       </h1>
       
-      <p class="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed">
-        BlackTechEngine scans your website, extracts your exact Brand DNA, detects high-converting keyword clusters, and autonomously writes, optimizes, and publishes research-backed articles and multi-channel social posts.
+      <!-- Subheadline -->
+      <p class="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+        BlackTechEngine autonomously crawls your website, extracts your proprietary Brand DNA, detects high-converting semantic search gaps, and synthesizes 2,500+ word deep-dive guides with omnichannel social drip syndication.
       </p>
 
       <!-- INTERACTIVE LIVE WEBSITE SCANNER BOX -->
-      <div class="mt-10 max-w-2xl mx-auto">
-        <form id="websiteScannerForm" class="p-2 sm:p-2.5 rounded-2xl glass-card glow-brand shadow-2xl flex flex-col sm:flex-row items-center gap-2.5">
-          <div class="flex-1 flex items-center gap-3 w-full px-3 py-2">
-            <i data-lucide="globe" class="w-5 h-5 text-indigo-500 shrink-0"></i>
+      <div class="mt-12 max-w-2xl mx-auto">
+        <form id="websiteScannerForm" class="p-2.5 sm:p-3 rounded-2xl bte-card glow-indigo flex flex-col sm:flex-row items-center gap-3">
+          <div class="flex-1 flex items-center gap-3 w-full px-3 py-1">
+            <i data-lucide="globe" class="w-6 h-6 text-indigo-500 shrink-0"></i>
             <input 
               id="scannerUrlInput" 
               type="text" 
               required
               value="https://thehorizonsunlimited.com"
-              placeholder="Enter your website URL (e.g. yourcompany.com)" 
-              class="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none text-sm font-medium"
+              placeholder="Enter your website URL (e.g. company.com)" 
+              class="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none text-base font-semibold"
             >
           </div>
           <button 
             type="submit" 
-            class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg shadow-indigo-500/30">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-bold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg shadow-indigo-500/30">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
             <span>Generate My Plan</span>
           </button>
         </form>
-        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-4">
-          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> No credit card required</span>
-          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Instant 60-second deep scan</span>
-          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Free GEO gap audit</span>
-        </p>
+
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 14-Day Risk-Free Trial</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> No Credit Card Required</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Instant 60s Deep Scan</span>
+        </div>
       </div>
 
       <!-- Quick Proof Counters -->
-      <div class="mt-14 pt-10 border-t border-slate-200/60 dark:border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-4xl mx-auto">
+      <div class="mt-16 pt-12 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-4xl mx-auto">
         <div>
-          <div class="text-3xl font-extrabold text-slate-900 dark:text-white">4.8M+</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Articles Published</div>
+          <div class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">4.8M+</div>
+          <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">Articles Published</div>
         </div>
         <div>
-          <div class="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">98.4%</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">SEO Health Score Avg</div>
+          <div class="font-heading text-3xl sm:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">98.4%</div>
+          <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">Avg SEO Health Score</div>
         </div>
         <div>
-          <div class="text-3xl font-extrabold text-violet-600 dark:text-violet-400">12.5x</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">AI Search Citations</div>
+          <div class="font-heading text-3xl sm:text-4xl font-extrabold text-violet-600 dark:text-violet-400">12.5x</div>
+          <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">AI Citation Growth</div>
         </div>
         <div>
-          <div class="text-3xl font-extrabold text-cyan-500">35+ hrs</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Saved Per Week</div>
+          <div class="font-heading text-3xl sm:text-4xl font-extrabold text-cyan-500">35+ hrs</div>
+          <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold mt-1">Saved Per Week</div>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- INTEGRATION LOGO SLIDER (INFINITE MARQUEE) -->
-  <section class="py-10 bg-slate-100/70 dark:bg-[#0F172A]/80 border-y border-slate-200 dark:border-slate-800 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 mb-4 text-center">
-      <p class="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
-        Direct 1-Click Publishing & Omnichannel Distribution
-      </p>
+  <!-- INFINITE MARQUEE INTEGRATIONS -->
+  <section class="py-10 bg-slate-100/60 dark:bg-[#0E1526]/70 border-y border-slate-200 dark:border-slate-800/80 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 mb-3 text-center">
+      <span class="text-xs font-bold uppercase tracking-widest text-slate-400">
+        Direct 1-Click CMS Sync & Omnichannel Social Syndication
+      </span>
     </div>
     
     <div class="relative w-full overflow-hidden">
-      <div class="animate-marquee flex items-center gap-14 py-2">
-        <!-- Logo 1: WordPress -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+      <div class="animate-marquee flex items-center gap-16 py-2">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i> WordPress VIP & REST
         </div>
-        <!-- Logo 2: Shopify -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="shopping-bag" class="w-5 h-5 text-emerald-500"></i> Shopify Blogs
         </div>
-        <!-- Logo 3: Webflow -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="layout" class="w-5 h-5 text-sky-500"></i> Webflow CMS
         </div>
-        <!-- Logo 4: Wix -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
-          <i data-lucide="box" class="w-5 h-5 text-violet-500"></i> Wix Studio
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
+          <i data-lucide="share-2" class="w-5 h-5 text-blue-500"></i> LinkedIn Carousels
         </div>
-        <!-- Logo 5: LinkedIn -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
-          <i data-lucide="share-2" class="w-5 h-5 text-blue-500"></i> LinkedIn Articles & Carousels
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
+          <i data-lucide="twitter" class="w-5 h-5 text-cyan-400"></i> X (Twitter) Threads
         </div>
-        <!-- Logo 6: Google Business -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="map-pin" class="w-5 h-5 text-amber-500"></i> Google Business Profile
         </div>
-        <!-- Logo 7: Facebook -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="facebook" class="w-5 h-5 text-indigo-400"></i> Facebook Pages
         </div>
-        <!-- Logo 8: X / Twitter -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
-          <i data-lucide="twitter" class="w-5 h-5 text-cyan-400"></i> X Thread Autopilot
-        </div>
-        <!-- Duplicate set for seamless infinite loop -->
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <!-- Duplicated set for seamless loop -->
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i> WordPress VIP & REST
         </div>
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="shopping-bag" class="w-5 h-5 text-emerald-500"></i> Shopify Blogs
         </div>
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
+        <div class="flex items-center gap-2.5 font-bold text-slate-700 dark:text-slate-200 text-sm whitespace-nowrap">
           <i data-lucide="layout" class="w-5 h-5 text-sky-500"></i> Webflow CMS
-        </div>
-        <div class="flex items-center gap-2 font-bold text-slate-600 dark:text-slate-300 text-sm whitespace-nowrap">
-          <i data-lucide="box" class="w-5 h-5 text-violet-500"></i> Wix Studio
         </div>
       </div>
     </div>
   </section>
 
-  <!-- INTERACTIVE FEATURE SHOWCASE -->
-  <section id="features" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-14">
-      <h2 class="text-xs uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-bold mb-3">Enterprise-Grade Autopilot</h2>
-      <h3 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Everything You Need to Rank & Convert</h3>
-      <p class="mt-4 text-slate-600 dark:text-slate-400 text-base">
-        Click through each module below to preview how BlackTechEngine replaces a full content marketing team with autonomous intelligence.
+  <!-- COMPREHENSIVE FEATURES PREVIEW (6 MODULE CARDS) -->
+  <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <span class="text-xs uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-bold mb-2 block">Autonomous Capabilities</span>
+      <h2 class="font-heading text-3xl sm:text-5xl font-extrabold tracking-tight">The 6 Pillars of BlackTechEngine</h2>
+      <p class="mt-4 text-base text-slate-600 dark:text-slate-300">
+        Engineered specifically to outrank traditional search engines and win conversational citations on LLMs.
       </p>
     </div>
 
-    <!-- Tabs Header -->
-    <div class="flex items-center justify-center flex-wrap gap-2 p-1.5 rounded-2xl glass-card max-w-3xl mx-auto mb-10">
-      <button data-target="tab-calendar" class="feature-tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-500/25">
-        Visual Content Calendar
-      </button>
-      <button data-target="tab-brand" class="feature-tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-        Brand DNA Extractor
-      </button>
-      <button data-target="tab-social" class="feature-tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-        Social Media Generator
-      </button>
-      <button data-target="tab-gbp" class="feature-tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-        Google Business Autopilot
-      </button>
-    </div>
-
-    <!-- Tab Panels Container -->
-    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       
-      <!-- Panel 1: Content Calendar -->
-      <div id="tab-calendar" class="feature-tab-panel">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-5 space-y-5">
-            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">Flagship Calendar System</span>
-            <h4 class="text-2xl sm:text-3xl font-extrabold">Autonomous 30-Day Content Scheduling</h4>
-            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-              Never stare at a blank schedule again. The calendar auto-populates optimal publishing days based on your niche traffic surges, generates 2,500+ word deep-dive guides, attaches copyright-free AI imagery, and pushes directly to your CMS.
-            </p>
-            <ul class="space-y-2.5 text-sm">
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Smart Auto-Fill slots that never leave empty publishing days</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Drag-and-drop rescheduling across entire months</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> 1-Click slide-over inspection for SEO scores & meta tags</li>
-            </ul>
-            <a href="user/calendar.html" class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline pt-2">
-              Explore Live Interactive Calendar <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-          </div>
-          <div class="lg:col-span-7">
-            <!-- Simulated Calendar Mockup UI -->
-            <div class="rounded-2xl bg-white dark:bg-[#0F172A] p-4 border border-slate-200 dark:border-slate-800 shadow-xl">
-              <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
-                <span class="font-bold flex items-center gap-1.5"><i data-lucide="calendar" class="w-4 h-4 text-indigo-500"></i> October 2026 Calendar Grid</span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-semibold">18 Articles Queued</span>
-              </div>
-              <div class="grid grid-cols-4 gap-3 text-xs">
-                <!-- Card 1 -->
-                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                  <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
-                    <span>Oct 14</span>
-                    <span class="text-emerald-500 font-bold">✓ Published</span>
-                  </div>
-                  <div class="font-semibold text-slate-900 dark:text-white line-clamp-2">Best AI Tech Stacks for 2026 SaaS Startups</div>
-                  <div class="mt-2 text-[10px] text-indigo-500 font-mono">Score: 98/100</div>
-                </div>
-                <!-- Card 2 (Today) -->
-                <div class="p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/40 border-2 border-indigo-500 shadow-md">
-                  <div class="flex items-center justify-between text-[10px] text-indigo-400 mb-1">
-                    <span class="font-bold">Today (Oct 15)</span>
-                    <span class="text-sky-400">Scheduled 3:00 PM</span>
-                  </div>
-                  <div class="font-semibold text-slate-900 dark:text-white line-clamp-2">Career Transition: From Junior Dev to AI Engineer</div>
-                  <div class="mt-2 text-[10px] text-indigo-400 font-mono">Score: 95/100</div>
-                </div>
-                <!-- Card 3 -->
-                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                  <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
-                    <span>Oct 16</span>
-                    <span class="text-sky-400">Scheduled</span>
-                  </div>
-                  <div class="font-semibold text-slate-900 dark:text-white line-clamp-2">Generative Engine Optimization (GEO) Playbook</div>
-                  <div class="mt-2 text-[10px] text-indigo-500 font-mono">Score: 96/100</div>
-                </div>
-                <!-- Card 4 (Auto-fill) -->
-                <div class="p-3 rounded-xl border border-dashed border-indigo-500/50 bg-indigo-500/5 flex flex-col justify-center items-center text-center">
-                  <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 mb-1"></i>
-                  <span class="text-[11px] font-semibold text-indigo-500 dark:text-indigo-300">Auto-fills Oct 17</span>
-                  <span class="text-[9px] text-slate-400">AI keyword gap</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Module 1 -->
+      <div class="bte-card bte-card-hover rounded-3xl p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold">
+          <i data-lucide="calendar" class="w-6 h-6"></i>
         </div>
+        <h3 class="font-heading text-xl font-bold">Visual Content Calendar</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          30-day interactive calendar featuring Smart Auto-Fill slots, drag-and-drop rescheduling, and a 1-click slide-over inspection drawer.
+        </p>
+        <a href="features.html#calendar" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-500 hover:underline">
+          Explore Calendar Specs &rarr;
+        </a>
       </div>
 
-      <!-- Panel 2: Brand DNA Extractor -->
-      <div id="tab-brand" class="feature-tab-panel hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-5 space-y-5">
-            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">Proprietary Voice Cloning</span>
-            <h4 class="text-2xl sm:text-3xl font-extrabold">Extracts & Clones Your Exact Brand Voice</h4>
-            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-              No generic AI fluff. BlackTechEngine analyzes your existing blogs, value propositions, and competitor positioning. It enforces custom internal link maps and bans overused AI buzzwords ("delve", "tapestry", "game-changer").
-            </p>
-            <ul class="space-y-2.5 text-sm">
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Automatic internal link anchor-text mapping</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Strict banned-phrase blacklist enforcement</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Persona calibration: Formal, Technical, or Casual</li>
-            </ul>
-            <a href="user/brand-dna.html" class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline pt-2">
-              Configure Brand DNA Studio <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-          </div>
-          <div class="lg:col-span-7">
-            <div class="rounded-2xl bg-white dark:bg-[#0F172A] p-5 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-              <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-                <span class="text-xs font-bold flex items-center gap-2"><i data-lucide="dna" class="w-4 h-4 text-violet-500"></i> Horizons Unlimited — Voice Matrix</span>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono">Calibrated (99%)</span>
-              </div>
-              <div class="grid grid-cols-2 gap-4 text-xs">
-                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <div class="text-slate-400 text-[10px]">Primary Tone</div>
-                  <div class="font-bold text-slate-900 dark:text-white mt-1">Authoritative & Inspiring</div>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <div class="text-slate-400 text-[10px]">Technical Depth</div>
-                  <div class="font-bold text-slate-900 dark:text-white mt-1">Level 4 (Senior Practitioner)</div>
-                </div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <div class="text-slate-400 text-[10px] mb-1.5">Enforced Banned AI Words (Auto-Purged)</div>
-                <div class="flex flex-wrap gap-1.5">
-                  <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-400 line-through">delve</span>
-                  <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-400 line-through">tapestry</span>
-                  <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-400 line-through">game-changer</span>
-                  <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/20 text-rose-400 line-through">plethora</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Module 2 -->
+      <div class="bte-card bte-card-hover rounded-3xl p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-violet-500/10 text-violet-500 flex items-center justify-center font-bold">
+          <i data-lucide="dna" class="w-6 h-6"></i>
         </div>
+        <h3 class="font-heading text-xl font-bold">Brand DNA Extractor</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Clones your exact editorial voice, establishes strict internal linking maps, and purges generic AI buzzwords ("delve", "tapestry").
+        </p>
+        <a href="features.html#brand-dna" class="inline-flex items-center gap-1.5 text-xs font-bold text-violet-500 hover:underline">
+          Explore Brand DNA Specs &rarr;
+        </a>
       </div>
 
-      <!-- Panel 3: Social Media Generator -->
-      <div id="tab-social" class="feature-tab-panel hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-5 space-y-5">
-            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">Omnichannel Repurposing</span>
-            <h4 class="text-2xl sm:text-3xl font-extrabold">1 Blog = 5 High-Impact Social Formats</h4>
-            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-              Whenever an article is generated, BlackTechEngine autonomously synthesizes a LinkedIn carousel deck, Twitter/X viral thread, Instagram caption with researched hashtags, and Facebook community post.
-            </p>
-            <ul class="space-y-2.5 text-sm">
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Smart Drip Reshare: Schedules posts across 14 days</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Formatted specifically for each platform's algorithm</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> High-converting hook generators for LinkedIn</li>
-            </ul>
-            <a href="user/social-media.html" class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline pt-2">
-              Open Social Media Studio <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-          </div>
-          <div class="lg:col-span-7">
-            <div class="rounded-2xl bg-white dark:bg-[#0F172A] p-5 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3 text-xs">
-              <div class="flex items-center gap-2 text-blue-500 font-bold">
-                <i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn Carousel Generator
-              </div>
-              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                <p class="font-semibold text-slate-800 dark:text-slate-200">"Most developers make this critical mistake when scaling vector databases in 2026..."</p>
-                <div class="mt-2 flex items-center gap-2 text-[10px] text-slate-400">
-                  <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400">Slide 1 of 6</span>
-                  <span>• 843 Engagements predicted</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 text-cyan-400 font-bold pt-1">
-                <i data-lucide="twitter" class="w-4 h-4"></i> X Thread Auto-Drip
-              </div>
-              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                <p class="font-mono text-slate-700 dark:text-slate-300">1/7 Here is the exact architectural blueprint we used to rank #1 on ChatGPT citations 🧵👇</p>
-              </div>
-            </div>
-          </div>
+      <!-- Module 3 -->
+      <div class="bte-card bte-card-hover rounded-3xl p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold">
+          <i data-lucide="share-2" class="w-6 h-6"></i>
         </div>
+        <h3 class="font-heading text-xl font-bold">Social Media Studio</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Transforms every blog post into a 5-slide LinkedIn PDF carousel deck, Twitter/X thread, and Instagram card with automated drip scheduling.
+        </p>
+        <a href="features.html#social" class="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-500 hover:underline">
+          Explore Social Studio &rarr;
+        </a>
       </div>
 
-      <!-- Panel 4: Google Business Profile -->
-      <div id="tab-gbp" class="feature-tab-panel hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-5 space-y-5">
-            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">Local 3-Pack Domination</span>
-            <h4 class="text-2xl sm:text-3xl font-extrabold">Autonomous Local Posts & AI Review Responder</h4>
-            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-              Keep your Google Business Profile buzzing with weekly geo-targeted updates, promotional offers, and instant 5-star review replies personalized with customer keywords.
-            </p>
-            <ul class="space-y-2.5 text-sm">
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Automated CTA buttons: "Call Now" or "Book Appointment"</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> 60-second review response with sentiment matching</li>
-              <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Geo-tagged image uploads for local ranking boost</li>
-            </ul>
-            <a href="user/google-business.html" class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:underline pt-2">
-              View Google Business Manager <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-          </div>
-          <div class="lg:col-span-7">
-            <div class="rounded-2xl bg-white dark:bg-[#0F172A] p-5 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3 text-xs">
-              <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
-                <span class="font-bold flex items-center gap-1.5"><i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i> New 5-Star Customer Review</span>
-                <span class="text-[10px] text-emerald-400 font-semibold">Auto-Responded in 42s</span>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
-                <div class="font-semibold text-slate-800 dark:text-slate-200">Sarah Jenkins: "Horizons Unlimited helped me land my dream cloud engineer job!"</div>
-                <div class="mt-2.5 p-2 rounded bg-indigo-500/10 border border-indigo-500/20 text-slate-700 dark:text-slate-300">
-                  <span class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">AI Response Published:</span>
-                  "Thank you so much Sarah! Our cloud engineering curriculum is specifically built for real-world production readiness. Proud to see you succeed!"
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Module 4 -->
+      <div class="bte-card bte-card-hover rounded-3xl p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold">
+          <i data-lucide="map-pin" class="w-6 h-6"></i>
         </div>
+        <h3 class="font-heading text-xl font-bold">Google Business Autopilot</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Local Maps 3-Pack post scheduler with CTA selectors and instant AI review responders matched with customer keywords.
+        </p>
+        <a href="features.html#gbp" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:underline">
+          Explore Local 3-Pack &rarr;
+        </a>
+      </div>
+
+      <!-- Module 5 -->
+      <div class="bte-card bte-card-hover rounded-3xl p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold">
+          <i data-lucide="cpu" class="w-6 h-6"></i>
+        </div>
+        <h3 class="font-heading text-xl font-bold">GEO Citation Tracker</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Monitors how often your domain is recommended by ChatGPT, Gemini, and Perplexity with Content Decay alert triggers.
+        </p>
+        <a href="features.html#geo" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-500 hover:underline">
+          Explore GEO Analytics &rarr;
+        </a>
+      </div>
+
+      <!-- Module 6 -->
+      <div class="bte-card bte-card-hover rounded-3xl p-8 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold">
+          <i data-lucide="edit-3" class="w-6 h-6"></i>
+        </div>
+        <h3 class="font-heading text-xl font-bold">Side-by-Side SEO Editor</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Real-time split-screen editor with dynamic circular SEO health gauge (0–100), word count telemetry, and 1-click CMS push.
+        </p>
+        <a href="features.html#editor" class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-500 hover:underline">
+          Explore Live Editor &rarr;
+        </a>
       </div>
 
     </div>
   </section>
 
   <!-- INTERACTIVE SAVINGS CALCULATOR -->
-  <section class="py-20 bg-slate-100/50 dark:bg-[#0F172A]/50 border-y border-slate-200 dark:border-slate-800">
+  <section class="py-20 bg-slate-100/50 dark:bg-[#0E1526]/50 border-y border-slate-200 dark:border-slate-800">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <h2 class="text-xs uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-bold mb-2">Cost & Productivity ROI</h2>
-        <h3 class="text-3xl font-extrabold">How Much Will You Save Every Month?</h3>
-        <p class="text-slate-600 dark:text-slate-400 text-sm mt-2">
-          Compare the cost of traditional freelance writers & SEO agencies with BlackTechEngine.
+        <span class="text-xs uppercase tracking-widest text-indigo-500 font-bold mb-2 block">ROI Benchmark</span>
+        <h3 class="font-heading text-3xl sm:text-4xl font-extrabold">How Much Money Will You Reclaim?</h3>
+        <p class="text-slate-600 dark:text-slate-300 text-sm mt-2">
+          Compare the cost of hiring human freelance writers and agencies with BlackTechEngine.
         </p>
       </div>
 
-      <div class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl">
-        <div class="space-y-8">
+      <div class="bte-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-8">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">
+              Articles required per month:
+            </span>
+            <span class="px-4 py-1.5 rounded-xl bg-indigo-600 text-white font-mono font-bold text-lg shadow-md">
+              <span id="articlesCountDisplay">15</span> Articles / mo
+            </span>
+          </div>
+          <input id="articlesSlider" type="range" min="4" max="60" value="15" step="1" class="w-full cursor-pointer">
+          <div class="flex justify-between text-xs text-slate-400 mt-2 font-mono">
+            <span>4 articles</span>
+            <span>20 articles</span>
+            <span>40 articles</span>
+            <span>60 articles</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800 text-center sm:text-left">
           
-          <!-- Slider Header -->
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <label for="articlesSlider" class="text-sm font-bold text-slate-700 dark:text-slate-300">
-                How many high-converting articles do you need per month?
-              </label>
-              <div class="px-4 py-1.5 rounded-xl bg-indigo-600 text-white font-mono font-bold text-lg shadow-md shadow-indigo-500/30">
-                <span id="articlesCountDisplay">15</span> articles
-              </div>
-            </div>
-            <input 
-              id="articlesSlider" 
-              type="range" 
-              min="4" 
-              max="60" 
-              value="15" 
-              step="1" 
-              class="w-full cursor-pointer"
-            >
-            <div class="flex justify-between text-[11px] text-slate-400 mt-2 font-mono">
-              <span>4 articles/mo</span>
-              <span>20 articles/mo</span>
-              <span>40 articles/mo</span>
-              <span>60 articles/mo</span>
-            </div>
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div class="text-xs text-slate-400 font-semibold">Freelance Writer Cost</div>
+            <div id="freelanceCostDisplay" class="text-2xl font-extrabold text-slate-700 dark:text-slate-300 mt-1 line-through">$2,250</div>
+            <div class="text-[10px] text-slate-400 mt-1">$150 / deep guide</div>
           </div>
 
-          <!-- Calculated Results Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-            
-            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-              <div class="text-xs text-slate-500 dark:text-slate-400">Freelance Agency Cost</div>
-              <div id="freelanceCostDisplay" class="text-2xl font-extrabold text-slate-700 dark:text-slate-300 mt-1 line-through">$2,100</div>
-              <div class="text-[10px] text-slate-400 mt-1">Based on $140/article</div>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-              <div class="text-xs text-slate-500 dark:text-slate-400">BlackTechEngine Cost</div>
-              <div id="bteCostDisplay" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">$99</div>
-              <div class="text-[10px] text-slate-400 mt-1">Growth Tier Autopilot</div>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
-              <div class="text-xs text-emerald-600 dark:text-emerald-400 font-bold">Monthly Net Savings</div>
-              <div id="savingsDisplay" class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">$2,001</div>
-              <div class="text-[10px] text-emerald-500 mt-1">95.2% Cost Reduction</div>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-violet-500/10 border border-violet-500/30">
-              <div class="text-xs text-violet-600 dark:text-violet-400 font-bold">Writing Hours Saved</div>
-              <div id="hoursSavedDisplay" class="text-3xl font-extrabold text-violet-600 dark:text-violet-400 mt-1">83 hrs</div>
-              <div class="text-[10px] text-violet-500 mt-1">Reclaim ~2 full weeks</div>
-            </div>
-
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div class="text-xs text-slate-400 font-semibold">BlackTechEngine Cost</div>
+            <div id="bteCostDisplay" class="text-2xl font-extrabold text-indigo-500 mt-1">$99</div>
+            <div class="text-[10px] text-slate-400 mt-1">Growth Tier Autopilot</div>
           </div>
 
-          <div class="text-center pt-2">
-            <a href="signup.html" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-sm shadow-xl shadow-indigo-500/30 hover:scale-105 transition-all">
-              <span>Start Saving Today With Free Trial</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
+          <div class="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+            <div class="text-xs text-emerald-500 font-bold uppercase">Net Cash Saved</div>
+            <div id="savingsDisplay" class="text-3xl font-extrabold text-emerald-500 mt-1">$2,151</div>
+            <div class="text-[10px] text-emerald-400 mt-1">95.6% Direct Reduction</div>
           </div>
 
+          <div class="p-5 rounded-2xl bg-violet-500/10 border border-violet-500/30">
+            <div class="text-xs text-violet-400 font-bold uppercase">Writing Hours Saved</div>
+            <div id="hoursSavedDisplay" class="text-3xl font-extrabold text-violet-400 mt-1">90 hrs</div>
+            <div class="text-[10px] text-violet-300 mt-1">~2 full working weeks</div>
+          </div>
+
+        </div>
+
+        <div class="text-center pt-2">
+          <a href="signup.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-sm shadow-xl shadow-indigo-500/25 hover:scale-105 transition-all">
+            <span>Claim Your Savings with 14-Day Free Trial</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TESTIMONIALS & TRUST -->
+  <!-- CUSTOMER REVIEWS & WALL OF LOVE -->
   <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center max-w-2xl mx-auto mb-16">
-      <h2 class="text-xs uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-bold mb-2">Social Proof</h2>
-      <h3 class="text-3xl sm:text-4xl font-extrabold">Loved by 4,200+ Growth Marketers</h3>
+      <span class="text-xs uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Social Proof</span>
+      <h3 class="font-heading text-3xl sm:text-4xl font-extrabold">Loved by 4,200+ Growth Teams</h3>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       
-      <!-- Card 1 -->
-      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="bte-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
         <div class="flex items-center gap-1 text-amber-400">
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
@@ -587,21 +434,20 @@
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
         </div>
         <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
-          "BlackTechEngine has completely eliminated our bottleneck. We generated 45 comprehensive tech articles in October, and our Perplexity AI mentions jumped 380%."
+          "BlackTechEngine has completely replaced our freelance writing bottleneck. We published 45 career articles on Horizons Unlimited in October and saw our Perplexity citations increase by 380%."
         </p>
-        <div class="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
           <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-white text-xs">
             AL
           </div>
           <div>
             <div class="font-bold text-sm text-slate-900 dark:text-white">Alex Livingstone</div>
-            <div class="text-xs text-slate-500 dark:text-slate-400">Head of Growth, Horizons Unlimited</div>
+            <div class="text-xs text-slate-400">Head of Growth, Horizons Unlimited</div>
           </div>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="bte-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
         <div class="flex items-center gap-1 text-amber-400">
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
@@ -610,21 +456,20 @@
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
         </div>
         <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
-          "The Brand DNA extractor is pure witchcraft. It actually writes like me, enforces our strict engineering vocabulary, and never produces generic ChatGPT garbage."
+          "The Brand DNA extractor is pure witchcraft. It writes with our exact engineering rigor, enforces custom internal links, and purges generic AI words. We rank #1 for 18 competitive keywords."
         </p>
-        <div class="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
           <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-500 to-rose-400 flex items-center justify-center font-bold text-white text-xs">
             EC
           </div>
           <div>
             <div class="font-bold text-sm text-slate-900 dark:text-white">Elena Chen</div>
-            <div class="text-xs text-slate-500 dark:text-slate-400">Founder, CloudScale Agency</div>
+            <div class="text-xs text-slate-400">Founder, CloudScale Agency</div>
           </div>
         </div>
       </div>
 
-      <!-- Card 3 -->
-      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="bte-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
         <div class="flex items-center gap-1 text-amber-400">
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
@@ -633,15 +478,15 @@
           <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
         </div>
         <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
-          "The calendar slide-over and WordPress 1-click webhook push saved our marketing team $8,000 every single month. We will never go back to manual writing."
+          "The calendar slide-over and WordPress REST push saved our team $8,000 every single month. We will never go back to manual content production."
         </p>
-        <div class="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
           <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-white text-xs">
             MR
           </div>
           <div>
             <div class="font-bold text-sm text-slate-900 dark:text-white">Marcus Reed</div>
-            <div class="text-xs text-slate-500 dark:text-slate-400">VP of Marketing, SaaSMetrics.io</div>
+            <div class="text-xs text-slate-400">VP of Marketing, SaaSMetrics.io</div>
           </div>
         </div>
       </div>
@@ -649,90 +494,91 @@
     </div>
   </section>
 
-  <!-- CTA BOTTOM BANNER -->
+  <!-- CTA BANNER -->
   <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 p-8 sm:p-14 text-white shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 p-8 sm:p-14 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
       <div class="max-w-xl">
-        <h3 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Ready to Rank on Autopilot?</h3>
+        <h3 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight">Ready to Dominate Search on Autopilot?</h3>
         <p class="mt-3 text-indigo-100 text-sm sm:text-base leading-relaxed">
-          Join thousands of high-growth companies dominating Google and generative AI engines today. 14-day risk-free trial.
+          Join thousands of high-growth companies conquering Google and generative AI engines today. 14-day free trial.
         </p>
       </div>
       <div class="flex flex-col sm:flex-row gap-3.5 w-full md:w-auto">
-        <a href="signup.html" class="px-8 py-3.5 rounded-xl bg-white text-indigo-600 font-bold text-sm shadow-lg hover:bg-slate-100 transition-all text-center">
+        <a href="signup.html" class="px-8 py-4 rounded-xl bg-white text-indigo-600 font-bold text-sm shadow-lg hover:bg-slate-100 transition-all text-center">
           Get Started Free
         </a>
-        <a href="login.html" class="px-8 py-3.5 rounded-xl bg-indigo-900/40 border border-white/30 text-white font-semibold text-sm hover:bg-indigo-900/60 transition-all text-center">
+        <a href="login.html" class="px-8 py-4 rounded-xl bg-indigo-900/40 border border-white/30 text-white font-semibold text-sm hover:bg-indigo-900/60 transition-all text-center">
           1-Click Live Demo
         </a>
       </div>
     </div>
   </section>
 
-  <!-- MODERN MULTI-COLUMN FOOTER -->
-  <footer class="mt-auto bg-slate-100 dark:bg-[#080B12] border-t border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400 text-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+  <!-- UNIFIED MASTER FOOTER (SHARED ACROSS ALL PUBLIC PAGES) -->
+  <footer class="mt-auto bg-slate-100 dark:bg-[#060910] border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
         
         <!-- Brand Column -->
         <div class="col-span-2 space-y-4">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
             </div>
-            <span class="text-lg font-extrabold text-slate-900 dark:text-white">BlackTechEngine</span>
+            <span class="font-heading text-xl font-black text-slate-900 dark:text-white">BlackTechEngine</span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
-            The next-generation autonomous AI SEO, GEO, and multi-channel content engine. Built for high-growth tech brands, agencies, and creators.
+            The next-generation autonomous AI SEO, GEO 3.0, and multi-channel content autopilot engine. Built for high-growth tech brands, agencies, and creators.
           </p>
           <div class="flex items-center gap-3 pt-2">
-            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-500"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-500"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
-            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-500"><i data-lucide="github" class="w-4 h-4"></i></a>
+            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="github" class="w-4 h-4"></i></a>
+            <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="youtube" class="w-4 h-4"></i></a>
           </div>
         </div>
 
-        <!-- Product -->
+        <!-- Product Links -->
         <div class="space-y-3 text-xs">
-          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">Product</h4>
-          <ul class="space-y-2">
-            <li><a href="user/calendar.html" class="hover:text-indigo-500">Visual Content Calendar</a></li>
-            <li><a href="user/brand-dna.html" class="hover:text-indigo-500">Brand DNA Studio</a></li>
-            <li><a href="user/articles.html" class="hover:text-indigo-500">AI SEO Articles</a></li>
-            <li><a href="user/social-media.html" class="hover:text-indigo-500">Social Media Autopilot</a></li>
-            <li><a href="user/google-business.html" class="hover:text-indigo-500">Google Business Profile</a></li>
-            <li><a href="pricing.html" class="hover:text-indigo-500">Pricing & Plans</a></li>
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider font-heading">Product</h4>
+          <ul class="space-y-2.5 font-medium">
+            <li><a href="features.html" class="hover:text-indigo-500 transition-colors">All Features</a></li>
+            <li><a href="user/calendar.html" class="hover:text-indigo-500 transition-colors">Visual Content Calendar</a></li>
+            <li><a href="user/brand-dna.html" class="hover:text-indigo-500 transition-colors">Brand DNA Studio</a></li>
+            <li><a href="user/articles.html" class="hover:text-indigo-500 transition-colors">AI SEO Articles</a></li>
+            <li><a href="user/social-media.html" class="hover:text-indigo-500 transition-colors">Social Media Studio</a></li>
+            <li><a href="pricing.html" class="hover:text-indigo-500 transition-colors">Pricing & Plans</a></li>
           </ul>
         </div>
 
         <!-- Resources -->
         <div class="space-y-3 text-xs">
-          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">Resources</h4>
-          <ul class="space-y-2">
-            <li><a href="about.html" class="hover:text-indigo-500">GEO & AI Search Guide</a></li>
-            <li><a href="blog.html" class="hover:text-indigo-500">Content Marketing Blog</a></li>
-            <li><a href="affiliate.html" class="hover:text-indigo-500">Affiliate Program (30%)</a></li>
-            <li><a href="user/integrations.html" class="hover:text-indigo-500">CMS Integrations</a></li>
-            <li><a href="login.html" class="hover:text-indigo-500">1-Click Demo Sandbox</a></li>
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider font-heading">Resources</h4>
+          <ul class="space-y-2.5 font-medium">
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">About GEO Architecture</a></li>
+            <li><a href="blog.html" class="hover:text-indigo-500 transition-colors">Research Blog</a></li>
+            <li><a href="affiliate.html" class="hover:text-indigo-500 transition-colors">Affiliate Program (30%)</a></li>
+            <li><a href="user/integrations.html" class="hover:text-indigo-500 transition-colors">CMS Integrations</a></li>
+            <li><a href="login.html" class="hover:text-indigo-500 transition-colors">1-Click Demo Sandbox</a></li>
           </ul>
         </div>
 
-        <!-- Quick Demos -->
+        <!-- Direct Portals -->
         <div class="space-y-3 text-xs">
-          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider">Direct Portals</h4>
-          <ul class="space-y-2">
-            <li><a href="user/index.html" class="text-indigo-500 font-semibold hover:underline">User Dashboard Panel</a></li>
-            <li><a href="admin/index.html" class="text-violet-500 font-semibold hover:underline">Super Admin Command</a></li>
-            <li><a href="signup.html" class="hover:text-indigo-500">New Account Wizard</a></li>
-            <li><a href="login.html" class="hover:text-indigo-500">Client Sign In</a></li>
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider font-heading">Direct Portals</h4>
+          <ul class="space-y-2.5 font-medium">
+            <li><a href="user/index.html" class="text-indigo-500 font-bold hover:underline">User Dashboard Panel</a></li>
+            <li><a href="admin/index.html" class="text-rose-500 font-bold hover:underline">Super Admin Command</a></li>
+            <li><a href="signup.html" class="hover:text-indigo-500 transition-colors">Start Free Trial</a></li>
+            <li><a href="login.html" class="hover:text-indigo-500 transition-colors">Client Sign In</a></li>
           </ul>
         </div>
 
       </div>
 
-      <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <div class="mt-14 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
         <div>
-          &copy; 2026 BlackTechEngine, Inc. All rights reserved.
+          &copy; 2026 BlackTechEngine, Inc. All rights reserved. Built with precision for autonomous SEO.
         </div>
         <div class="flex items-center gap-6">
           <a href="#" class="hover:text-indigo-500">Privacy Policy</a>
@@ -743,80 +589,68 @@
     </div>
   </footer>
 
-  <!-- INTERACTIVE WEBSITE SCANNER RESULT MODAL -->
+  <!-- SCANNER RESULT AUDIT MODAL -->
   <div id="scannerResultModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
-    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
-
-    <div class="relative w-full max-w-2xl rounded-3xl glass-card bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 animate-fadeIn">
-      
-      <!-- Close Button -->
-      <button data-modal-close class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-md"></div>
+    <div class="relative w-full max-w-2xl rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 animate-fadeIn">
+      <button data-modal-close class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <!-- Scanning Progress View -->
+      <!-- Loading View -->
       <div id="scanLoadingView" class="space-y-6 text-center py-6">
-        <div class="w-16 h-16 rounded-2xl bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-500 animate-spin">
+        <div class="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-500 animate-spin">
           <i data-lucide="loader" class="w-8 h-8"></i>
         </div>
-        
         <div>
-          <h3 class="text-xl font-bold">Scanning <span id="scannedUrlLabel" class="text-indigo-500">thehorizonsunlimited.com</span></h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Analyzing content architecture, search intent gaps & brand voice</p>
+          <h3 class="font-heading text-2xl font-bold">Scanning <span id="scannedUrlLabel" class="text-indigo-500 font-mono">thehorizonsunlimited.com</span></h3>
+          <p class="text-xs text-slate-400 mt-1">Analyzing content architecture, search intent gaps & brand voice</p>
         </div>
-
-        <!-- Progress Bar -->
         <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
           <div id="scanProgressBar" class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full w-[25%] transition-all duration-500 rounded-full"></div>
         </div>
-
-        <!-- Step List -->
         <div class="space-y-2.5 text-xs text-left max-w-md mx-auto">
           <div id="scanStep1" class="flex items-center gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40">
-            <span class="status-dot w-4 h-4 rounded-full bg-indigo-500 animate-pulse"></span>
-            <span class="font-medium text-slate-700 dark:text-slate-300">Crawling sitemap & indexable pages...</span>
+            <span class="w-4 h-4 rounded-full bg-indigo-500 animate-pulse"></span>
+            <span class="font-medium text-slate-300">Crawling sitemap & indexable pages...</span>
           </div>
           <div id="scanStep2" class="flex items-center gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40">
-            <span class="status-dot w-4 h-4 rounded-full bg-slate-400"></span>
-            <span class="font-medium text-slate-700 dark:text-slate-300">Extracting Brand DNA & Editorial Tone...</span>
+            <span class="w-4 h-4 rounded-full bg-slate-500"></span>
+            <span class="font-medium text-slate-300">Extracting Brand DNA & Editorial Tone...</span>
           </div>
           <div id="scanStep3" class="flex items-center gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40">
-            <span class="status-dot w-4 h-4 rounded-full bg-slate-400"></span>
-            <span class="font-medium text-slate-700 dark:text-slate-300">Finding high-converting GEO keyword gaps...</span>
+            <span class="w-4 h-4 rounded-full bg-slate-500"></span>
+            <span class="font-medium text-slate-300">Finding high-converting GEO keyword gaps...</span>
           </div>
         </div>
       </div>
 
-      <!-- Scan Completed Results View -->
+      <!-- Completed View -->
       <div id="scanCompletedView" class="hidden space-y-6">
         <div class="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold">
-            <i data-lucide="check" class="w-5 h-5"></i>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            <i data-lucide="check" class="w-6 h-6"></i>
           </div>
           <div>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Audit Ready: Horizons Unlimited</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Found 38 high-intent article opportunities & calibrated brand tone</p>
+            <h3 class="font-heading text-xl font-bold">Audit Ready: Horizons Unlimited</h3>
+            <p class="text-xs text-slate-400">Found 45 high-intent article opportunities & calibrated brand tone</p>
           </div>
         </div>
 
-        <!-- Brand DNA Snapshot -->
         <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/50">
-          <div class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <i data-lucide="dna" class="w-3.5 h-3.5"></i> Detected Brand DNA
+          <div class="text-[11px] font-bold text-indigo-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <i data-lucide="dna" class="w-4 h-4"></i> Detected Brand DNA
           </div>
           <div class="grid grid-cols-2 gap-2 text-xs">
-            <div><span class="text-slate-400">Core Domain:</span> <strong class="text-slate-800 dark:text-slate-200">Tech & Career Education</strong></div>
-            <div><span class="text-slate-400">Voice Tone:</span> <strong class="text-slate-800 dark:text-slate-200">Inspiring & Authoritative</strong></div>
-            <div><span class="text-slate-400">Primary Target:</span> <strong class="text-slate-800 dark:text-slate-200">Career Transitioners / Techies</strong></div>
-            <div><span class="text-slate-400">GEO Gap Score:</span> <strong class="text-emerald-500">64% Opportunity</strong></div>
+            <div><span class="text-slate-400">Core Domain:</span> <strong class="text-slate-200">Tech & Career Education</strong></div>
+            <div><span class="text-slate-400">Voice Tone:</span> <strong class="text-slate-200">Authoritative & Inspiring</strong></div>
+            <div><span class="text-slate-400">Target Persona:</span> <strong class="text-slate-200">Career Switchers / Developers</strong></div>
+            <div><span class="text-slate-400">GEO Gap Score:</span> <strong class="text-emerald-400">68% Untapped Market</strong></div>
           </div>
         </div>
 
-        <!-- 5 Ready-To-Write Topics -->
         <div>
-          <div class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-2.5">
-            Top 5 Ready-to-Publish Article Gaps:
-          </div>
+          <div class="text-xs font-bold text-slate-300 mb-2.5">Top 5 Ready-to-Publish Article Gaps:</div>
           <div class="space-y-2 text-xs">
             <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
               <span class="font-medium">1. How to Transition from Non-Tech to AI Engineer in 2026</span>
@@ -841,21 +675,18 @@
           </div>
         </div>
 
-        <!-- Action Button -->
         <div class="pt-2 flex gap-3">
-          <a href="signup.html" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-center text-sm shadow-lg shadow-indigo-500/30">
+          <a href="signup.html" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-center text-xs shadow-lg shadow-indigo-500/30">
             Publish These 5 Articles on Autopilot
           </a>
-          <button data-modal-close class="px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-semibold">
+          <button data-modal-close class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
             Close
           </button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/main.js"></script>
 </body>

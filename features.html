@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features — BlackTechEngine Omnichannel AI SEO & Content Autopilot</title>
+  
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- UNIFIED HEADER NAVIGATION -->
+  <header class="sticky top-0 z-40 bte-glass-nav transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="font-heading text-2xl font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">Autonomous SEO & GEO SaaS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
+        <a href="features.html" class="text-indigo-600 dark:text-indigo-400 font-bold">Features</a>
+        <a href="about.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
+        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+        <a href="blog.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
+        <a href="affiliate.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+          <span>Affiliates</span>
+          <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30">30%</span>
+        </a>
+      </nav>
+
+      <!-- Right Utility Actions -->
+      <div class="flex items-center gap-3.5">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
+        </button>
+
+        <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+          Sign In
+        </a>
+
+        <a href="signup.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <span>Start Autopilot</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+
+        <!-- Mobile Hamburger -->
+        <button id="mobileMenuBtn" class="lg:hidden p-2.5 rounded-xl text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobileMenu" class="hidden lg:hidden px-6 pt-3 pb-6 space-y-3 bg-white dark:bg-[#0E1526] border-b border-slate-200 dark:border-slate-800">
+      <a href="index.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Home</a>
+      <a href="features.html" class="block py-2 text-sm font-bold text-indigo-600 dark:text-indigo-400">Features</a>
+      <a href="about.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">About GEO</a>
+      <a href="pricing.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Pricing</a>
+      <a href="blog.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Blog</a>
+      <a href="affiliate.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Affiliate Partner (30%)</a>
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-3">
+        <a href="login.html" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Sign In</a>
+        <a href="signup.html" class="w-1/2 text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold">Start Free</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-20 pb-20 overflow-hidden">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-indigo-600/15 via-violet-600/15 to-cyan-400/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider mb-6">
+        <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+        <span>Full-Stack Autopilot Capabilities</span>
+      </div>
+      <h1 class="font-heading text-4xl sm:text-6xl font-black tracking-tight max-w-4xl mx-auto leading-tight">
+        Engineered to Outrank Humans & Generic AI: <span class="gradient-text-primary">The 6 Pillars</span>
+      </h1>
+      <p class="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+        Discover how our autonomous agents handle the entire content lifecycle—from deep brand voice extraction to generative engine citations, multi-platform drip syndication, and continuous local SEO ranking.
+      </p>
+    </div>
+  </section>
+
+  <!-- DEEP DIVE FEATURE 1: BRAND DNA -->
+  <section class="py-20 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider mb-4">
+            <i data-lucide="dna" class="w-4 h-4"></i> Feature 01
+          </div>
+          <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Proprietary Brand DNA & Voice Extraction Engine
+          </h2>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+            Generic AI sounds like a robot. BlackTechEngine crawls your existing high-performing articles, about pages, and founder social posts to synthesize a mathematical vector profile of your brand's unique voice.
+          </p>
+
+          <div class="mt-8 space-y-4">
+            <div class="flex items-start gap-3.5">
+              <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="sliders" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Tone & Personality Calibration</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Fine-tune formality, enthusiasm, analytical depth, and humor with real-time text feedback.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5">
+              <div class="w-8 h-8 rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Negative Prompt & Banned Words Filter</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Strictly eliminates cheesy AI clichés like "delve into", "tapestry", "game-changer", and "in today's digital landscape".</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5">
+              <div class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="link-2" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Internal Linking Knowledge Graph</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Automatically weaves contextually relevant anchor links to your money pages and lead magnets.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Preview Card -->
+        <div class="bte-card p-6 sm:p-8 rounded-3xl glow-indigo border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-bold text-sm text-slate-900 dark:text-white">Horizons Unlimited Profile</div>
+                <div class="text-[11px] text-slate-500">calibrated: 2,450 words analyzed</div>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Active Vector</span>
+          </div>
+
+          <!-- Dynamic Tone Preview Box -->
+          <div class="space-y-4 text-xs">
+            <div>
+              <div class="flex justify-between font-bold mb-1">
+                <span class="text-slate-600 dark:text-slate-400">Tone Spectrum (Casual vs Authoritative)</span>
+                <span class="text-indigo-500">85% Expert</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full w-[85%] rounded-full"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-bold mb-1">
+                <span class="text-slate-600 dark:text-slate-400">Technical Density</span>
+                <span class="text-violet-500">72% In-Depth</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-violet-500 h-full w-[72%] rounded-full"></div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 mt-4">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Live Synthesis Output Preview:</span>
+              <p class="text-slate-700 dark:text-slate-200 italic leading-relaxed">
+                "Modern cloud architecture is no longer about hosting servers—it is an exercise in latency reduction and event-driven orchestration. If you're building in 2026 without edge computing, you're paying a double tax on compute and user experience."
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEEP DIVE FEATURE 2: GEO 3.0 -->
+  <section class="py-20 bg-slate-100/50 dark:bg-[#0E1526]/50 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Visual Comparison Graphic -->
+        <div class="order-2 lg:order-1 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-4 flex items-center gap-2">
+            <i data-lucide="cpu" class="w-4 h-4"></i> Generative Search Citation Engine
+          </div>
+
+          <div class="space-y-4">
+            <!-- Simulated ChatGPT search reply -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">ChatGPT 5.0 Search Answer</span>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                According to recent benchmark analyses from <strong class="text-indigo-500 underline cursor-pointer">Horizons Unlimited</strong>, transitioning to AI engineering requires mastering prompt architecture, vector embeddings, and LangChain orchestration...
+              </p>
+              <div class="mt-3 flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">Citation #1 Source</span>
+                <span class="text-[10px] text-slate-400">98% relevance score</span>
+              </div>
+            </div>
+
+            <!-- Simulated Perplexity citation -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Perplexity AI Pro Synthesis</span>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Key findings corroborated by <strong class="text-cyan-500 underline cursor-pointer">Horizons Unlimited Tech Report</strong> indicate that 73% of tech leaders prioritize domain-specific evaluation over generic benchmarks.
+              </p>
+              <div class="mt-3 flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">Primary Reference [1]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-1 lg:order-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 text-xs font-bold uppercase tracking-wider mb-4">
+            <i data-lucide="cpu" class="w-4 h-4"></i> Feature 02
+          </div>
+          <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Generative Engine Optimization (GEO 3.0)
+          </h2>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+            By 2026, over 48% of search volume has migrated from classic Google 10-blue-links to AI Answer Engines (ChatGPT Search, Perplexity, Google Gemini, and Claude). Traditional SEO alone is no longer enough.
+          </p>
+
+          <div class="mt-6 space-y-3.5 text-sm">
+            <div class="flex items-center gap-3">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+              <span class="text-slate-700 dark:text-slate-300"><strong>Information-Gain Injection:</strong> Unique proprietary insights and data matrices LLMs require for citations.</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+              <span class="text-slate-700 dark:text-slate-300"><strong>Syntactic Direct Answers:</strong> Q&A structures calibrated for RAG retriever bots.</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+              <span class="text-slate-700 dark:text-slate-300"><strong>Schema & Entity Graphs:</strong> JSON-LD semantic breadcrumbs automatically embedded in every post.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEEP DIVE FEATURE 3: AUTONOMOUS CONTENT CALENDAR -->
+  <section class="py-20 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider mb-4">
+            <i data-lucide="calendar" class="w-4 h-4"></i> Feature 03
+          </div>
+          <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Autonomous 30-Day Content Calendar & Auto-Publisher
+          </h2>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+            Never brainstorm a topic again. BlackTechEngine projects a rolling 30-day publishing schedule based on trending search queries and competitor content gaps. You can approve with 1-click or set it to 100% Autopilot.
+          </p>
+
+          <div class="mt-8 grid grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800">
+              <div class="text-2xl font-black text-indigo-500 font-heading">0 Minutes</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Manual writing required per week with Autopilot mode</div>
+            </div>
+            <div class="p-4 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800">
+              <div class="text-2xl font-black text-emerald-500 font-heading">100% Native</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Direct publish to WordPress, Shopify, Webflow & Ghost</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulated Calendar Snippet -->
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+            <div class="font-bold text-sm">October 2026 Publishing Queue</div>
+            <span class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-indigo-500/10 text-indigo-500">Weekly Cadence: 3 Posts</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <div>
+                  <div class="font-bold text-slate-800 dark:text-slate-200">Oct 16: Top 10 Remote AI Engineering Jobs</div>
+                  <div class="text-[10px] text-slate-400">WordPress + LinkedIn + X scheduled at 9:00 AM EST</div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-bold">Auto-Publish</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+                <div>
+                  <div class="font-bold text-slate-800 dark:text-slate-200">Oct 19: GEO vs Traditional SEO Masterclass</div>
+                  <div class="text-[10px] text-slate-400">Ghost + LinkedIn Carousel scheduled at 10:30 AM EST</div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-400 font-bold">Scheduled</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-violet-400"></span>
+                <div>
+                  <div class="font-bold text-slate-800 dark:text-slate-200">Oct 23: System Design Interview Blueprint</div>
+                  <div class="text-[10px] text-slate-400">Webflow + Google Business Profile scheduled at 2:00 PM EST</div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-violet-500/20 text-violet-400 font-bold">Scheduled</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEEP DIVE FEATURE 4: OMNICHANNEL SOCIAL DRIP -->
+  <section class="py-20 bg-slate-100/50 dark:bg-[#0E1526]/50 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Social Carousel Preview -->
+        <div class="order-2 lg:order-1 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">1 Article &rarr; 4 Social Formats</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/10 text-indigo-500 font-bold">Auto-Repurposed</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2 mb-2 font-bold text-indigo-500">
+                <i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn Carousel
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">6 high-retention visual slide cards with bold hook and CTA.</p>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white">
+                <i data-lucide="twitter" class="w-4 h-4"></i> X Thread
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">7-tweet punchy breakdown engineered for viral retweets & bookmarks.</p>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2 mb-2 font-bold text-blue-600">
+                <i data-lucide="facebook" class="w-4 h-4"></i> Facebook Post
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">Conversational narrative with targeted hashtags and discussion prompt.</p>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2 mb-2 font-bold text-pink-500">
+                <i data-lucide="instagram" class="w-4 h-4"></i> Instagram Caption
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">Story-driven caption with link-in-bio prompt and niche hashtag cluster.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-1 lg:order-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-pink-500/10 text-pink-600 dark:text-pink-400 text-xs font-bold uppercase tracking-wider mb-4">
+            <i data-lucide="share-2" class="w-4 h-4"></i> Feature 04
+          </div>
+          <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Omnichannel Social Drip Engine
+          </h2>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+            Publishing a blog post without social amplification is wasted effort. BlackTechEngine automatically deconstructs every article into platform-optimized social assets and drips them across LinkedIn, Twitter/X, Facebook, and Instagram.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs font-bold">Auto Slide Generator</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs font-bold">Hashtag Clustering</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs font-bold">Best-Hour Scheduling</span>
+            <span class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs font-bold">Drip Delays</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES 5 & 6 DUAL GRID -->
+  <section class="py-20 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight">
+          Local Dominance & Autonomous Gap Hunting
+        </h2>
+        <p class="text-slate-600 dark:text-slate-300 mt-3 text-base">
+          Features built for agencies, physical businesses, and hyper-growth SaaS companies.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Feature 5 -->
+        <div class="bte-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-6">
+              <i data-lucide="map-pin" class="w-6 h-6"></i>
+            </div>
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-500 mb-1">Feature 05</div>
+            <h3 class="font-heading text-2xl font-bold mb-3">Local SEO & Google Business Autopilot</h3>
+            <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
+              Rank in the coveted Google Maps 3-Pack. Automatically publish weekly geo-tagged Google Business Profile updates and respond to customer reviews in seconds using empathetic, keyword-rich AI.
+            </p>
+            <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Automated weekly Google Business offer posts</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> 1-Click AI Review Responder with tone control</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Local citation consistency verification</li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-amber-500">
+            <span>Explore Local Module</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="bte-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-6">
+              <i data-lucide="search" class="w-6 h-6"></i>
+            </div>
+            <div class="text-xs font-bold uppercase tracking-wider text-emerald-500 mb-1">Feature 06</div>
+            <h3 class="font-heading text-2xl font-bold mb-3">Continuous Semantic Keyword & Gap Hunter</h3>
+            <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
+              Our bot perpetually monitors your competitors' search footprints. When a competitor drops ranking on a high-value topic or a new conversational query spikes, BlackTechEngine schedules a superior counter-guide.
+            </p>
+            <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Real-time competitor sitemap change detection</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Low-difficulty, high-conversion keyword clustering</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Automated seasonal search trend projection</li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-emerald-500">
+            <span>Explore Gap Hunter</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER (SHARED STANDARD) -->
+  <section class="py-20 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="p-8 sm:p-14 rounded-3xl bg-gradient-to-tr from-indigo-900/60 via-slate-900 to-violet-950/60 border border-indigo-500/30 shadow-2xl relative overflow-hidden">
+        <h2 class="font-heading text-3xl sm:text-5xl font-black text-white">
+          Experience Autonomous Content Growth
+        </h2>
+        <p class="mt-4 text-slate-300 text-base sm:text-lg max-w-2xl mx-auto">
+          Start your 14-day free trial today. Connect your CMS in under 2 minutes and let BlackTechEngine handle the rest.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="signup.html" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-base shadow-xl shadow-indigo-500/30 hover:scale-105 transition-all">
+            Start Free 14-Day Autopilot
+          </a>
+          <a href="pricing.html" class="w-full sm:w-auto px-8 py-4 rounded-xl border border-slate-700 bg-slate-800/80 text-white font-bold text-base hover:bg-slate-700/80 transition-all">
+            View All Pricing Plans
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNIFIED FOOTER (SHARED ACROSS ALL PUBLIC PAGES) -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#070A11] text-slate-600 dark:text-slate-400 text-sm transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        
+        <!-- Brand Info -->
+        <div class="lg:col-span-2 space-y-4">
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <span class="font-heading text-2xl font-black text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          </a>
+          <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+            The next-generation autonomous SEO and GEO (Generative Engine Optimization) platform. Transforming websites into authoritative, AI-cited industry leaders.
+          </p>
+          <div class="pt-2 flex items-center gap-3 text-slate-500 dark:text-slate-400">
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="github" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+          </div>
+        </div>
+
+        <!-- Product Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Platform</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="features.html" class="hover:text-indigo-500 transition-colors">Features Overview</a></li>
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">GEO 3.0 Engine</a></li>
+            <li><a href="pricing.html" class="hover:text-indigo-500 transition-colors">Pricing & Plans</a></li>
+            <li><a href="user/index.html" class="hover:text-indigo-500 transition-colors">User Dashboard Demo</a></li>
+            <li><a href="admin/index.html" class="hover:text-indigo-500 transition-colors">Super Admin Demo</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Resources</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="blog.html" class="hover:text-indigo-500 transition-colors">AI & SEO Blog</a></li>
+            <li><a href="blog-single.html" class="hover:text-indigo-500 transition-colors">Latest Guide</a></li>
+            <li><a href="affiliate.html" class="hover:text-indigo-500 transition-colors">Affiliate Program (30%)</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Documentation</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">API Reference</a></li>
+          </ul>
+        </div>
+
+        <!-- Company Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Company</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Contact Support</a></li>
+            <li><a href="login.html" class="hover:text-indigo-500 transition-colors">Client Sign In</a></li>
+            <li><a href="signup.html" class="hover:text-indigo-500 transition-colors">Create Account</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-12 mt-12 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div>
+          &copy; 2026 BlackTechEngine, Inc. All rights reserved. Built with precision for autonomous SEO.
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-indigo-500">Privacy Policy</a>
+          <a href="#" class="hover:text-indigo-500">Terms of Service</a>
+          <a href="#" class="hover:text-indigo-500">Security & GDPR</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

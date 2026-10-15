@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Models & Prompt Studio — BlackTechEngine Admin</title>
+  <title>AI Model Router & Prompts — BlackTechEngine Super Admin</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,213 +24,349 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT ADMIN SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- SUPER ADMIN COMMAND SIDEBAR -->
+  <aside id="adminSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
       
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-rose-500/25">
-            <i data-lucide="shield-alert" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-rose-500">Admin</span></div>
-            <div class="text-[9px] uppercase font-bold text-rose-400">Master Command</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="mt-6 space-y-6 flex-1">
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/25">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+        </div>
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Platform Control</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Executive Command</span>
-            </a>
-            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="users" class="w-4 h-4"></i>
-              <span>User & Workspaces</span>
-            </a>
-            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-500/20">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>AI Models & Prompts</span>
-            </a>
-            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Subscription Plans</span>
-            </a>
-            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-cyan-400">Admin</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Super Admin Mode
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Platform Control</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
               <i data-lucide="activity" class="w-4 h-4"></i>
-              <span>Autopilot Queue Logs</span>
+              <span>Mission Control</span>
             </a>
-            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="gift" class="w-4 h-4"></i>
-              <span>Affiliates & Payouts</span>
+            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>Workspaces & Users</span>
             </a>
-          </nav>
+            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>AI Router & Prompts</span>
+            </a>
+            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>Plans & Pricing Tiers</span>
+            </a>
+          </div>
         </div>
 
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Shortcuts</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="../user/calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30">
-              <i data-lucide="external-link" class="w-4 h-4"></i>
-              <span>Switch to User View</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Operations & Infrastructure</div>
+          <div class="space-y-1">
+            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="server" class="w-4 h-4"></i>
+              <span>Job Queues & Latency</span>
             </a>
-            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-white">
-              <i data-lucide="globe" class="w-4 h-4"></i>
-              <span>Public Website</span>
+            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+              <span>Affiliate Approvals</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Master Administrator</div>
-            <div class="text-[10px] text-rose-400 truncate">admin@blacktechengine.com</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Quick Navigation</div>
+          <div class="space-y-1">
+            <a href="../user/index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Switch to User Panel</span>
+            </a>
+            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>View Public Website</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SUPER ADMIN PROFILE MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="adminProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-cyan-400 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500 text-slate-900 font-black text-xs flex items-center justify-center shrink-0">SA</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Root Architect</div>
+              <div class="text-[10px] text-cyan-400 truncate">admin@blacktechengine.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="adminProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="../user/index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+            <span>User Sandbox View</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Exit Admin Mode</span>
+          </button>
         </div>
       </div>
-
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
       <div class="flex items-center gap-4">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">AI Model Routing & Master Prompt Studio</h1>
-        <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-bold">Multi-Agent Ensemble</span>
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Platform Control</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-cyan-400 font-bold">AI Model Router & Master Prompts</span>
+        </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-cyan-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <button onclick="bteToast.show('AI model routing rules updated across all worker clusters!', 'success')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-slate-900 font-black text-xs shadow-md hover:scale-105 transition-all">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i>
+          <span>Save Router Config</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- MODEL ROUTING MATRIX -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+      <!-- HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Active LLM & Diffusion Model Routing</h3>
-          <p class="text-xs text-slate-400">Assign specific models to specialized sub-tasks in the generation pipeline</p>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">AI Model Router & Prompt Studio</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Route specific synthesis workloads to optimal foundation models based on cost and output quality.</p>
         </div>
+      </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-xs">
+      <!-- WORKLOAD ROUTING MATRIX -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <h3 class="font-heading text-lg font-bold">Synthesis Workload Routing Matrix</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
           
-          <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <label class="block font-bold text-slate-700 dark:text-slate-300">Deep Research & Vector Mining</label>
-            <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium">
-              <option selected>Gemini 2.5 Pro (Recommended)</option>
-              <option>Claude 3.7 Sonnet (Thinking)</option>
-              <option>GPT-4o (OpenAI)</option>
-            </select>
-            <span class="text-[10px] text-emerald-400 block">Lowest hallucination rate</span>
+          <!-- Route 1 -->
+          <div class="p-5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Long-Form Articles & GEO Analysis</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Primary Core</span>
+            </div>
+            <p class="text-slate-400">2,500+ word guides requiring rigorous logical reasoning and zero hallucinations.</p>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Assigned Foundation Model</label>
+              <select class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-indigo-400">
+                <option selected>Anthropic Claude 3.5 Sonnet (Recommended &bull; $0.003/1k tokens)</option>
+                <option>OpenAI GPT-4o ($0.005/1k tokens)</option>
+                <option>Google Gemini 1.5 Pro ($0.0012/1k tokens)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <label class="block font-bold text-slate-700 dark:text-slate-300">Article Writing & Prose Synthesis</label>
-            <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium">
-              <option selected>Claude 3.7 Sonnet (Anthropic)</option>
-              <option>Gemini 2.5 Pro</option>
-              <option>Llama 3.3 70B (Together AI)</option>
-            </select>
-            <span class="text-[10px] text-indigo-400 block">Highest human-like fluency</span>
+          <!-- Route 2 -->
+          <div class="p-5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Real-Time Search Grounding & Gaps</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400">Live Crawl</span>
+            </div>
+            <p class="text-slate-400">Live web indexing, competitor sitemap parsing, and search query clustering.</p>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Assigned Foundation Model</label>
+              <select class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-cyan-400">
+                <option selected>Google Gemini 1.5 Pro (Search Grounding &bull; $0.0012/1k tokens)</option>
+                <option>Perplexity Sonar Pro ($0.003/1k tokens)</option>
+                <option>OpenAI GPT-4o Mini ($0.0006/1k tokens)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <label class="block font-bold text-slate-700 dark:text-slate-300">Featured Image Rendering</label>
-            <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium">
-              <option selected>Flux Pro 1.1 (Black Forest)</option>
-              <option>Google Imagen 3</option>
-              <option>Midjourney v6 API</option>
-            </select>
-            <span class="text-[10px] text-cyan-400 block">1792x1024 photorealistic render</span>
+          <!-- Route 3 -->
+          <div class="p-5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Omnichannel Social Carousels & Threads</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-violet-500/10 text-violet-400">High Engagement</span>
+            </div>
+            <p class="text-slate-400">Condensing 3,000 words into punchy visual slides and viral Twitter hook chains.</p>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Assigned Foundation Model</label>
+              <select class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-violet-400">
+                <option selected>OpenAI GPT-4o Omni (Optimized for Social Hooks &bull; $0.0025/1k tokens)</option>
+                <option>Anthropic Claude 3.5 Haiku ($0.0008/1k tokens)</option>
+                <option>Meta Llama 3.1 70B ($0.0006/1k tokens)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <label class="block font-bold text-slate-700 dark:text-slate-300">Social Repurposing & Threads</label>
-            <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium">
-              <option selected>Claude 3.5 Haiku (Fast)</option>
-              <option>GPT-4o-mini</option>
-              <option>Gemini 2.5 Flash</option>
-            </select>
-            <span class="text-[10px] text-violet-400 block">&lt; 1.2s inference speed</span>
+          <!-- Route 4 -->
+          <div class="p-5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Local Google Business & Review Responder</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400">Local Speed</span>
+            </div>
+            <p class="text-slate-400">Empathetic customer review replies and local promotional offer updates.</p>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Assigned Foundation Model</label>
+              <select class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-amber-400">
+                <option selected>Meta Llama 3.1 70B (High-throughput &bull; $0.0006/1k tokens)</option>
+                <option>OpenAI GPT-4o Mini ($0.0006/1k tokens)</option>
+              </select>
+            </div>
           </div>
-
-        </div>
-
-        <div class="pt-2 flex justify-end">
-          <button onclick="window.showToast('Model routing pipeline configuration updated!', 'success')" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md">
-            Save Model Routing
-          </button>
         </div>
       </div>
 
-      <!-- MASTER SYSTEM PROMPT STUDIO -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
-        <div>
-          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Master System Prompt Studio</h3>
-          <p class="text-xs text-slate-400">Configure global steering instructions applied across all customer workspaces.</p>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 text-xs font-bold">
-            <button class="px-4 py-2 rounded-xl bg-rose-600 text-white">Article Master Prompt</button>
-            <button class="px-4 py-2 rounded-xl text-slate-400 hover:text-white">GEO Citation Booster</button>
-            <button class="px-4 py-2 rounded-xl text-slate-400 hover:text-white">Social Drip Rules</button>
-          </div>
-
+      <!-- MASTER PROMPT TEMPLATE STUDIO -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
-            <textarea rows="12" class="w-full p-4 rounded-2xl bg-slate-900 text-slate-200 font-mono text-xs leading-relaxed border border-slate-800 focus:outline-none focus:border-rose-500">You are the BlackTechEngine Autonomous Senior Tech Journalist and Generative Engine Optimization (GEO) Architect.
-
-Your primary directive is to produce definitive, research-grade, exhaustive 2,500+ word guides that outrank traditional search results and serve as primary citations for ChatGPT, Google Gemini, and Perplexity.
-
-Core Operational Constraints:
-1. STRICTLY PROHIBIT generic AI buzzwords: "delve", "tapestry", "game-changer", "plethora", "revolutionize". Any usage results in automated rejection.
-2. In the first 120 words, provide an unambiguous, bolded definition answering the core search intent.
-3. Every 600 words, embed a structured Markdown comparison table or a quantitative data benchmark.
-4. Auto-inject Schema.org JSON-LD (FAQPage and TechArticle) at the conclusion of the output.
-5. Calibrate voice to the specific customer Brand DNA vector provided in the context payload.</textarea>
+            <h3 class="font-heading text-lg font-bold">Global Master Prompt Template</h3>
+            <p class="text-xs text-slate-400">Engineers the system instructions injected across all tenant generation jobs.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="bteToast.show('Testing prompt with mock Brand DNA vector...', 'info')" class="px-3.5 py-1.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs font-bold hover:border-cyan-400 text-slate-700 dark:text-slate-300">
+              Run Mock Test
+            </button>
           </div>
         </div>
 
-        <div class="pt-2 flex justify-end">
-          <button onclick="window.showToast('Master System Prompt deployed to cluster!', 'success')" class="px-6 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-rose-500/25">
-            Deploy Master Prompt
-          </button>
+        <!-- Available Dynamic Variables Badges -->
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Available Runtime Injections:</div>
+          <div class="flex flex-wrap gap-2 text-xs font-mono">
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-500/15 text-indigo-400 border border-indigo-500/25 cursor-pointer">{brand_voice_vector}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-cyan-500/15 text-cyan-400 border border-cyan-500/25 cursor-pointer">{target_keyword_gaps}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 border border-rose-500/25 cursor-pointer">{banned_cliches_list}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-violet-500/15 text-violet-400 border border-violet-500/25 cursor-pointer">{internal_anchor_links}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 cursor-pointer">{geo_schema_jsonld}</span>
+          </div>
+        </div>
+
+        <!-- System Prompt Code Box -->
+        <div class="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-indigo-300 space-y-2">
+          <div class="text-slate-500">// GLOBAL SYSTEM INSTRUCTION FOR BLACKTECHENGINE SYNTHESIS ENGINES</div>
+          <textarea rows="8" class="w-full bg-transparent text-slate-200 border-none focus:outline-none leading-relaxed font-mono">You are BlackTechEngine, an elite autonomous technical writer calibrated with Brand DNA: {brand_voice_vector}.
+Your goal is to synthesize a primary, citation-worthy guide on: {target_keyword_gaps}.
+
+Strict Negative Constraints:
+1. NEVER use the following AI clichés: {banned_cliches_list}.
+2. Inject primary statistical matrices and structured comparisons in KaTeX and Markdown.
+3. Automatically link relevant target anchors to: {internal_anchor_links}.
+4. Structure the first 150 words to directly answer user search intent for RAG retriever bots.</textarea>
         </div>
       </div>
-
     </main>
+
+    <!-- UNIFIED DASHBOARD FOOTER -->
+    <footer class="h-14 border-t border-slate-200 dark:border-slate-800/80 px-6 sm:px-8 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+        <span>AI Model Router: Claude 3.5 & GPT-4o Active</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Exit Super Admin Session?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Returning to login screen will terminate root elevated permissions.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Active
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Exit Admin
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script>
+    // Admin profile dropdown toggle
+    document.getElementById('adminProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('adminProfileDropdown')?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('adminProfileDropdown')?.classList.add('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
+    }
+  </script>
 </body>
 </html>

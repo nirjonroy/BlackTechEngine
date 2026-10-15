@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Affiliate Approvals & Commission Rules — BlackTechEngine Admin</title>
+  <title>Affiliate Approvals & Payouts — BlackTechEngine Super Admin</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,221 +24,702 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT ADMIN SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- SUPER ADMIN COMMAND SIDEBAR -->
+  <aside id="adminSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
       
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-rose-500/25">
-            <i data-lucide="shield-alert" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-rose-500">Admin</span></div>
-            <div class="text-[9px] uppercase font-bold text-rose-400">Master Command</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="mt-6 space-y-6 flex-1">
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/25">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+        </div>
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Platform Control</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Executive Command</span>
-            </a>
-            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="users" class="w-4 h-4"></i>
-              <span>User & Workspaces</span>
-            </a>
-            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>AI Models & Prompts</span>
-            </a>
-            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Subscription Plans</span>
-            </a>
-            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-cyan-400">Admin</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Super Admin Mode
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Platform Control</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
               <i data-lucide="activity" class="w-4 h-4"></i>
-              <span>Autopilot Queue Logs</span>
+              <span>Mission Control</span>
             </a>
-            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-500/20">
-              <i data-lucide="gift" class="w-4 h-4"></i>
-              <span>Affiliates & Payouts</span>
+            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>Workspaces & Users</span>
             </a>
-          </nav>
+            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>AI Router & Prompts</span>
+            </a>
+            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>Plans & Pricing Tiers</span>
+            </a>
+          </div>
         </div>
 
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Shortcuts</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="../user/calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30">
-              <i data-lucide="external-link" class="w-4 h-4"></i>
-              <span>Switch to User View</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Operations & Infrastructure</div>
+          <div class="space-y-1">
+            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="server" class="w-4 h-4"></i>
+              <span>Job Queues & Latency</span>
             </a>
-            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-white">
-              <i data-lucide="globe" class="w-4 h-4"></i>
-              <span>Public Website</span>
+            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold border border-cyan-500/20 shadow-sm">
+              <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+              <span>Affiliate Approvals</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Master Administrator</div>
-            <div class="text-[10px] text-rose-400 truncate">admin@blacktechengine.com</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Quick Navigation</div>
+          <div class="space-y-1">
+            <a href="../user/index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Switch to User Panel</span>
+            </a>
+            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>View Public Website</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SUPER ADMIN PROFILE MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="adminProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-cyan-400 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500 text-slate-900 font-black text-xs flex items-center justify-center shrink-0">SA</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Root Architect</div>
+              <div class="text-[10px] text-cyan-400 truncate">admin@blacktechengine.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="adminProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="../user/index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+            <span>User Sandbox View</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Exit Admin Mode</span>
+          </button>
         </div>
       </div>
-
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
       <div class="flex items-center gap-4">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Affiliate Partner Program & Payout Approvals</h1>
-        <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">1 Pending Payout</span>
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Operations & Infrastructure</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-cyan-400 font-bold">Affiliate Approvals & Payouts</span>
+        </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-cyan-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <button onclick="approveAllPayouts()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-900 font-black text-xs shadow-md hover:scale-105 transition-all">
+          <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+          <span>Approve All ($6,410.00)</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- COMMISSION RULES CONFIGURATION -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-5">
+      <!-- HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Global Affiliate Program Rules</h3>
-          <p class="text-xs text-slate-400">Controls automatic commission tracking across all public affiliates</p>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">Affiliate Partner Network & Payouts</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Review pending commission payouts, adjust reward tiers, and inspect referral fraud telemetry.</p>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
-          <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Lifetime Recurring Commission (%)</label>
-            <input type="number" value="30" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Cookie Attribution Window (Days)</label>
-            <input type="number" value="60" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Minimum Payout Threshold ($)</label>
-            <input type="number" value="50" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold">
-          </div>
-        </div>
-
-        <div class="pt-2 flex justify-end">
-          <button onclick="window.showToast('Global affiliate rules updated!', 'success')" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md">
-            Save Rules
+        <div class="flex items-center gap-2">
+          <button onclick="openConfigModal()" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:border-cyan-400 text-slate-300 flex items-center gap-1.5">
+            <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Commission Rules
           </button>
         </div>
       </div>
 
-      <!-- PENDING PAYOUT REQUESTS & PARTNER ACCOUNTS TABLE -->
-      <div class="glass-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden space-y-4 p-6 sm:p-8">
-        <div>
-          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Affiliate Partners & Payout Queue</h3>
-          <p class="text-xs text-slate-400">Review pending withdrawals and active partner performance</p>
+      <!-- KEY METRICS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Total Affiliate Sales</span>
+            <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400"><i data-lucide="trending-up" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">$148,920</div>
+          <div class="text-[11px] text-emerald-400 font-bold mt-1">
+            28.4% of total platform MRR
+          </div>
+        </div>
+
+        <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Pending Payouts</span>
+            <span class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400"><i data-lucide="clock" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-amber-400">$6,410.00</div>
+          <div class="text-[11px] text-slate-400 font-semibold mt-1">
+            18 requests ready for Wise batch
+          </div>
+        </div>
+
+        <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Lifetime Paid Out</span>
+            <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400"><i data-lucide="badge-dollar-sign" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">$44,676.00</div>
+          <div class="text-[11px] text-cyan-400 font-bold mt-1">
+            100% on-time payouts record
+          </div>
+        </div>
+
+        <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Active Partners</span>
+            <span class="p-1.5 rounded-lg bg-violet-500/10 text-violet-400"><i data-lucide="users" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">342</div>
+          <div class="text-[11px] text-violet-400 font-bold mt-1">
+            48 Agency VIPs (40% rate)
+          </div>
+        </div>
+      </div>
+
+      <!-- FRAUD & ANOMALY DETECTION NOTICE -->
+      <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-amber-300">Fraud Detection Engine: 1 Suspicious Referral Flagged</div>
+            <div class="text-[11px] text-slate-400">Partner <code class="font-mono text-amber-300">aff_devin99</code> generated 2 subscriptions matching their own registration IP subnet. Payout held for audit.</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="dismissFraudAlert(this)" class="px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-semibold hover:bg-slate-800 text-slate-300">Dismiss</button>
+          <button onclick="bteToast.show('Partner aff_devin99 flagged and frozen for audit.', 'warning')" class="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold">Investigate & Freeze</button>
+        </div>
+      </div>
+
+      <!-- PENDING PAYOUTS APPROVAL QUEUE -->
+      <div class="bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+        <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-heading text-lg font-bold flex items-center gap-2">
+              <span>Pending Payout Requests</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold">18 Pending</span>
+            </h2>
+            <p class="text-xs text-slate-400">All referrals have passed the 30-day money-back guarantee period and are ready for settlement.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">Payout Method:</span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 flex items-center gap-1.5">
+              <i data-lucide="credit-card" class="w-3.5 h-3.5"></i> Wise Batch Transfer Ready
+            </span>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400">
-                <th class="pb-3 font-semibold">Partner / Affiliate</th>
-                <th class="pb-3 font-semibold">Payment Destination</th>
-                <th class="pb-3 font-semibold">Active Referrals</th>
-                <th class="pb-3 font-semibold">Requested Payout</th>
-                <th class="pb-3 font-semibold text-center">Status</th>
-                <th class="pb-3 font-semibold text-right">Approval Actions</th>
+          <table class="w-full text-left text-xs" id="payoutsTable">
+            <thead class="bg-slate-100/50 dark:bg-slate-900/50 text-slate-400 font-semibold uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-800">
+              <tr>
+                <th class="p-4">Partner</th>
+                <th class="p-4">Payment Account</th>
+                <th class="p-4">Referred Tenants</th>
+                <th class="p-4">Commission Tier</th>
+                <th class="p-4">Hold Verification</th>
+                <th class="p-4">Payout Amount</th>
+                <th class="p-4 text-right">Approval Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
               
-              <!-- Partner 1: Horizons Unlimited (Pending) -->
-              <tr class="bg-amber-500/5">
-                <td class="py-4">
-                  <div class="font-bold text-slate-900 dark:text-white text-sm">Alex Livingstone</div>
-                  <div class="text-[10px] text-indigo-400">Horizons Unlimited (ref: alex88)</div>
+              <!-- Payout 1 -->
+              <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors payout-row" id="payout-row-1">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center shrink-0">
+                      MK
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white">Marcus King</div>
+                      <div class="text-[10px] text-slate-400">marcus@saasgrowth.io</div>
+                    </div>
+                  </div>
                 </td>
-                <td class="py-4">
-                  <div class="font-mono text-slate-900 dark:text-white">payouts@thehorizonsunlimited.com</div>
-                  <div class="text-[10px] text-slate-400">PayPal Express</div>
+                <td class="p-4">
+                  <div class="font-mono text-slate-300">marcus-transfer@wise.com</div>
+                  <div class="text-[10px] text-slate-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Wise ID: #WS-88192</div>
                 </td>
-                <td class="py-4 font-mono font-bold">18 active users</td>
-                <td class="py-4 font-mono font-bold text-emerald-500 text-sm">$480.00</td>
-                <td class="py-4 text-center">
-                  <span id="payoutStatusBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                    Pending Approval
+                <td class="p-4 font-bold text-slate-800 dark:text-slate-200">
+                  42 Active Workspaces
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 font-bold text-[10px]">
+                    30% Standard Recurring
                   </span>
                 </td>
-                <td class="py-4 text-right space-x-2">
-                  <button id="btnApprovePayout" onclick="document.getElementById('payoutStatusBadge').className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400'; document.getElementById('payoutStatusBadge').textContent = '✓ Approved & Paid'; this.disabled = true; this.className = 'hidden'; window.showToast('Payout of $480.00 approved and sent via PayPal API!', 'success');" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm">
-                    Approve Payout
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-[11px]">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 30-Day Hold Cleared
+                  </span>
+                </td>
+                <td class="p-4 font-heading text-base font-black text-emerald-400">
+                  $1,248.00
+                </td>
+                <td class="p-4 text-right space-x-2">
+                  <button onclick="approveSinglePayout('payout-row-1', 'Marcus King', 1248.00)" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all">
+                    Approve Wise Transfer
                   </button>
-                  <button onclick="window.showToast('Payout request rejected with notification email.', 'warning');" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800">
-                    Reject
+                  <button onclick="holdPayout('payout-row-1', 'Marcus King')" class="px-2.5 py-1.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white text-xs">
+                    Hold
                   </button>
                 </td>
               </tr>
 
-              <!-- Partner 2 -->
-              <tr>
-                <td class="py-4">
-                  <div class="font-bold text-slate-900 dark:text-white text-sm">Elena Chen</div>
-                  <div class="text-[10px] text-indigo-400">CloudScale Media (ref: elenac)</div>
+              <!-- Payout 2 -->
+              <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors payout-row" id="payout-row-2">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-violet-500/20 text-violet-400 font-bold flex items-center justify-center shrink-0">
+                      SL
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <span>Sarah Lin</span>
+                        <span class="px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-400 text-[9px] font-bold">VIP 40%</span>
+                      </div>
+                      <div class="text-[10px] text-slate-400">sarah@growthaccelerator.agency</div>
+                    </div>
+                  </div>
                 </td>
-                <td class="py-4 font-mono text-slate-400">Stripe Direct Connect</td>
-                <td class="py-4 font-mono font-bold">34 active users</td>
-                <td class="py-4 font-mono text-slate-400">— ($0.00 pending)</td>
-                <td class="py-4 text-center">
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/20 text-slate-400">
-                    Paid in Last Cycle
+                <td class="p-4">
+                  <div class="font-mono text-slate-300">payouts@growthaccelerator.agency</div>
+                  <div class="text-[10px] text-slate-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Wise ID: #WS-99321</div>
+                </td>
+                <td class="p-4 font-bold text-slate-800 dark:text-slate-200">
+                  68 Active Workspaces
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-bold text-[10px]">
+                    40% VIP Agency Tier
                   </span>
                 </td>
-                <td class="py-4 text-right">
-                  <span class="text-[11px] text-slate-400">No actions required</span>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-[11px]">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 30-Day Hold Cleared
+                  </span>
+                </td>
+                <td class="p-4 font-heading text-base font-black text-emerald-400">
+                  $2,692.80
+                </td>
+                <td class="p-4 text-right space-x-2">
+                  <button onclick="approveSinglePayout('payout-row-2', 'Sarah Lin', 2692.80)" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all">
+                    Approve Wise Transfer
+                  </button>
+                  <button onclick="holdPayout('payout-row-2', 'Sarah Lin')" class="px-2.5 py-1.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white text-xs">
+                    Hold
+                  </button>
                 </td>
               </tr>
 
+              <!-- Payout 3 -->
+              <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors payout-row" id="payout-row-3">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center shrink-0">
+                      DT
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white">David Torres</div>
+                      <div class="text-[10px] text-slate-400">david@seoreviews.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <div class="font-mono text-slate-300">david.torres.pay@paypal.com</div>
+                  <div class="text-[10px] text-slate-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> PayPal Verified</div>
+                </td>
+                <td class="p-4 font-bold text-slate-800 dark:text-slate-200">
+                  19 Active Workspaces
+                </td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 font-bold text-[10px]">
+                    30% Standard Recurring
+                  </span>
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-[11px]">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 30-Day Hold Cleared
+                  </span>
+                </td>
+                <td class="p-4 font-heading text-base font-black text-emerald-400">
+                  $564.30
+                </td>
+                <td class="p-4 text-right space-x-2">
+                  <button onclick="approveSinglePayout('payout-row-3', 'David Torres', 564.30)" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all">
+                    Approve PayPal
+                  </button>
+                  <button onclick="holdPayout('payout-row-3', 'David Torres')" class="px-2.5 py-1.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white text-xs">
+                    Hold
+                  </button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
+      <!-- TOP AFFILIATES LEADERBOARD & DIRECTORY -->
+      <div class="bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+        <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-heading text-lg font-bold">Top Affiliate Partners Directory</h2>
+            <p class="text-xs text-slate-400">Partner performance metrics, custom commission overrides, and fraud risk scoring.</p>
+          </div>
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" placeholder="Search partner name or ID..." class="pl-8 pr-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-cyan-400 w-56">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-100/50 dark:bg-slate-900/50 text-slate-400 font-semibold uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-800">
+              <tr>
+                <th class="p-4">Partner</th>
+                <th class="p-4">Affiliate Code</th>
+                <th class="p-4">Active MRR</th>
+                <th class="p-4">Commission Rate</th>
+                <th class="p-4">Conversion Rate</th>
+                <th class="p-4">Fraud Risk</th>
+                <th class="p-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+              <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="p-4 font-bold text-slate-900 dark:text-white">
+                  Sarah Lin (Growth Accelerator)
+                </td>
+                <td class="p-4 font-mono text-cyan-400">GROWTHACCEL</td>
+                <td class="p-4 font-semibold text-emerald-400">$6,732.00 / mo</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 font-bold text-[10px]">40% VIP</span>
+                </td>
+                <td class="p-4 font-mono">14.8%</td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 0.4% (Ultra Low)
+                  </span>
+                </td>
+                <td class="p-4 text-right">
+                  <button onclick="editPartnerRate('Sarah Lin', 40)" class="text-xs font-bold text-cyan-400 hover:underline">
+                    Edit Rate
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="p-4 font-bold text-slate-900 dark:text-white">
+                  Marcus King
+                </td>
+                <td class="p-4 font-mono text-cyan-400">MARCUSSEO</td>
+                <td class="p-4 font-semibold text-emerald-400">$4,160.00 / mo</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-bold text-[10px]">30% Standard</span>
+                </td>
+                <td class="p-4 font-mono">11.2%</td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 0.8% (Clean)
+                  </span>
+                </td>
+                <td class="p-4 text-right">
+                  <button onclick="editPartnerRate('Marcus King', 30)" class="text-xs font-bold text-cyan-400 hover:underline">
+                    Edit Rate
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="p-4 font-bold text-slate-900 dark:text-white">
+                  David Torres
+                </td>
+                <td class="p-4 font-mono text-cyan-400">SEOREVIEWS</td>
+                <td class="p-4 font-semibold text-emerald-400">$1,881.00 / mo</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-bold text-[10px]">30% Standard</span>
+                </td>
+                <td class="p-4 font-mono">9.4%</td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 1.1% (Clean)
+                  </span>
+                </td>
+                <td class="p-4 text-right">
+                  <button onclick="editPartnerRate('David Torres', 30)" class="text-xs font-bold text-cyan-400 hover:underline">
+                    Edit Rate
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
+
+    <!-- ADMIN FOOTER -->
+    <footer class="h-12 border-t border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between text-[11px] text-slate-400 bg-white/50 dark:bg-slate-900/50">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Wise Business API: Connected & Ready</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
+  </div>
+
+  <!-- EDIT RATE MODAL -->
+  <div id="rateModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeRateModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 animate-fadeIn">
+      <h3 class="font-heading text-lg font-bold mb-1">Edit Commission Rate</h3>
+      <p id="rateModalSubtitle" class="text-xs text-slate-400 mb-4">Partner: Sarah Lin</p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Recurring Commission (%)</label>
+          <div class="relative">
+            <input type="number" id="partnerRateInput" value="40" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold focus:outline-none focus:border-cyan-400">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">VIP Partner Badge</label>
+          <select class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+            <option>Enabled (Featured Agency Partner)</option>
+            <option>Standard Affiliate</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeRateModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-xs font-bold text-slate-300">
+          Cancel
+        </button>
+        <button onclick="savePartnerRate()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-slate-900 font-black text-xs">
+          Save Custom Rate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMISSION RULES MODAL -->
+  <div id="configModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeConfigModal()"></div>
+    <div class="relative w-full max-w-md rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 animate-fadeIn">
+      <h3 class="font-heading text-lg font-bold mb-1">Platform Affiliate Policies</h3>
+      <p class="text-xs text-slate-400 mb-4">Set global thresholds, attribution windows, and payout cadence.</p>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-400 mb-1">Default Base Commission Rate</label>
+          <input type="text" value="30% Lifetime Recurring" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-400 mb-1">Attribution Cookie Window (Days)</label>
+          <input type="number" value="90" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-400 mb-1">Minimum Payout Threshold ($USD)</label>
+          <input type="number" value="50" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-400 mb-1">Holding Period for Refund Protection</label>
+          <input type="text" value="30 Days (Strict Hold)" readonly class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-400">
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-xs font-bold text-slate-300">
+          Close
+        </button>
+        <button onclick="bteToast.show('Global affiliate policies updated!', 'success'); closeConfigModal();" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-900 font-black text-xs">
+          Save Policies
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Exit Super Admin Session?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Returning to login screen will terminate root elevated permissions.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Active
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Exit Admin
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script>
+    // Admin profile dropdown toggle
+    document.getElementById('adminProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('adminProfileDropdown')?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('adminProfileDropdown')?.classList.add('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
+    }
+
+    function approveSinglePayout(rowId, partner, amount) {
+      const row = document.getElementById(rowId);
+      if (row) {
+        row.style.opacity = '0.5';
+        row.querySelector('td:last-child').innerHTML = `<span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-xs"><i data-lucide="check" class="w-4 h-4"></i> Wise Transfer Initiated</span>`;
+        lucide.createIcons();
+        bteToast.show(`Approved Wise transfer of $${amount.toFixed(2)} to ${partner}!`, 'success');
+      }
+    }
+
+    function holdPayout(rowId, partner) {
+      bteToast.show(`Payout for ${partner} placed on temporary compliance hold.`, 'info');
+    }
+
+    function approveAllPayouts() {
+      if (confirm('Approve all 18 pending payouts totaling $6,410.00 via Wise Batch API?')) {
+        document.querySelectorAll('.payout-row').forEach(row => {
+          row.style.opacity = '0.5';
+          row.querySelector('td:last-child').innerHTML = `<span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-xs"><i data-lucide="check" class="w-4 h-4"></i> Batch Sent</span>`;
+        });
+        lucide.createIcons();
+        bteToast.show('Wise batch transfer dispatched! $6,410.00 settled successfully.', 'success');
+      }
+    }
+
+    function dismissFraudAlert(btn) {
+      btn.closest('.p-4').style.display = 'none';
+      bteToast.show('Fraud flag dismissed after risk review.', 'info');
+    }
+
+    let currentEditingPartner = '';
+    function editPartnerRate(partner, rate) {
+      currentEditingPartner = partner;
+      document.getElementById('rateModalSubtitle').innerText = `Partner: ${partner}`;
+      document.getElementById('partnerRateInput').value = rate;
+      document.getElementById('rateModal').classList.remove('hidden');
+      document.getElementById('rateModal').classList.add('flex');
+    }
+
+    function closeRateModal() {
+      document.getElementById('rateModal').classList.add('hidden');
+      document.getElementById('rateModal').classList.remove('flex');
+    }
+
+    function savePartnerRate() {
+      const rate = document.getElementById('partnerRateInput').value;
+      bteToast.show(`Custom commission for ${currentEditingPartner} updated to ${rate}%!`, 'success');
+      closeRateModal();
+    }
+
+    function openConfigModal() {
+      document.getElementById('configModal').classList.remove('hidden');
+      document.getElementById('configModal').classList.add('flex');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.add('hidden');
+      document.getElementById('configModal').classList.remove('flex');
+    }
+  </script>
 </body>
 </html>

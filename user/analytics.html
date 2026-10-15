@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analytics & GEO Tracking — BlackTechEngine</title>
+  <title>GEO & Traffic Analytics — BlackTechEngine Autopilot</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,324 +24,450 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- UNIFIED DASHBOARD SIDEBAR -->
+  <aside id="dashboardSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
-            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
-        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
-        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
-      </div>
-
-      <div class="mt-6 space-y-6 flex-1">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-slate-400 font-bold">User Workspace</span>
+        </div>
+      </a>
+
+      <!-- Workspace Switcher Selector -->
+      <div class="mt-4 p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">HU</div>
+          <div class="truncate">
+            <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Horizons Unlimited</div>
+            <div class="text-[10px] text-emerald-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Autopilot Active</div>
+          </div>
+        </div>
+        <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <!-- Group 1: Core -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Core Autopilot</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Dashboard</span>
+              <span>Dashboard Overview</span>
             </a>
-            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="calendar" class="w-4 h-4"></i>
-                <span>Content Calendar</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>Content Calendar</span>
             </a>
-            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="dna" class="w-4 h-4"></i>
               <span>Brand DNA Studio</span>
             </a>
-            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>Articles Manager</span>
+              <span>Articles & SEO Editor</span>
             </a>
-            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          </div>
+        </div>
+
+        <!-- Group 2: Distribution -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Omnichannel & Local</div>
+          <div class="space-y-1">
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="share-2" class="w-4 h-4"></i>
-              <span>Social Media Studio</span>
+              <span>Social Media Drip</span>
             </a>
-            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="map-pin" class="w-4 h-4"></i>
-                <span>Google Business</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            <a href="google-business.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <span>Google Business Profile</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 3: Intelligence -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Intelligence & SEO</div>
+          <div class="space-y-1">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20">
               <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-              <span>Analytics & GEO</span>
+              <span>GEO & Traffic Analytics</span>
             </a>
-            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <i data-lucide="target" class="w-4 h-4"></i>
-              <span>Keywords & Clusters</span>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="search" class="w-4 h-4"></i>
+              <span>Keyword Gap Hunter</span>
             </a>
-            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="gauge" class="w-4 h-4"></i>
-                <span>Site Speed & CWV</span>
-              </div>
-              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            <a href="site-speed.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Site Speed & Health</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 4: Settings -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <i data-lucide="plug" class="w-4 h-4"></i>
-              <span>Integrations Hub</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Settings & Account</div>
+          <div class="space-y-1">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="blocks" class="w-4 h-4"></i>
+              <span>CMS Integrations</span>
             </a>
-            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Billing & Credits</span>
+              <span>Billing & Quota</span>
             </a>
-            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="gift" class="w-4 h-4"></i>
               <span>Affiliate Earnings</span>
             </a>
-            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="settings" class="w-4 h-4"></i>
               <span>Settings</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
-            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </nav>
+
+      <!-- USER PROFILE DROPDOWN MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="userProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-indigo-500 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">AM</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Alex Morgan</div>
+              <div class="text-[10px] text-slate-400 truncate">alex@thehorizonsunlimited.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="userProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+            <span>View Profile</span>
+          </a>
+          <a href="settings.html?tab=team" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>Team Members</span>
+          </a>
+          <a href="billing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
+            <span>Upgrade to Agency</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Log Out</span>
+          </button>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
-      <div class="flex items-center gap-3">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Organic Traffic & Generative Search Visibility</h1>
-        <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">GSC Connected</span>
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
+      <div class="flex items-center gap-4">
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Horizons Unlimited</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-indigo-500 font-bold">Analytics & Citations</span>
+        </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <button onclick="bteToast.show('Generating automated executive PDF report...', 'info'); setTimeout(()=>bteToast.show('Report downloaded: Horizons-Analytics-Oct2026.pdf', 'success'), 800)" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold shadow-md hover:scale-105 transition-all">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Download PDF Report</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- GSC CLICKS & IMPRESSIONS CHART CARD -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Google Search Console Organic Clicks vs Impressions</h3>
-            <p class="text-xs text-slate-400">Past 90 days organic trajectory for thehorizonsunlimited.com</p>
-          </div>
-          <div class="flex items-center gap-4 text-xs font-mono font-bold">
-            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-indigo-500 inline-block"></span> Total Clicks: 24,190</span>
-            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-cyan-400 inline-block"></span> Impressions: 420,800</span>
-          </div>
-        </div>
-
-        <div class="h-64 w-full">
-          <canvas id="trafficChart"></canvas>
-        </div>
-      </div>
-
-      <!-- AI SEARCH VISIBILITY TRACKER -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+      <!-- HEADER & DATE FILTER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div class="flex items-center gap-2 text-xs font-bold text-indigo-500 uppercase tracking-wider">
-            <i data-lucide="cpu" class="w-4 h-4"></i> Generative Engine Optimization (GEO) Radar
-          </div>
-          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">AI Recommendation & Citation Market Share</h3>
-          <p class="text-xs text-slate-400">Tracking how often ChatGPT, Gemini, and Perplexity reference Horizons Unlimited as an authoritative recommendation.</p>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">GEO 3.0 & Traffic Analytics</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Multi-model citation share, organic visitor acquisition, and search intent value.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          
-          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-slate-900 dark:text-white">ChatGPT Search</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Top 3 Cited</span>
-            </div>
-            <div class="text-3xl font-extrabold text-emerald-500">642</div>
-            <div class="text-xs text-slate-400">Total verified citations on tech career queries</div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-slate-900 dark:text-white">Perplexity AI</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-400">#1 Source</span>
-            </div>
-            <div class="text-3xl font-extrabold text-indigo-500">518</div>
-            <div class="text-xs text-slate-400">Citations across coding bootcamps & AI engineering</div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-slate-900 dark:text-white">Google Gemini</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400">88% Share</span>
-            </div>
-            <div class="text-3xl font-extrabold text-cyan-500">330</div>
-            <div class="text-xs text-slate-400">Featured in Gemini Overview AI summaries</div>
-          </div>
-
+        <div class="flex items-center gap-1.5 bte-card p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold">
+          <button class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-indigo-500">7 Days</button>
+          <button class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold">30 Days</button>
+          <button class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-indigo-500">90 Days</button>
+          <button class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-indigo-500">All Time</button>
         </div>
       </div>
 
-      <!-- CONTENT DECAY TABLE -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-          <div>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Content Decay & Refresh Detector</h3>
-            <p class="text-xs text-slate-400">Articles older than 90 days suffering ranking drift. Refresh with 1 click to update stats.</p>
-          </div>
-          <span class="text-xs font-mono font-bold text-amber-500">2 Articles Need Refresh</span>
+      <!-- 4 ANALYTICS KPI CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Total Inbound Sessions</div>
+          <div class="text-3xl font-black font-heading text-slate-900 dark:text-white">34,250</div>
+          <div class="text-xs text-emerald-500 mt-1 flex items-center gap-1"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +184% vs last month</div>
         </div>
 
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Generative AI Citations</div>
+          <div class="text-3xl font-black font-heading text-cyan-400">3,890</div>
+          <div class="text-xs text-emerald-500 mt-1 flex items-center gap-1"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +310% citation growth</div>
+        </div>
+
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Avg Citation Position</div>
+          <div class="text-3xl font-black font-heading text-violet-400">#1.4</div>
+          <div class="text-xs text-indigo-400 mt-1 font-bold">Primary Reference Source</div>
+        </div>
+
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Estimated Traffic Value</div>
+          <div class="text-3xl font-black font-heading text-emerald-400">$48,200</div>
+          <div class="text-xs text-slate-400 mt-1">Google Ads equivalent CPC</div>
+        </div>
+      </div>
+
+      <!-- CITATION SHARE BY AI ENGINE -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Engine Share Cards (5 cols) -->
+        <div class="lg:col-span-5 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+          <h3 class="font-heading text-lg font-bold">Citation Share by AI Answer Engine</h3>
+          <p class="text-xs text-slate-400">Where Horizons Unlimited content was cited during user queries.</p>
+
+          <div class="space-y-4 pt-2 text-xs">
+            <!-- ChatGPT -->
+            <div>
+              <div class="flex justify-between font-bold mb-1">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> ChatGPT Search</span>
+                <span class="font-mono text-emerald-400">48% (1,867 citations)</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full w-[48%] rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Perplexity -->
+            <div>
+              <div class="flex justify-between font-bold mb-1">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Perplexity Pro</span>
+                <span class="font-mono text-cyan-400">32% (1,244 citations)</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-cyan-400 h-full w-[32%] rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Google Gemini -->
+            <div>
+              <div class="flex justify-between font-bold mb-1">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Google Gemini</span>
+                <span class="font-mono text-indigo-400">14% (544 citations)</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full w-[14%] rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Claude & Others -->
+            <div>
+              <div class="flex justify-between font-bold mb-1">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-violet-500"></span> Claude 3.5 & Other RAG Bots</span>
+                <span class="font-mono text-violet-400">6% (235 citations)</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-violet-500 h-full w-[6%] rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 30-Day Growth Canvas (7 cols) -->
+        <div class="lg:col-span-7 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+            <h3 class="font-heading text-base font-bold">Daily Citation Run-Rate</h3>
+            <span class="text-xs font-mono text-cyan-400">Avg 130 citations / day</span>
+          </div>
+          <div class="h-64 w-full">
+            <canvas id="dailyCitationsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP CITATION EARNING ARTICLES -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <h3 class="font-heading text-lg font-bold">Top Articles Driving Generative Citations</h3>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
+          <table class="w-full text-left text-xs">
             <thead>
-              <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400">
-                <th class="pb-3 font-semibold">Article Title</th>
-                <th class="pb-3 font-semibold">Peak Rank</th>
-                <th class="pb-3 font-semibold">Current Rank</th>
-                <th class="pb-3 font-semibold">Estimated Traffic Loss</th>
-                <th class="pb-3 font-semibold text-right">Autopilot Fix</th>
+              <tr class="text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2">
+                <th class="pb-3">Article Title</th>
+                <th class="pb-3">Top Cited Search Query</th>
+                <th class="pb-3">Citations</th>
+                <th class="pb-3">Inbound Clicks</th>
+                <th class="pb-3">Est. Value</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
               <tr>
-                <td class="py-3 font-semibold text-slate-900 dark:text-white">
-                  Best Cloud Computing Certifications 2025 (Needs 2026 Update)
-                </td>
-                <td class="py-3 font-mono text-emerald-500">Pos #2</td>
-                <td class="py-3 font-mono text-amber-500">Pos #8 (-6)</td>
-                <td class="py-3 text-rose-400">-420 clicks/mo</td>
-                <td class="py-3 text-right">
-                  <button onclick="window.showToast('Re-indexing, updating stats to 2026, and re-publishing!', 'success'); this.textContent = '✓ Refreshing...'; this.disabled = true;" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
-                    Refresh Article
-                  </button>
-                </td>
+                <td class="py-3 font-bold text-slate-800 dark:text-slate-200">The 2026 Generative Engine Optimization Benchmark</td>
+                <td class="py-3 text-indigo-400 font-mono">how to get cited in perplexity and chatgpt</td>
+                <td class="py-3 font-bold text-cyan-400">1,420</td>
+                <td class="py-3 font-bold text-slate-200">9,840 visits</td>
+                <td class="py-3 font-mono text-emerald-400">$14,200</td>
               </tr>
               <tr>
-                <td class="py-3 font-semibold text-slate-900 dark:text-white">
-                  Full Stack Developer Roadmap: Front End vs Back End
-                </td>
-                <td class="py-3 font-mono text-emerald-500">Pos #1</td>
-                <td class="py-3 font-mono text-amber-500">Pos #5 (-4)</td>
-                <td class="py-3 text-rose-400">-190 clicks/mo</td>
-                <td class="py-3 text-right">
-                  <button onclick="window.showToast('Re-indexing, updating stats to 2026, and re-publishing!', 'success'); this.textContent = '✓ Refreshing...'; this.disabled = true;" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
-                    Refresh Article
-                  </button>
-                </td>
+                <td class="py-3 font-bold text-slate-800 dark:text-slate-200">How to Eliminate AI Cliches From Your Content Pipe</td>
+                <td class="py-3 text-indigo-400 font-mono">banned words in ai writing list</td>
+                <td class="py-3 font-bold text-cyan-400">890</td>
+                <td class="py-3 font-bold text-slate-200">6,120 visits</td>
+                <td class="py-3 font-mono text-emerald-400">$8,900</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-bold text-slate-800 dark:text-slate-200">Top 10 Remote AI Engineering Jobs (Salary Study)</td>
+                <td class="py-3 text-indigo-400 font-mono">remote ai engineer salaries 2026</td>
+                <td class="py-3 font-bold text-cyan-400">760</td>
+                <td class="py-3 font-bold text-slate-200">5,400 visits</td>
+                <td class="py-3 font-mono text-emerald-400">$11,400</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-
     </main>
+
+    <!-- UNIFIED DASHBOARD FOOTER -->
+    <footer class="h-14 border-t border-slate-200 dark:border-slate-800/80 px-6 sm:px-8 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Search Engine Indexers: Live Synchronization</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Sign Out of Workspace?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Your autopilot schedule will continue running autonomously in the background.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Logged In
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Sign Out
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const ctx = document.getElementById('trafficChart');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10', 'Week 11', 'Week 12'],
-            datasets: [
-              {
-                label: 'Organic Clicks',
-                data: [420, 580, 890, 1100, 1450, 1900, 2300, 2800, 3400, 4100, 4900, 5600],
-                borderColor: '#6366F1',
-                backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                tension: 0.4,
-                fill: true
-              },
-              {
-                label: 'Impressions (÷10)',
-                data: [1200, 1600, 2400, 3100, 4200, 5800, 7200, 9100, 11400, 14200, 18500, 24000],
-                borderColor: '#06B6D4',
-                backgroundColor: 'transparent',
-                borderDash: [5, 5],
-                tension: 0.4
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                labels: {
-                  color: document.documentElement.classList.contains('dark') ? '#94A3B8' : '#475569'
-                }
-              }
-            },
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: { color: '#94A3B8' }
-              },
-              y: {
-                grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                ticks: { color: '#94A3B8' }
-              }
-            }
+    const dCtx = document.getElementById('dailyCitationsChart')?.getContext('2d');
+    if (dCtx) {
+      new Chart(dCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Oct 1', 'Oct 3', 'Oct 5', 'Oct 7', 'Oct 9', 'Oct 11', 'Oct 13', 'Oct 15'],
+          datasets: [{
+            label: 'AI Citations',
+            data: [42, 68, 95, 110, 142, 160, 195, 220],
+            backgroundColor: '#06B6D4',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#94A3B8', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94A3B8', font: { size: 10 } } }
           }
-        });
-      }
+        }
+      });
+    }
+
+    // User profile dropdown toggle
+    document.getElementById('userProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('userProfileDropdown')?.classList.toggle('hidden');
     });
+    document.addEventListener('click', () => {
+      document.getElementById('userProfileDropdown')?.classList.add('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
+    }
   </script>
 </body>
 </html>

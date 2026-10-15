@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Get Started with BlackTechEngine — 3-Step Setup Wizard</title>
+  <title>Start Autopilot — BlackTechEngine 14-Day Free Trial</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,248 +24,304 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen antialiased flex flex-col justify-between p-4 sm:p-6 lg:p-8">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- TOP BAR -->
-  <header class="max-w-4xl w-full mx-auto flex items-center justify-between py-2">
+  <div class="max-w-7xl w-full mx-auto px-6 py-6 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg">
-        <i data-lucide="sparkles" class="w-4 h-4"></i>
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+        <i data-lucide="sparkles" class="w-5 h-5"></i>
       </div>
-      <span class="text-lg font-extrabold tracking-tight">BlackTech<span class="text-indigo-500">Engine</span></span>
+      <span class="font-heading text-2xl font-black text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
     </a>
 
-    <div class="flex items-center gap-3">
-      <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-        <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
-        <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+    <div class="flex items-center gap-4">
+      <!-- Sun/Moon Theme Toggle -->
+      <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
+        <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
+        <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
       </button>
-      <a href="login.html" class="text-xs font-semibold hover:text-indigo-500">Already have an account? Sign in</a>
+
+      <a href="login.html" class="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-500">
+        Already have an account? <span class="text-indigo-500 underline ml-1">Sign In</span>
+      </a>
     </div>
-  </header>
+  </div>
 
-  <!-- ONBOARDING WIZARD CARD -->
-  <main class="max-w-2xl w-full mx-auto my-8">
-    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl relative">
-      
-      <!-- STEP INDICATOR BAR -->
-      <div class="mb-8">
-        <div class="flex items-center justify-between text-xs font-bold text-slate-400 mb-2">
-          <span id="stepLabel1" class="text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">1</span> Account
-          </span>
-          <span id="stepLabel2" class="flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-[10px]">2</span> Website Scan
-          </span>
-          <span id="stepLabel3" class="flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-[10px]">3</span> Autopilot Schedule
-          </span>
-        </div>
-        <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-          <div id="wizardProgressBar" class="bg-indigo-600 h-full w-1/3 transition-all duration-300"></div>
-        </div>
+  <!-- ONBOARDING WIZARD CONTAINER -->
+  <main class="max-w-3xl w-full mx-auto px-4 py-8 flex-1 flex flex-col justify-center">
+    
+    <!-- Step Indicator Bar -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between text-xs font-bold mb-3">
+        <span id="stepLabel1" class="text-indigo-500 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">1</span> Account</span>
+        <span id="stepLabel2" class="text-slate-400 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-[10px]">2</span> Website DNA</span>
+        <span id="stepLabel3" class="text-slate-400 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-[10px]">3</span> Cadence & CMS</span>
       </div>
+      <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div id="wizardProgressBar" class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full w-1/3 transition-all duration-300 rounded-full"></div>
+      </div>
+    </div>
 
-      <!-- STEP 1: CREATE ACCOUNT -->
-      <div id="wizardStep1" class="space-y-5">
+    <!-- CARD CONTAINER -->
+    <div class="bte-card p-6 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl">
+      
+      <!-- STEP 1: ACCOUNT DETAILS -->
+      <div id="wizardStep1" class="space-y-6">
         <div>
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Create Your 14-Day Free Trial</h2>
-          <p class="text-xs text-slate-500 mt-1">Start ranking your website in Google and generative search engines today.</p>
+          <h2 class="font-heading text-2xl sm:text-3xl font-black">Create Your Free Autopilot Account</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Get 14 days of full access. Zero risk, cancel anytime in 1 click.</p>
         </div>
 
-        <div class="space-y-4 text-xs">
-          <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Your Full Name</label>
-            <input id="userName" type="text" value="Alex Livingstone" placeholder="Alex Livingstone" class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+        <!-- Social Buttons -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <button type="button" onclick="bteToast.show('Google account connected!', 'success'); nextWizardStep()" class="py-2.5 px-3 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 hover:border-indigo-500 text-xs font-bold flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            <span>Google</span>
+          </button>
+          <button type="button" onclick="bteToast.show('GitHub account connected!', 'success'); nextWizardStep()" class="py-2.5 px-3 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 hover:border-indigo-500 text-xs font-bold flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 fill-current text-slate-800 dark:text-white" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            <span>GitHub</span>
+          </button>
+          <button type="button" onclick="bteToast.show('Facebook account connected!', 'success'); nextWizardStep()" class="py-2.5 px-3 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 hover:border-indigo-500 text-xs font-bold flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 fill-[#1877F2]" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
+          </button>
+        </div>
+
+        <div class="relative my-4">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200 dark:border-slate-800"></div></div>
+          <div class="relative flex justify-center text-xs"><span class="px-3 bg-white dark:bg-[#131C31] text-slate-400">or sign up with work email</span></div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">First Name</label>
+              <input type="text" value="Alex" class="w-full px-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Last Name</label>
+              <input type="text" value="Morgan" class="w-full px-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none">
+            </div>
           </div>
+
           <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Work Email</label>
-            <input id="userEmail" type="email" value="alex@thehorizonsunlimited.com" placeholder="alex@company.com" class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Work Email</label>
+            <input type="email" value="alex@thehorizonsunlimited.com" class="w-full px-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none">
           </div>
+
           <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Choose Password</label>
-            <input id="userPassword" type="password" value="SuperSecurePass2026!" class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Choose Password</label>
+            <input type="password" value="••••••••••••" class="w-full px-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none">
           </div>
         </div>
 
-        <button onclick="goToStep(2)" class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2">
-          <span>Continue to Website Scan</span>
+        <button type="button" onclick="nextWizardStep()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 hover:scale-[1.01] transition-all flex items-center justify-center gap-2">
+          <span>Continue to Step 2: Website DNA</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- STEP 2: WEBSITE URL & BRAND DNA SCAN -->
-      <div id="wizardStep2" class="space-y-5 hidden">
+      <!-- STEP 2: WEBSITE DNA SCANNER -->
+      <div id="wizardStep2" class="space-y-6 hidden">
         <div>
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Enter Your Target Website</h2>
-          <p class="text-xs text-slate-500 mt-1">BlackTechEngine will crawl your domain and calibrate your unique brand voice.</p>
+          <h2 class="font-heading text-2xl sm:text-3xl font-black">Scan Your Target Website</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Our autonomous agent will crawl your domain and extract your Brand DNA.</p>
         </div>
 
-        <div class="space-y-4 text-xs">
+        <div class="space-y-4">
           <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Website URL</label>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Website Domain / Sitemap URL</label>
             <div class="relative">
               <i data-lucide="globe" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-              <input id="wizardUrl" type="url" value="https://thehorizonsunlimited.com" class="w-full pl-10 pr-3 p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500 font-mono text-xs">
+              <input id="wizardUrlInput" type="text" value="https://thehorizonsunlimited.com" class="w-full pl-10 pr-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none font-mono">
             </div>
           </div>
+
           <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Primary Industry / Niche</label>
-            <select class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
-              <option selected>Tech Career Education & Training</option>
-              <option>B2B SaaS / Software</option>
-              <option>E-Commerce / Consumer Goods</option>
-              <option>Fintech & Financial Advisory</option>
-              <option>Digital Agency / Consulting</option>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Industry / Domain Focus</label>
+            <select class="w-full px-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none">
+              <option selected>Tech, AI & Career Education</option>
+              <option>B2B SaaS & Software</option>
+              <option>E-commerce & Consumer Goods</option>
+              <option>Local Professional Services (Legal, Medical, Finance)</option>
+              <option>Digital Marketing & Agency</option>
             </select>
           </div>
+
           <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Target Editorial Voice</label>
-            <div class="grid grid-cols-3 gap-2">
-              <label class="p-3 rounded-xl border border-indigo-500 bg-indigo-500/10 cursor-pointer flex flex-col items-center text-center">
-                <input type="radio" name="tone" checked class="hidden">
-                <span class="font-bold text-indigo-500">Authoritative</span>
-                <span class="text-[10px] text-slate-400 mt-0.5">Industry leader</span>
-              </label>
-              <label class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 cursor-pointer flex flex-col items-center text-center">
-                <input type="radio" name="tone" class="hidden">
-                <span class="font-bold">Conversational</span>
-                <span class="text-[10px] text-slate-400 mt-0.5">Engaging & friendly</span>
-              </label>
-              <label class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 cursor-pointer flex flex-col items-center text-center">
-                <input type="radio" name="tone" class="hidden">
-                <span class="font-bold">Technical</span>
-                <span class="text-[10px] text-slate-400 mt-0.5">Deep engineering</span>
-              </label>
-            </div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Primary Target Audience Persona</label>
+            <input type="text" value="Career Switchers, Aspiring AI Engineers & Tech Professionals" class="w-full px-4 py-2.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs flex items-start gap-3">
+          <i data-lucide="sparkles" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
+          <div>
+            <strong class="text-indigo-500">Autonomous Crawl Ready:</strong>
+            <span class="text-slate-600 dark:text-slate-300 ml-1">We will analyze sitemaps, high-ranking pages, and brand tone parameters automatically upon finishing setup.</span>
           </div>
         </div>
 
         <div class="flex gap-3">
-          <button onclick="goToStep(1)" class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+          <button type="button" onclick="prevWizardStep()" class="w-1/3 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">
             Back
           </button>
-          <button onclick="goToStep(3)" class="flex-1 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2">
-            <span>Scan & Set Schedule</span>
+          <button type="button" onclick="nextWizardStep()" class="w-2/3 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
+            <span>Continue to Step 3: Cadence</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </div>
       </div>
 
-      <!-- STEP 3: SCHEDULE & CONNECT SOCIALS -->
-      <div id="wizardStep3" class="space-y-5 hidden">
+      <!-- STEP 3: CADENCE & CMS SELECTION -->
+      <div id="wizardStep3" class="space-y-6 hidden">
         <div>
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Configure Autopilot Schedule</h2>
-          <p class="text-xs text-slate-500 mt-1">Pick how often articles should be generated and distributed.</p>
+          <h2 class="font-heading text-2xl sm:text-3xl font-black">Choose Publishing Cadence & CMS</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Configure your autonomous publishing rhythm. You can change this anytime.</p>
         </div>
 
-        <div class="space-y-4 text-xs">
-          <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Publishing Cadence</label>
-            <div class="grid grid-cols-3 gap-2">
-              <div class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 text-center cursor-pointer hover:border-indigo-500">
-                <div class="font-bold">3x / Week</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">12 posts/mo</div>
-              </div>
-              <div class="p-3 rounded-xl border-2 border-indigo-500 bg-indigo-500/10 text-center cursor-pointer">
-                <div class="font-bold text-indigo-500">Daily Autopilot</div>
-                <div class="text-[10px] text-indigo-400 mt-0.5">30 posts/mo (Optimal)</div>
-              </div>
-              <div class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 text-center cursor-pointer hover:border-indigo-500">
-                <div class="font-bold">Aggressive</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">60 posts/mo</div>
-              </div>
-            </div>
+        <div class="space-y-4">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Publishing Speed</label>
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <label class="p-4 rounded-2xl bte-surface border-2 border-indigo-500 cursor-pointer block">
+              <input type="radio" name="cadence" checked class="sr-only">
+              <div class="font-bold text-sm text-indigo-500">3 Posts / Week</div>
+              <div class="text-[11px] text-slate-400 mt-1">Recommended</div>
+            </label>
+            <label class="p-4 rounded-2xl bte-surface border border-slate-300 dark:border-slate-700 cursor-pointer block hover:border-indigo-500">
+              <input type="radio" name="cadence" class="sr-only">
+              <div class="font-bold text-sm">1 Post / Week</div>
+              <div class="text-[11px] text-slate-400 mt-1">Conservative</div>
+            </label>
+            <label class="p-4 rounded-2xl bte-surface border border-slate-300 dark:border-slate-700 cursor-pointer block hover:border-indigo-500">
+              <input type="radio" name="cadence" class="sr-only">
+              <div class="font-bold text-sm">Daily (7 / Week)</div>
+              <div class="text-[11px] text-slate-400 mt-1">Aggressive Scale</div>
+            </label>
           </div>
 
-          <div>
-            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-2">Automated Syndication Channels</label>
-            <div class="space-y-2">
-              <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 cursor-pointer">
-                <span class="flex items-center gap-2.5 font-semibold">
-                  <i data-lucide="file-text" class="w-4 h-4 text-indigo-500"></i> WordPress / CMS Direct Push
-                </span>
-                <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
-              </label>
-              <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 cursor-pointer">
-                <span class="flex items-center gap-2.5 font-semibold">
-                  <i data-lucide="share-2" class="w-4 h-4 text-blue-500"></i> LinkedIn Carousel Generator
-                </span>
-                <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
-              </label>
-              <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 cursor-pointer">
-                <span class="flex items-center gap-2.5 font-semibold">
-                  <i data-lucide="twitter" class="w-4 h-4 text-cyan-400"></i> X (Twitter) Thread Drip
-                </span>
-                <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
-              </label>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 pt-2">Connect Your CMS (Select Primary)</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="p-3.5 rounded-2xl bte-surface border-2 border-indigo-500 flex flex-col items-center justify-center gap-1.5 cursor-pointer">
+              <i data-lucide="file-code" class="w-5 h-5 text-indigo-500"></i>
+              <span class="text-xs font-bold">WordPress</span>
+              <span class="text-[9px] text-emerald-400">REST API</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bte-surface border border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-indigo-500">
+              <i data-lucide="shopping-bag" class="w-5 h-5 text-slate-400"></i>
+              <span class="text-xs font-bold">Shopify</span>
+              <span class="text-[9px] text-slate-500">Blog API</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bte-surface border border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-indigo-500">
+              <i data-lucide="layout" class="w-5 h-5 text-slate-400"></i>
+              <span class="text-xs font-bold">Webflow</span>
+              <span class="text-[9px] text-slate-500">CMS Collections</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bte-surface border border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-indigo-500">
+              <i data-lucide="webhook" class="w-5 h-5 text-slate-400"></i>
+              <span class="text-xs font-bold">Ghost / API</span>
+              <span class="text-[9px] text-slate-500">Webhooks</span>
             </div>
           </div>
         </div>
 
         <div class="flex gap-3 pt-2">
-          <button onclick="goToStep(2)" class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+          <button type="button" onclick="prevWizardStep()" class="w-1/3 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">
             Back
           </button>
-          <a href="user/calendar.html" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2 text-center">
-            <span>Launch My Autopilot Dashboard</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
+          <button type="button" onclick="finishWizard()" class="w-2/3 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 via-indigo-600 to-violet-600 text-white font-black text-sm shadow-xl shadow-indigo-500/30 flex items-center justify-center gap-2 hover:scale-[1.01] transition-all">
+            <i data-lucide="rocket" class="w-4 h-4"></i>
+            <span>Launch Autopilot Engine &rarr;</span>
+          </button>
         </div>
       </div>
-
     </div>
   </main>
 
-  <footer class="text-center text-xs text-slate-400 py-3">
-    &copy; 2026 BlackTechEngine, Inc. 14-day free trial • Cancel anytime
-  </footer>
+  <!-- SIMPLE FOOTER -->
+  <div class="py-6 text-center text-xs text-slate-500 border-t border-slate-200 dark:border-slate-800/80">
+    &copy; 2026 BlackTechEngine, Inc. All rights reserved. &bull; <a href="index.html" class="hover:underline">Back to Home</a>
+  </div>
 
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
-    function goToStep(step) {
-      document.getElementById('wizardStep1').classList.add('hidden');
-      document.getElementById('wizardStep2').classList.add('hidden');
-      document.getElementById('wizardStep3').classList.add('hidden');
+    let currentStep = 1;
+    function updateWizardUI() {
+      document.getElementById('wizardStep1').classList.toggle('hidden', currentStep !== 1);
+      document.getElementById('wizardStep2').classList.toggle('hidden', currentStep !== 2);
+      document.getElementById('wizardStep3').classList.toggle('hidden', currentStep !== 3);
 
-      const progressBar = document.getElementById('wizardProgressBar');
-      const label1 = document.getElementById('stepLabel1');
-      const label2 = document.getElementById('stepLabel2');
-      const label3 = document.getElementById('stepLabel3');
+      const pb = document.getElementById('wizardProgressBar');
+      if (currentStep === 1) pb.style.width = '33%';
+      if (currentStep === 2) pb.style.width = '66%';
+      if (currentStep === 3) pb.style.width = '100%';
 
-      if (step === 1) {
-        document.getElementById('wizardStep1').classList.remove('hidden');
-        progressBar.style.width = '33.3%';
-        label1.className = 'text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 font-bold';
-        label2.className = 'text-slate-400 flex items-center gap-1.5';
-        label3.className = 'text-slate-400 flex items-center gap-1.5';
-      } else if (step === 2) {
-        document.getElementById('wizardStep2').classList.remove('hidden');
-        progressBar.style.width = '66.6%';
-        label1.className = 'text-emerald-500 flex items-center gap-1.5';
-        label2.className = 'text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 font-bold';
-        label3.className = 'text-slate-400 flex items-center gap-1.5';
-      } else if (step === 3) {
-        document.getElementById('wizardStep3').classList.remove('hidden');
-        progressBar.style.width = '100%';
-        label1.className = 'text-emerald-500 flex items-center gap-1.5';
-        label2.className = 'text-emerald-500 flex items-center gap-1.5';
-        label3.className = 'text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 font-bold';
+      const l1 = document.getElementById('stepLabel1');
+      const l2 = document.getElementById('stepLabel2');
+      const l3 = document.getElementById('stepLabel3');
+
+      l1.className = currentStep >= 1 ? 'text-indigo-500 flex items-center gap-1.5 font-bold' : 'text-slate-400 flex items-center gap-1.5';
+      l2.className = currentStep >= 2 ? 'text-indigo-500 flex items-center gap-1.5 font-bold' : 'text-slate-400 flex items-center gap-1.5';
+      l3.className = currentStep >= 3 ? 'text-indigo-500 flex items-center gap-1.5 font-bold' : 'text-slate-400 flex items-center gap-1.5';
+    }
+
+    function nextWizardStep() {
+      if (currentStep < 3) {
+        currentStep++;
+        updateWizardUI();
       }
-      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function prevWizardStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateWizardUI();
+      }
+    }
+
+    function finishWizard() {
+      bteToast.show('🚀 Welcome! Setting up your Horizons Unlimited workspace...', 'success');
+      setTimeout(() => {
+        window.location.href = 'user/index.html';
+      }, 900);
     }
   </script>
 </body>

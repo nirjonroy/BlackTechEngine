@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Overview — BlackTechEngine</title>
+  <title>Dashboard Overview — BlackTechEngine Autopilot</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,78 +24,84 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT SIDEBAR (SORO AI STYLE) -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- UNIFIED DASHBOARD SIDEBAR -->
+  <aside id="dashboardSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
       
       <!-- Brand Logo -->
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
-            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Website Switcher Dropdown -->
-      <div class="mt-4 relative">
-        <button data-dropdown-toggle="siteSwitcherMenu" class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-xs hover:border-indigo-500 transition-colors text-left">
-          <div class="truncate pr-2">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
-            <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
-          </div>
-          <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
-        </button>
-
-        <div id="siteSwitcherMenu" class="dropdown-menu hidden absolute top-full left-0 right-0 mt-1 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl z-50 text-xs space-y-1">
-          <div class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-between">
-            <span>Horizons Unlimited</span>
-            <i data-lucide="check" class="w-3.5 h-3.5"></i>
-          </div>
-          <a href="#" class="block p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-            CloudScale Labs (Dev)
-          </a>
-          <button data-modal-target="addWebsiteModal" class="w-full text-left p-2 rounded-lg text-indigo-500 font-semibold hover:bg-indigo-50 dark:hover:bg-indigo-950/30 flex items-center gap-1.5 border-t border-slate-200 dark:border-slate-800 mt-1">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            <span>+ Add New Website</span>
-          </button>
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
         </div>
+        <div>
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-slate-400 font-bold">User Workspace</span>
+        </div>
+      </a>
+
+      <!-- Workspace Switcher Selector -->
+      <div class="mt-4 p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">HU</div>
+          <div class="truncate">
+            <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Horizons Unlimited</div>
+            <div class="text-[10px] text-emerald-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Autopilot Active</div>
+          </div>
+        </div>
+        <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
       </div>
 
-      <!-- MAIN NAVIGATION MENU -->
-      <div class="mt-6 space-y-6 flex-1">
-        
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <!-- Group 1: Core -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Core Autopilot</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20">
               <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Dashboard</span>
+              <span>Dashboard Overview</span>
             </a>
-            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
-              <div class="flex items-center gap-3">
-                <i data-lucide="calendar" class="w-4 h-4"></i>
-                <span>Content Calendar</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>Content Calendar</span>
             </a>
             <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="dna" class="w-4 h-4"></i>
@@ -101,53 +109,56 @@
             </a>
             <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>Articles Manager</span>
+              <span>Articles & SEO Editor</span>
             </a>
+          </div>
+        </div>
+
+        <!-- Group 2: Distribution -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Omnichannel & Local</div>
+          <div class="space-y-1">
             <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="share-2" class="w-4 h-4"></i>
-              <span>Social Media Studio</span>
+              <span>Social Media Drip</span>
             </a>
-            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
-              <div class="flex items-center gap-3">
-                <i data-lucide="map-pin" class="w-4 h-4"></i>
-                <span>Google Business</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            <a href="google-business.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <span>Google Business Profile</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 3: Intelligence -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
-          <nav class="space-y-1 text-xs font-semibold">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Intelligence & SEO</div>
+          <div class="space-y-1">
             <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-              <span>Analytics & GEO</span>
+              <span>GEO & Traffic Analytics</span>
             </a>
             <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
-              <i data-lucide="target" class="w-4 h-4"></i>
-              <span>Keywords & Clusters</span>
+              <i data-lucide="search" class="w-4 h-4"></i>
+              <span>Keyword Gap Hunter</span>
             </a>
-            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
-              <div class="flex items-center gap-3">
-                <i data-lucide="gauge" class="w-4 h-4"></i>
-                <span>Site Speed & CWV</span>
-              </div>
-              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            <a href="site-speed.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Site Speed & Health</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 4: Settings -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
-          <nav class="space-y-1 text-xs font-semibold">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Settings & Account</div>
+          <div class="space-y-1">
             <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
-              <i data-lucide="plug" class="w-4 h-4"></i>
-              <span>Integrations Hub</span>
+              <i data-lucide="blocks" class="w-4 h-4"></i>
+              <span>CMS Integrations</span>
             </a>
             <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Billing & Credits</span>
+              <span>Billing & Quota</span>
             </a>
             <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="gift" class="w-4 h-4"></i>
@@ -157,335 +168,452 @@
               <i data-lucide="settings" class="w-4 h-4"></i>
               <span>Settings</span>
             </a>
-          </nav>
+          </div>
         </div>
+      </nav>
 
-      </div>
-
-      <!-- BOTTOM PROFILE & HELP -->
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-        <!-- Support Button -->
-        <button data-modal-target="supportModal" class="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/60 text-xs font-semibold hover:text-indigo-500 transition-colors">
-          <i data-lucide="headphones" class="w-3.5 h-3.5"></i>
-          <span>Get Help 24/7</span>
-        </button>
-
-        <!-- User Profile Card -->
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="flex items-center gap-2.5 truncate">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-400 text-white font-bold text-xs flex items-center justify-center shrink-0">
-              AL
-            </div>
-            <div class="truncate text-xs">
-              <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
-              <div class="text-[10px] text-slate-400 truncate">alex@thehorizons...</div>
+      <!-- USER PROFILE DROPDOWN MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="userProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-indigo-500 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">AM</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Alex Morgan</div>
+              <div class="text-[10px] text-slate-400 truncate">alex@thehorizonsunlimited.com</div>
             </div>
           </div>
-          <a href="../login.html" title="Sign Out" class="p-1.5 text-slate-400 hover:text-rose-500 transition-colors">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <!-- Dropdown Popup -->
+        <div id="userProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+            <span>View Profile</span>
           </a>
+          <a href="settings.html?tab=team" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>Team Members</span>
+          </a>
+          <a href="billing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
+            <span>Upgrade to Agency</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Log Out</span>
+          </button>
         </div>
       </div>
-
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT CONTAINER -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP UTILITY BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
-      
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
       <div class="flex items-center gap-4">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Workspace Overview</h1>
-        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>Autopilot Active</span>
-        </span>
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Horizons Unlimited</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-indigo-500 font-bold">Dashboard Overview</span>
+        </div>
       </div>
 
-      <!-- Right Utility Controls -->
+      <!-- Right Utility Actions -->
       <div class="flex items-center gap-3">
-        
-        <!-- Credits Badge -->
-        <a href="billing.html" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
-          <span class="font-medium text-slate-700 dark:text-slate-300">Credits: <strong class="text-indigo-600 dark:text-indigo-400">22 / 30</strong></span>
-        </a>
+        <!-- Status Indicator Pill -->
+        <div class="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Autopilot ON: 3 Posts / Wk</span>
+        </div>
 
-        <!-- Dark/Light Theme Switcher -->
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-colors" title="Toggle Theme">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
         </button>
 
-        <!-- New Article Action -->
-        <a href="calendar.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-500/25 transition-all">
+        <!-- Notification Bell with Flyout -->
+        <div class="relative">
+          <button id="notifBellBtn" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 relative">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500"></span>
+          </button>
+          
+          <div id="notifFlyout" class="hidden absolute right-0 mt-2 w-80 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-4 z-50 text-xs">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800 mb-2">
+              <span class="font-bold text-slate-800 dark:text-slate-200">Recent Notifications</span>
+              <span class="text-[10px] text-indigo-500 cursor-pointer">Mark all read</span>
+            </div>
+            <div class="space-y-2">
+              <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                <div class="font-semibold text-slate-800 dark:text-slate-200">Article Auto-Published</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">"Top 10 Remote AI Engineering Jobs" pushed to WordPress.</div>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                <div class="font-semibold text-slate-800 dark:text-slate-200">New Perplexity Citation</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Your domain was cited as Source #1 for "AI Prompt Engineering Roadmap".</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- + Quick Action Dropdown -->
+        <a href="calendar.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold shadow-md shadow-indigo-500/20 hover:scale-105 transition-all">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">New Article</span>
+          <span>Add Article</span>
         </a>
       </div>
     </header>
 
-    <!-- DASHBOARD CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+    <!-- CONTENT BODY -->
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- WELCOME BANNER -->
-      <div class="rounded-3xl bg-gradient-to-r from-indigo-900/60 via-violet-900/40 to-[#0F172A] p-6 sm:p-8 border border-indigo-500/30 glass-card relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-        <div class="space-y-2">
-          <span class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">Target Domain: thehorizonsunlimited.com</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Your Autopilot Pipeline is Healthy & Humming 🚀</h2>
-          <p class="text-xs sm:text-sm text-slate-300 max-w-xl">
-            7 high-value articles are queued for publishing over the next 14 days. Your generative engine citation rate increased by <strong class="text-emerald-400">+28.4%</strong> this month.
+      <!-- HERO WELCOME BANNER -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-violet-950/60 border border-indigo-500/25 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 mb-2">
+            <i data-lucide="activity" class="w-3.5 h-3.5"></i> Autopilot Engine Running Smoothly
+          </div>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Welcome back, Alex!
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
+            Horizons Unlimited has published <strong class="text-indigo-400">14 articles</strong> this month. Next scheduled post drops tomorrow at 9:00 AM EST.
           </p>
         </div>
-        <div class="flex gap-3 shrink-0">
-          <a href="calendar.html" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-lg hover:bg-indigo-500 transition-all">
-            View Live Calendar
+        <div class="flex items-center gap-3">
+          <a href="articles.html" class="px-5 py-2.5 rounded-xl bg-white text-slate-900 font-bold text-xs shadow-md hover:bg-slate-100 transition-all">
+            Review Drafts
           </a>
-          <a href="brand-dna.html" class="px-5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-200 font-semibold text-xs hover:bg-slate-700 transition-all">
-            Brand DNA
+          <a href="calendar.html" class="px-5 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-white font-bold text-xs hover:bg-slate-700 transition-all">
+            View Calendar Matrix
           </a>
         </div>
       </div>
 
-      <!-- 4 SUMMARY STAT CARDS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- 4 KPI CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        <!-- Card 1 -->
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Articles Published</span>
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-              <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <!-- KPI 1 -->
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Monthly Quota</span>
+            <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
             </div>
           </div>
-          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">48</div>
-          <div class="flex items-center gap-1.5 text-[11px] text-emerald-500 font-semibold mt-1">
-            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +8 published this month
+          <div class="text-3xl font-black font-heading text-slate-900 dark:text-white">14 / 30</div>
+          <div class="text-xs text-slate-400 mt-1">Articles published this cycle</div>
+          <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-3">
+            <div class="bg-indigo-500 h-full w-[46%] rounded-full"></div>
           </div>
         </div>
 
-        <!-- Card 2 -->
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Scheduled in Queue</span>
-            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
-              <i data-lucide="calendar" class="w-4 h-4"></i>
-            </div>
-          </div>
-          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">7</div>
-          <div class="flex items-center gap-1.5 text-[11px] text-indigo-400 font-semibold mt-1">
-            <i data-lucide="clock" class="w-3.5 h-3.5"></i> Next post today at 3:00 PM
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Organic Traffic Growth</span>
-            <div class="w-8 h-8 rounded-lg bg-violet-500/10 text-violet-500 flex items-center justify-center">
-              <i data-lucide="trending-up" class="w-4 h-4"></i>
-            </div>
-          </div>
-          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">+342%</div>
-          <div class="flex items-center gap-1.5 text-[11px] text-emerald-500 font-semibold mt-1">
-            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> 84,200 unique impressions
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">AI Search Citations</span>
-            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center">
+        <!-- KPI 2 -->
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">GEO Citation Readiness</span>
+            <div class="w-8 h-8 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center">
               <i data-lucide="cpu" class="w-4 h-4"></i>
             </div>
           </div>
-          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">1,490</div>
-          <div class="flex items-center gap-1.5 text-[11px] text-cyan-400 font-semibold mt-1">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> ChatGPT & Perplexity
+          <div class="text-3xl font-black font-heading text-violet-600 dark:text-violet-400">94.8%</div>
+          <div class="text-xs text-emerald-500 mt-1 flex items-center gap-1">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +6.2% vs last month
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-3">
+            <div class="bg-violet-500 h-full w-[94%] rounded-full"></div>
           </div>
         </div>
 
+        <!-- KPI 3 -->
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Omnichannel Posts</span>
+            <div class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-black font-heading text-cyan-600 dark:text-cyan-400">42 Dripped</div>
+          <div class="text-xs text-slate-400 mt-1">LinkedIn, X, Facebook & GBP</div>
+          <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-3">
+            <div class="bg-cyan-400 h-full w-[70%] rounded-full"></div>
+          </div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Organic Inbound Visits</span>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+              <i data-lucide="users" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-black font-heading text-emerald-600 dark:text-emerald-400">34,250</div>
+          <div class="text-xs text-emerald-500 mt-1 flex items-center gap-1">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +184% MoM growth
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-3">
+            <div class="bg-emerald-500 h-full w-[88%] rounded-full"></div>
+          </div>
+        </div>
       </div>
 
-      <!-- TWO COLUMN SECTION: ONBOARDING CHECKLIST & UPCOMING SCHEDULED POSTS -->
+      <!-- PERFORMANCE CHART -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 mb-6 gap-4">
+          <div>
+            <h3 class="font-heading text-lg font-bold">Organic Search Traffic & LLM Citations Growth</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Tracking visits and answer citations across Google, ChatGPT Search, and Perplexity.</p>
+          </div>
+          <div class="flex items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500"></span> Organic Traffic</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-cyan-400"></span> AI Citations</span>
+          </div>
+        </div>
+        <div class="h-72 w-full">
+          <canvas id="trafficGrowthChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 2-COLUMN SPLIT: QUEUE & BRAND DNA STREAM -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <!-- Left: Onboarding Checklist (4 of 5 complete) -->
-        <div class="lg:col-span-5 glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <!-- UPCOMING PUBLISHING QUEUE TABLE -->
+        <div class="lg:col-span-8 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6">
             <div>
-              <h3 class="font-bold text-sm text-slate-900 dark:text-white">Workspace Health Checklist</h3>
-              <p class="text-[11px] text-slate-400">4 of 5 optimization steps completed</p>
+              <h3 class="font-heading text-lg font-bold">Upcoming Autopilot Queue</h3>
+              <p class="text-xs text-slate-400">Next 4 articles prepared for autonomous dispatch</p>
             </div>
-            <span class="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-mono text-xs font-bold">80%</span>
+            <a href="calendar.html" class="text-xs font-bold text-indigo-500 hover:underline">View All 16 &rarr;</a>
           </div>
 
-          <div class="space-y-3 text-xs">
-            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Website Architecture Scanned
-              </span>
-              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
-            </div>
-
-            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Brand DNA Voice Calibrated
-              </span>
-              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
-            </div>
-
-            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> WordPress CMS REST API Connected
-              </span>
-              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
-            </div>
-
-            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> LinkedIn & X Socials Linked
-              </span>
-              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
-            </div>
-
-            <div class="flex items-center justify-between p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/50">
-              <span class="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 font-medium">
-                <i data-lucide="circle" class="w-4 h-4 text-indigo-400"></i> Connect Google Search Console API
-              </span>
-              <a href="integrations.html" class="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Connect &rarr;</a>
-            </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2">
+                  <th class="pb-3">Date</th>
+                  <th class="pb-3">Article Title</th>
+                  <th class="pb-3">Target Keyword</th>
+                  <th class="pb-3">Channels</th>
+                  <th class="pb-3">Status</th>
+                  <th class="pb-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                <tr>
+                  <td class="py-3.5 font-mono text-slate-400">Oct 16</td>
+                  <td class="py-3.5 font-bold text-slate-800 dark:text-slate-200">Top 10 Remote AI Engineering Jobs</td>
+                  <td class="py-3.5 text-indigo-500 font-mono">remote AI jobs</td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800">WP + LI</span></td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Scheduled</span></td>
+                  <td class="py-3.5 text-right"><a href="articles.html" class="font-bold text-indigo-500 hover:underline">Edit</a></td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 font-mono text-slate-400">Oct 19</td>
+                  <td class="py-3.5 font-bold text-slate-800 dark:text-slate-200">GEO vs Traditional SEO Masterclass</td>
+                  <td class="py-3.5 text-indigo-500 font-mono">GEO optimization</td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800">WP + Carousel</span></td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Scheduled</span></td>
+                  <td class="py-3.5 text-right"><a href="articles.html" class="font-bold text-indigo-500 hover:underline">Edit</a></td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 font-mono text-slate-400">Oct 23</td>
+                  <td class="py-3.5 font-bold text-slate-800 dark:text-slate-200">System Design Interview Blueprint 2026</td>
+                  <td class="py-3.5 text-indigo-500 font-mono">system design guide</td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800">WP + GBP</span></td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Scheduled</span></td>
+                  <td class="py-3.5 text-right"><a href="articles.html" class="font-bold text-indigo-500 hover:underline">Edit</a></td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 font-mono text-slate-400">Oct 26</td>
+                  <td class="py-3.5 font-bold text-slate-800 dark:text-slate-200">LangChain vs LlamaIndex Comparison</td>
+                  <td class="py-3.5 text-indigo-500 font-mono">langchain vs llamaindex</td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800">WP + X</span></td>
+                  <td class="py-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400">Draft</span></td>
+                  <td class="py-3.5 text-right"><a href="articles.html" class="font-bold text-indigo-500 hover:underline">Edit</a></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- Right: Upcoming Scheduled Posts Queue -->
-        <div class="lg:col-span-7 glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-            <div>
-              <h3 class="font-bold text-sm text-slate-900 dark:text-white">Upcoming Autopilot Queue</h3>
-              <p class="text-[11px] text-slate-400">Next articles queued for autonomous publishing</p>
+        <!-- RIGHT: BRAND DNA QUICK STATUS & ACTIVITY LOG -->
+        <div class="lg:col-span-4 space-y-6">
+          
+          <!-- Brand DNA Vector Card -->
+          <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Active Brand DNA</span>
+              <a href="brand-dna.html" class="text-[11px] text-indigo-500 hover:underline font-bold">Edit Studio</a>
             </div>
-            <a href="calendar.html" class="text-xs text-indigo-500 font-semibold hover:underline">Open Calendar &rarr;</a>
+            <div class="space-y-3 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-400">Domain Vector:</span>
+                <strong class="text-slate-200">Tech & Career Education</strong>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Tone Spectrum:</span>
+                <strong class="text-indigo-400">85% Authoritative</strong>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Banned AI Cliches:</span>
+                <strong class="text-emerald-400">32 Terms Blocked</strong>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Internal Link Anchors:</span>
+                <strong class="text-violet-400">18 Money Pages</strong>
+              </div>
+            </div>
+            <button onclick="bteToast.show('Initiating deep site re-crawl for thehorizonsunlimited.com...', 'info')" class="mt-4 w-full py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1.5 transition-all">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Re-Crawl Sitemap & Tone</span>
+            </button>
           </div>
 
-          <div class="space-y-3 text-xs">
-            
-            <!-- Item 1 (Today) -->
-            <div class="p-3.5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/40 border-2 border-indigo-500/80 flex items-center justify-between gap-4">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-600 text-white">Today 3:00 PM</span>
-                  <span class="text-slate-400 text-[10px]">Keyword: career transition into tech</span>
-                </div>
-                <div class="font-bold text-slate-900 dark:text-white text-sm">
-                  From Junior Dev to AI Engineer: The 2026 Skills & Salary Roadmap
+          <!-- Activity Stream -->
+          <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Autonomous Stream</div>
+            <div class="space-y-3 text-xs">
+              <div class="flex items-start gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 shrink-0"></span>
+                <div>
+                  <div class="font-bold text-slate-800 dark:text-slate-200">WordPress Article Published</div>
+                  <div class="text-[10px] text-slate-400">Oct 12 &bull; "Eliminate AI Cliches"</div>
                 </div>
               </div>
-              <div class="text-right shrink-0">
-                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">Score: 98</span>
+              <div class="flex items-start gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-blue-400 mt-1.5 shrink-0"></span>
+                <div>
+                  <div class="font-bold text-slate-800 dark:text-slate-200">LinkedIn Carousel Dripped</div>
+                  <div class="text-[10px] text-slate-400">Oct 12 &bull; 6 slides reached 1.2k impressions</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-violet-400 mt-1.5 shrink-0"></span>
+                <div>
+                  <div class="font-bold text-slate-800 dark:text-slate-200">Perplexity Citation Verified</div>
+                  <div class="text-[10px] text-slate-400">Oct 10 &bull; Horizons cited for Cloud Architecture</div>
+                </div>
               </div>
             </div>
-
-            <!-- Item 2 -->
-            <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-4">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/20 text-sky-400">Oct 17, 10:00 AM</span>
-                  <span class="text-slate-400 text-[10px]">Keyword: full stack cloud certification</span>
-                </div>
-                <div class="font-bold text-slate-800 dark:text-slate-200">
-                  Best Cloud Certifications in 2026: AWS vs Azure vs GCP Breakdown
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">Score: 95</span>
-              </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-4">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/20 text-sky-400">Oct 19, 2:30 PM</span>
-                  <span class="text-slate-400 text-[10px]">Keyword: remote tech jobs no experience</span>
-                </div>
-                <div class="font-bold text-slate-800 dark:text-slate-200">
-                  How Non-Technical Professionals Break Into 6-Figure Tech Roles
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">Score: 96</span>
-              </div>
-            </div>
-
           </div>
         </div>
-
       </div>
-
     </main>
+
+    <!-- UNIFIED DASHBOARD FOOTER -->
+    <footer class="h-14 border-t border-slate-200 dark:border-slate-800/80 px-6 sm:px-8 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>All AI Synthesis Workers Operational (Latency: 280ms)</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine. Horizons Unlimited Workspace.</div>
+    </footer>
   </div>
 
-  <!-- ADD WEBSITE MODAL -->
-  <div id="addWebsiteModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
-    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
-    <div class="relative w-full max-w-md rounded-2xl glass-card bg-white dark:bg-slate-900 p-6 z-10 space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-        <h3 class="font-bold text-sm">Add New Website to Workspace</h3>
-        <button data-modal-close class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+  <!-- LOGOUT CONFIRMATION MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
       </div>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Website Name</label>
-          <input type="text" placeholder="e.g. Acme Tech" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Domain URL</label>
-          <input type="url" placeholder="https://acmetech.io" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-        </div>
-      </div>
-      <div class="pt-2 flex gap-2">
-        <button onclick="window.showToast('Scanning new domain and initializing Brand DNA!', 'success'); window.closeModal('addWebsiteModal');" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">Start AI Scan</button>
-        <button data-modal-close class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SUPPORT 24/7 MODAL -->
-  <div id="supportModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
-    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
-    <div class="relative w-full max-w-md rounded-2xl glass-card bg-white dark:bg-slate-900 p-6 z-10 space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-        <h3 class="font-bold text-sm flex items-center gap-2"><i data-lucide="headphones" class="w-4 h-4 text-indigo-500"></i> Get Priority Support 24/7</h3>
-        <button data-modal-close class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
-      </div>
-      <p class="text-xs text-slate-400">Our engineering and SEO strategist team is live to assist with CMS webhooks, GEO rankings, or API issues.</p>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Issue Topic</label>
-          <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-            <option>WordPress / Shopify Webhook Publishing</option>
-            <option>Brand DNA Voice Tuning</option>
-            <option>Credits & Billing</option>
-            <option>Other Technical Question</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Message</label>
-          <textarea rows="3" placeholder="Describe what you need help with..." class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"></textarea>
-        </div>
-      </div>
-      <div class="pt-2 flex gap-2">
-        <button onclick="window.showToast('Support ticket #BTE-9241 created! Strategist will reply shortly.', 'info'); window.closeModal('supportModal');" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">Send Ticket</button>
-        <button data-modal-close class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs">Close</button>
+      <h3 class="font-heading text-lg font-bold">Sign Out of Workspace?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Your autopilot schedule will continue running autonomously in the background.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Logged In
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Sign Out
+        </a>
       </div>
     </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script>
+    // Chart.js Performance Chart Initialization
+    const ctx = document.getElementById('trafficGrowthChart')?.getContext('2d');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          datasets: [
+            {
+              label: 'Organic Inbound Traffic',
+              data: [4200, 7800, 12400, 19200, 26800, 34250],
+              borderColor: '#6366F1',
+              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'LLM Citations Count',
+              data: [120, 340, 890, 1620, 2450, 3890],
+              borderColor: '#22D3EE',
+              backgroundColor: 'rgba(34, 211, 238, 0.05)',
+              borderWidth: 2,
+              tension: 0.4,
+              borderDash: [5, 5]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(148, 163, 184, 0.1)' },
+              ticks: { color: '#94A3B8', font: { family: 'Plus Jakarta Sans', size: 11 } }
+            },
+            y: {
+              grid: { color: 'rgba(148, 163, 184, 0.1)' },
+              ticks: { color: '#94A3B8', font: { family: 'Plus Jakarta Sans', size: 11 } }
+            }
+          }
+        }
+      });
+    }
+
+    // User profile dropdown toggle
+    document.getElementById('userProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('userProfileDropdown')?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('userProfileDropdown')?.classList.add('hidden');
+      document.getElementById('notifFlyout')?.classList.add('hidden');
+    });
+    document.getElementById('notifBellBtn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('notifFlyout')?.classList.toggle('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
+    }
+  </script>
 </body>
 </html>

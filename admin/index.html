@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Super Admin Command Center — BlackTechEngine</title>
+  <title>Mission Control — BlackTechEngine Super Admin</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,296 +24,436 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT ADMIN SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- SUPER ADMIN COMMAND SIDEBAR -->
+  <aside id="adminSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
       
-      <!-- Brand Logo & Super Admin Badge -->
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-rose-500/25">
-            <i data-lucide="shield-alert" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-rose-500">Admin</span></div>
-            <div class="text-[9px] uppercase font-bold text-rose-400">Master Command</div>
-          </div>
-        </a>
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/25">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-cyan-400">Admin</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Super Admin Mode
+          </span>
+        </div>
+      </a>
+
+      <!-- Quick Platform Health Indicator -->
+      <div class="mt-4 p-3 rounded-2xl bg-indigo-50 dark:bg-[#131C31] border border-indigo-200 dark:border-indigo-900/50 text-xs">
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold">Worker Nodes</span>
+          <span class="text-emerald-500 font-mono font-bold">8 / 8 Online</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-emerald-500 h-full w-full rounded-full"></div>
+        </div>
       </div>
 
-      <!-- Main Admin Navigation Menu -->
-      <div class="mt-6 space-y-6 flex-1">
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Platform Control</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-500/20">
-              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Executive Command</span>
-            </a>
-            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="users" class="w-4 h-4"></i>
-              <span>User & Workspaces</span>
-            </a>
-            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>AI Models & Prompts</span>
-            </a>
-            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Subscription Plans</span>
-            </a>
-            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Platform Control</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20">
               <i data-lucide="activity" class="w-4 h-4"></i>
-              <span>Autopilot Queue Logs</span>
+              <span>Mission Control</span>
             </a>
-            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="gift" class="w-4 h-4"></i>
-              <span>Affiliates & Payouts</span>
+            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>Workspaces & Users</span>
             </a>
-          </nav>
+            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>AI Router & Prompts</span>
+            </a>
+            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>Plans & Pricing Tiers</span>
+            </a>
+          </div>
         </div>
 
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Shortcuts</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="../user/calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30">
-              <i data-lucide="external-link" class="w-4 h-4"></i>
-              <span>Switch to User View</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Operations & Infrastructure</div>
+          <div class="space-y-1">
+            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="server" class="w-4 h-4"></i>
+              <span>Job Queues & Latency</span>
             </a>
-            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-white">
-              <i data-lucide="globe" class="w-4 h-4"></i>
-              <span>Public Website</span>
+            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+              <span>Affiliate Approvals</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <!-- Admin Profile Bottom -->
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Master Administrator</div>
-            <div class="text-[10px] text-rose-400 truncate">admin@blacktechengine.com</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Quick Navigation</div>
+          <div class="space-y-1">
+            <a href="../user/index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Switch to User Panel</span>
+            </a>
+            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>View Public Website</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SUPER ADMIN PROFILE MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="adminProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-cyan-400 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500 text-slate-900 font-black text-xs flex items-center justify-center shrink-0">SA</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Root Architect</div>
+              <div class="text-[10px] text-cyan-400 truncate">admin@blacktechengine.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="adminProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="../user/index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+            <span>User Sandbox View</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Exit Admin Mode</span>
+          </button>
         </div>
       </div>
-
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
       <div class="flex items-center gap-4">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Executive Command Center</h1>
-        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>Cluster SLA: 99.98%</span>
-        </span>
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Global Infrastructure</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-cyan-400 font-bold">Mission Control</span>
+        </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Theme Toggle -->
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Global Token Burn Badge -->
+        <div class="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-cyan-400 text-xs font-mono font-bold">
+          <i data-lucide="flame" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>Token Burn: 4.2M / hr</span>
+        </div>
+
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-cyan-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <button onclick="bteToast.show('Global cache cleared across all 8 synthesis nodes!', 'success')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-bold hover:border-cyan-400 transition-all">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Purge Cache</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- TOP 5 KPI CARDS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-xs text-slate-400 font-bold uppercase">Monthly Rec. Revenue</div>
-          <div class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">$84,290</div>
-          <div class="text-[11px] text-emerald-500 mt-1 font-semibold flex items-center gap-1">
-            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +18.4% MRR growth
-          </div>
+      <!-- HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">Super Admin Mission Control</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Real-time telemetry, multi-tenant workspace health, and global LLM synthesis spend.</p>
         </div>
 
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-xs text-slate-400 font-bold uppercase">Active Subscribers</div>
-          <div class="text-2xl font-extrabold text-indigo-500 mt-2">892</div>
-          <div class="text-[11px] text-indigo-400 mt-1 font-semibold">Paying Workspaces</div>
-        </div>
-
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-xs text-slate-400 font-bold uppercase">Articles Today</div>
-          <div class="text-2xl font-extrabold text-violet-500 mt-2">1,480</div>
-          <div class="text-[11px] text-slate-400 mt-1 font-semibold">Across all customers</div>
-        </div>
-
-        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-xs text-slate-400 font-bold uppercase">AI API Token Cost</div>
-          <div class="text-2xl font-extrabold text-rose-400 mt-2">$3,120</div>
-          <div class="text-[11px] text-slate-400 mt-1 font-semibold">Gemini + Claude + Flux</div>
-        </div>
-
-        <div class="p-5 rounded-2xl glass-card border border-emerald-500/40 bg-emerald-500/5">
-          <div class="text-xs text-emerald-500 font-bold uppercase">Net SaaS Margin</div>
-          <div class="text-2xl font-extrabold text-emerald-500 mt-2">$81,170</div>
-          <div class="text-[11px] text-emerald-400 mt-1 font-semibold">96.3% Gross Margin</div>
-        </div>
-
-      </div>
-
-      <!-- REVENUE VS AI TOKEN SPEND CHART (CHART.JS) -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Platform Revenue vs AI API Token Spend (2026)</h3>
-            <p class="text-xs text-slate-400">Illustrating unit economics and gross software profitability</p>
-          </div>
-          <div class="flex items-center gap-4 text-xs font-mono font-bold">
-            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> SaaS Revenue ($)</span>
-            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-rose-500 inline-block"></span> Model API Cost ($)</span>
-          </div>
-        </div>
-
-        <div class="h-64 w-full">
-          <canvas id="adminRevenueChart"></canvas>
-        </div>
-      </div>
-
-      <!-- LIVE ARTICLE GENERATION & CMS PUSH FEED -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-          <div>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Live Autopilot Activity Stream</h3>
-            <p class="text-xs text-slate-400">Real-time background generation and webhook deliveries</p>
-          </div>
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400 animate-pulse">
-            ● Live Stream
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Cluster Status: Healthy</span>
           </span>
         </div>
+      </div>
 
-        <div class="space-y-3 text-xs">
-          
-          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                <i data-lucide="check" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <span class="font-bold text-slate-900 dark:text-white block">WordPress Webhook Published (2,640 words)</span>
-                <span class="text-[10px] text-slate-400">Customer: Horizons Unlimited • Keyword: "junior dev to ai engineer"</span>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-400 block">42s ago</span>
-              <span class="font-mono text-emerald-500 font-bold">$0.038 token cost</span>
-            </div>
+      <!-- 4 GLOBAL METRICS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <span>Total Workspaces</span>
+            <i data-lucide="building" class="w-4 h-4 text-indigo-400"></i>
           </div>
+          <div class="text-3xl font-black font-heading text-slate-900 dark:text-white">1,248</div>
+          <div class="text-xs text-emerald-500 mt-1 flex items-center gap-1"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +42 this week</div>
+        </div>
 
-          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold">
-                <i data-lucide="share-2" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <span class="font-bold text-slate-900 dark:text-white block">LinkedIn Carousel Generated (5 slides)</span>
-                <span class="text-[10px] text-slate-400">Customer: CloudScale Agency • Drip scheduled for tomorrow 9 AM</span>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-400 block">2m ago</span>
-              <span class="font-mono text-indigo-400 font-bold">$0.012 token cost</span>
-            </div>
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <span>Platform MRR</span>
+            <i data-lucide="badge-dollar-sign" class="w-4 h-4 text-emerald-400"></i>
           </div>
+          <div class="text-3xl font-black font-heading text-emerald-400">$128,450</div>
+          <div class="text-xs text-emerald-500 mt-1 flex items-center gap-1"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +18.4% MoM</div>
+        </div>
 
-          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
-                <i data-lucide="image" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <span class="font-bold text-slate-900 dark:text-white block">Flux Pro 1.1 Featured Image Rendered (1792x1024)</span>
-                <span class="text-[10px] text-slate-400">Customer: DevSprint Bootcamps • Photorealistic tech classroom</span>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-400 block">4m ago</span>
-              <span class="font-mono text-cyan-400 font-bold">$0.040 render cost</span>
-            </div>
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <span>Articles Synthesized</span>
+            <i data-lucide="file-check-2" class="w-4 h-4 text-cyan-400"></i>
           </div>
+          <div class="text-3xl font-black font-heading text-cyan-400">18,420</div>
+          <div class="text-xs text-slate-400 mt-1">Current calendar month</div>
+        </div>
 
+        <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <span>LLM API Cost Ratio</span>
+            <i data-lucide="pie-chart" class="w-4 h-4 text-violet-400"></i>
+          </div>
+          <div class="text-3xl font-black font-heading text-violet-400">8.4%</div>
+          <div class="text-xs text-emerald-500 mt-1 font-bold">91.6% Gross Margin</div>
         </div>
       </div>
 
+      <!-- REVENUE VS AI TOKEN SPEND CHART -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 mb-6 gap-4">
+          <div>
+            <h3 class="font-heading text-lg font-bold">Platform Revenue ($) vs AI Model Token Spend ($)</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Tracking unit economics across Claude 3.5 Sonnet, GPT-4o, and Gemini API calls.</p>
+          </div>
+          <div class="flex items-center gap-4 text-xs font-semibold">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Recurring Revenue</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Raw AI Token Cost</span>
+          </div>
+        </div>
+        <div class="h-72 w-full">
+          <canvas id="adminRevenueVsCostChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 2-COLUMN SPLIT: ACTIVE WORKERS & LIVE GENERATION STREAM -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- LIVE WORKER NODES -->
+        <div class="lg:col-span-6 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-heading text-base font-bold flex items-center gap-2">
+              <i data-lucide="server" class="w-4 h-4 text-cyan-400"></i>
+              <span>Active Synthesis Worker Clusters</span>
+            </h3>
+            <a href="queues.html" class="text-xs font-bold text-cyan-400 hover:underline">Full Queue &rarr;</a>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="p-3.5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-800 dark:text-slate-200">Cluster 01 &bull; us-east-prod</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Claude 3.5 Sonnet Router &bull; Latency: 240ms</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400">Active (4 jobs)</span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-800 dark:text-slate-200">Cluster 02 &bull; us-west-prod</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">GPT-4o Social & Carousel Engine &bull; Latency: 190ms</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400">Active (6 jobs)</span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-slate-800 dark:text-slate-200">Cluster 03 &bull; eu-central-prod</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Gemini 1.5 Pro Search Grounding &bull; Latency: 310ms</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400">Active (2 jobs)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE PLATFORM GENERATION STREAM -->
+        <div class="lg:col-span-6 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-heading text-base font-bold flex items-center gap-2">
+              <i data-lucide="radio" class="w-4 h-4 text-indigo-400"></i>
+              <span>Live Global Synthesis Stream</span>
+            </h3>
+            <span class="text-[10px] text-cyan-400 font-mono">Stream: Active</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="p-3 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                <span class="font-bold text-indigo-400">Horizons Unlimited (Alex)</span>
+                <span>Just now</span>
+              </div>
+              <div class="font-bold text-slate-800 dark:text-slate-200">"The 2026 GEO Citation Benchmark"</div>
+              <div class="text-[10px] text-emerald-400 mt-0.5">2,640 words synthesized &bull; Injected 8 gaps</div>
+            </div>
+
+            <div class="p-3 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                <span class="font-bold text-cyan-400">CloudMatrix SaaS</span>
+                <span>2 min ago</span>
+              </div>
+              <div class="font-bold text-slate-800 dark:text-slate-200">"Kubernetes Cost Optimization in 2026"</div>
+              <div class="text-[10px] text-emerald-400 mt-0.5">Pushed to Webflow CMS + LinkedIn carousel</div>
+            </div>
+
+            <div class="p-3 rounded-2xl bte-surface border border-slate-200 dark:border-slate-800">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                <span class="font-bold text-violet-400">Apex Growth Agency</span>
+                <span>4 min ago</span>
+              </div>
+              <div class="font-bold text-slate-800 dark:text-slate-200">"Local Dental Clinic SEO Playbook"</div>
+              <div class="text-[10px] text-emerald-400 mt-0.5">Pushed to Shopify + Google Business Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
+
+    <!-- UNIFIED DASHBOARD FOOTER -->
+    <footer class="h-14 border-t border-slate-200 dark:border-slate-800/80 px-6 sm:px-8 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+        <span>Super Admin Mission Control &bull; Core Engine Build 3.4.8</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Exit Super Admin Session?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Returning to login screen will terminate root elevated permissions.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Active
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Exit Admin
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const ctx = document.getElementById('adminRevenueChart');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct (Current)'],
-            datasets: [
-              {
-                label: 'MRR Revenue ($)',
-                data: [32000, 44000, 56000, 68000, 76000, 84290],
-                backgroundColor: '#10B981',
-                borderRadius: 8
-              },
-              {
-                label: 'AI Model Cost ($)',
-                data: [1200, 1600, 2100, 2600, 2900, 3120],
-                backgroundColor: '#F43F5E',
-                borderRadius: 8
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                labels: {
-                  color: document.documentElement.classList.contains('dark') ? '#94A3B8' : '#475569'
-                }
-              }
+    // Revenue vs AI Spend Chart
+    const rCtx = document.getElementById('adminRevenueVsCostChart')?.getContext('2d');
+    if (rCtx) {
+      new Chart(rCtx, {
+        type: 'line',
+        data: {
+          labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          datasets: [
+            {
+              label: 'Platform Revenue ($)',
+              data: [32000, 48000, 68000, 89000, 108000, 128450],
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true
             },
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: { color: '#94A3B8' }
-              },
-              y: {
-                grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                ticks: { color: '#94A3B8' }
-              }
+            {
+              label: 'Raw AI Token Cost ($)',
+              data: [2800, 4100, 5600, 7200, 8900, 10780],
+              borderColor: '#F43F5E',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              tension: 0.4,
+              borderDash: [4, 4]
             }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94A3B8', font: { size: 11 } } },
+            y: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94A3B8', font: { size: 11 } } }
           }
-        });
-      }
+        }
+      });
+    }
+
+    // Admin profile dropdown toggle
+    document.getElementById('adminProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('adminProfileDropdown')?.classList.toggle('hidden');
     });
+    document.addEventListener('click', () => {
+      document.getElementById('adminProfileDropdown')?.classList.add('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
+    }
   </script>
 </body>
 </html>

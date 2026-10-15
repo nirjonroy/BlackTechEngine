@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brand DNA Studio — BlackTechEngine</title>
+  <title>Brand DNA Studio — BlackTechEngine Autopilot</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,444 +24,525 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- UNIFIED DASHBOARD SIDEBAR -->
+  <aside id="dashboardSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
-            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Website Switcher -->
-      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
-        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
-        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
-      </div>
-
-      <!-- Navigation Menu -->
-      <div class="mt-6 space-y-6 flex-1">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-slate-400 font-bold">User Workspace</span>
+        </div>
+      </a>
+
+      <!-- Workspace Switcher Selector -->
+      <div class="mt-4 p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">HU</div>
+          <div class="truncate">
+            <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Horizons Unlimited</div>
+            <div class="text-[10px] text-emerald-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Autopilot Active</div>
+          </div>
+        </div>
+        <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <!-- Group 1: Core -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Core Autopilot</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Dashboard</span>
+              <span>Dashboard Overview</span>
             </a>
-            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="calendar" class="w-4 h-4"></i>
-                <span>Content Calendar</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>Content Calendar</span>
             </a>
-            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20">
               <i data-lucide="dna" class="w-4 h-4"></i>
               <span>Brand DNA Studio</span>
             </a>
-            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>Articles Manager</span>
+              <span>Articles & SEO Editor</span>
             </a>
-            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          </div>
+        </div>
+
+        <!-- Group 2: Distribution -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Omnichannel & Local</div>
+          <div class="space-y-1">
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="share-2" class="w-4 h-4"></i>
-              <span>Social Media Studio</span>
+              <span>Social Media Drip</span>
             </a>
-            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="map-pin" class="w-4 h-4"></i>
-                <span>Google Business</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            <a href="google-business.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <span>Google Business Profile</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 3: Intelligence -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Intelligence & SEO</div>
+          <div class="space-y-1">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-              <span>Analytics & GEO</span>
+              <span>GEO & Traffic Analytics</span>
             </a>
-            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <i data-lucide="target" class="w-4 h-4"></i>
-              <span>Keywords & Clusters</span>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="search" class="w-4 h-4"></i>
+              <span>Keyword Gap Hunter</span>
             </a>
-            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="gauge" class="w-4 h-4"></i>
-                <span>Site Speed & CWV</span>
-              </div>
-              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            <a href="site-speed.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Site Speed & Health</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 4: Settings -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <i data-lucide="plug" class="w-4 h-4"></i>
-              <span>Integrations Hub</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Settings & Account</div>
+          <div class="space-y-1">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="blocks" class="w-4 h-4"></i>
+              <span>CMS Integrations</span>
             </a>
-            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Billing & Credits</span>
+              <span>Billing & Quota</span>
             </a>
-            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="gift" class="w-4 h-4"></i>
               <span>Affiliate Earnings</span>
             </a>
-            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="settings" class="w-4 h-4"></i>
               <span>Settings</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
-            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </nav>
+
+      <!-- USER PROFILE DROPDOWN MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="userProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-indigo-500 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">AM</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Alex Morgan</div>
+              <div class="text-[10px] text-slate-400 truncate">alex@thehorizonsunlimited.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <!-- Dropdown Popup -->
+        <div id="userProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+            <span>View Profile</span>
+          </a>
+          <a href="settings.html?tab=team" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>Team Members</span>
+          </a>
+          <a href="billing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
+            <span>Upgrade to Agency</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Log Out</span>
+          </button>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
-      <div class="flex items-center gap-3">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Brand DNA & Voice Studio</h1>
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-400 border border-violet-500/30">
-          Calibrated
-        </span>
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
+      <div class="flex items-center gap-4">
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Horizons Unlimited</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-indigo-500 font-bold">Brand DNA Studio</span>
+        </div>
       </div>
 
+      <!-- Right Utility Actions -->
       <div class="flex items-center gap-3">
-        <!-- Re-scan Website Button -->
-        <button onclick="window.showToast('Re-scanning thehorizonsunlimited.com & updating vector matrix...', 'info')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-500"></i>
-          <span>Re-scan Website</span>
-        </button>
-
-        <!-- Theme Toggle -->
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <button onclick="bteToast.show('Brand DNA vector saved and synchronized with AI synthesis router!', 'success')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold shadow-md shadow-indigo-500/20 hover:scale-105 transition-all">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i>
+          <span>Save Vector Profile</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-6 max-w-5xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- TAB NAVIGATION -->
-      <div class="flex items-center gap-2 p-1.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 text-xs font-bold overflow-x-auto">
-        <button onclick="switchDnaTab('tab-company')" id="btn-company" class="dna-tab-btn px-4 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20 whitespace-nowrap">
-          Company & Audience
-        </button>
-        <button onclick="switchDnaTab('tab-voice')" id="btn-voice" class="dna-tab-btn px-4 py-2 rounded-xl text-slate-500 hover:text-white whitespace-nowrap">
-          Voice & Tone Tuning
-        </button>
-        <button onclick="switchDnaTab('tab-links')" id="btn-links" class="dna-tab-btn px-4 py-2 rounded-xl text-slate-500 hover:text-white whitespace-nowrap">
-          Internal Links Map
-        </button>
-        <button onclick="switchDnaTab('tab-visual')" id="btn-visual" class="dna-tab-btn px-4 py-2 rounded-xl text-slate-500 hover:text-white whitespace-nowrap">
-          Visual Brand Style
-        </button>
-      </div>
-
-      <!-- TAB 1: COMPANY & AUDIENCE -->
-      <div id="tab-company" class="dna-tab-content space-y-6">
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-5">
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Business Summary & Positioning</h3>
-            <p class="text-xs text-slate-400">Used by the AI to understand your exact domain authority and product offerings.</p>
-          </div>
-
-          <div class="space-y-4 text-xs">
-            <div>
-              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Company Overview</label>
-              <textarea rows="3" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white leading-relaxed">Horizons Unlimited is a premier tech career accelerator and educational institution specializing in helping non-technical professionals transition into high-paying Cloud Architecture, AI Engineering, and Full Stack roles with a proven curriculum and hiring partnerships.</textarea>
-            </div>
-
-            <div>
-              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Core Services & Educational Programs</label>
-              <input type="text" value="Cloud Engineering Bootcamp, AI Engineering Immersion, Full Stack Development, Tech Interview Mentorship" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-            </div>
-
-            <div>
-              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Target Customer Personas</label>
-              <textarea rows="2" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white leading-relaxed">Primary: Junior software developers looking to upskill into AI/ML; Career transitioners from finance, sales, and healthcare seeking 6-figure remote engineering roles.</textarea>
-            </div>
-          </div>
-
-          <div class="pt-2 flex justify-end">
-            <button onclick="window.showToast('Company DNA saved successfully!', 'success')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-500/25">
-              Save Company DNA
-            </button>
-          </div>
+      <!-- HEADER -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">Brand DNA & Editorial Tone Studio</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Calibrate the mathematical voice vector our autonomous LLM agent uses for all synthesized content.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Vector Status: Active</span>
+          <button onclick="bteToast.show('Initiating deep crawl on thehorizonsunlimited.com...', 'info')" class="px-3 py-1.5 rounded-xl bte-card border border-slate-300 dark:border-slate-700 hover:border-indigo-500 text-xs font-bold flex items-center gap-1.5">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Re-Analyze Site</span>
+          </button>
         </div>
       </div>
 
-      <!-- TAB 2: VOICE & TONE TUNING -->
-      <div id="tab-voice" class="dna-tab-content space-y-6 hidden">
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Tone Calibration & AI Blacklist</h3>
-            <p class="text-xs text-slate-400">Control the personality of articles and purge overused AI clichés.</p>
-          </div>
-
-          <!-- Sliders -->
-          <div class="space-y-6 pt-2">
-            <div>
-              <div class="flex items-center justify-between text-xs font-bold mb-2">
-                <span>Tone Formality</span>
-                <span class="text-indigo-500 font-mono">Authoritative & Confident (75%)</span>
-              </div>
-              <input type="range" min="0" max="100" value="75" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>Casual & Playful</span>
-                <span>Balanced</span>
-                <span>Authoritative & Formal</span>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex items-center justify-between text-xs font-bold mb-2">
-                <span>Technical Depth</span>
-                <span class="text-indigo-500 font-mono">Deep Engineering & Code-Heavy (80%)</span>
-              </div>
-              <input type="range" min="0" max="100" value="80" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>Simple & Beginner</span>
-                <span>Intermediate</span>
-                <span>Deep Architecture & Benchmarks</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Banned AI Words Input -->
-          <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-            <label class="block font-bold text-xs text-slate-700 dark:text-slate-300 mb-2">
-              Banned AI Buzzwords Blacklist (Purged from all generations)
-            </label>
-            <div id="bannedWordsList" class="flex flex-wrap gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-              <span class="px-2.5 py-1 rounded-lg text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
-                <span>delve</span>
-                <button onclick="this.parentElement.remove()" class="hover:text-rose-200">&times;</button>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
-                <span>tapestry</span>
-                <button onclick="this.parentElement.remove()" class="hover:text-rose-200">&times;</button>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
-                <span>game-changer</span>
-                <button onclick="this.parentElement.remove()" class="hover:text-rose-200">&times;</button>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
-                <span>plethora</span>
-                <button onclick="this.parentElement.remove()" class="hover:text-rose-200">&times;</button>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
-                <span>unlock the potential</span>
-                <button onclick="this.parentElement.remove()" class="hover:text-rose-200">&times;</button>
-              </span>
-            </div>
-
-            <div class="mt-3 flex gap-2">
-              <input id="newBannedWordInput" type="text" placeholder="Type a banned phrase (e.g. revolutionize)..." class="flex-1 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
-              <button onclick="addBannedWord()" class="px-4 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-xs font-bold hover:bg-indigo-600 hover:text-white transition-all">
-                + Add Banned Word
-              </button>
-            </div>
-          </div>
-
-          <div class="pt-2 flex justify-end">
-            <button onclick="window.showToast('Voice matrix & blacklist updated!', 'success')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-500/25">
-              Save Voice Tuning
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 3: INTERNAL LINKS MAP -->
-      <div id="tab-links" class="dna-tab-content space-y-6 hidden">
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-5">
+      <!-- TONE CALIBRATION & LIVE TEXT PREVIEW (CRITICAL USER REQUEST) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- LEFT: 4 TONE SLIDERS -->
+        <div class="lg:col-span-7 bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
           <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-            <div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white">Internal Link Injection Rules</h3>
-              <p class="text-xs text-slate-400">The AI naturally links these anchor keywords back to your key conversion pages.</p>
-            </div>
-            <button onclick="window.showToast('Added new internal link rule slot!', 'info')" class="px-3 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-md">
-              + Add Rule
-            </button>
+            <h3 class="font-heading text-lg font-bold flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i>
+              <span>Voice Parameter Sliders</span>
+            </h3>
+            <span class="text-[11px] text-slate-400">Drag to adjust live sample</span>
           </div>
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400">
-                  <th class="pb-3 font-semibold">Target Destination URL</th>
-                  <th class="pb-3 font-semibold">Anchor Text Keywords</th>
-                  <th class="pb-3 font-semibold text-center">Priority</th>
-                  <th class="pb-3 font-semibold text-center">Active</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                <tr>
-                  <td class="py-3 font-mono text-[11px] text-indigo-400">/programs/cloud-engineering</td>
-                  <td class="py-3">cloud engineering program, learn cloud architecture</td>
-                  <td class="py-3 text-center"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">High</span></td>
-                  <td class="py-3 text-center"><input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600"></td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-mono text-[11px] text-indigo-400">/programs/ai-engineering</td>
-                  <td class="py-3">AI engineering bootcamp, become machine learning engineer</td>
-                  <td class="py-3 text-center"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">High</span></td>
-                  <td class="py-3 text-center"><input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600"></td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-mono text-[11px] text-indigo-400">/apply</td>
-                  <td class="py-3">apply now, start tech career, book interview</td>
-                  <td class="py-3 text-center"><span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-bold text-[10px]">Medium</span></td>
-                  <td class="py-3 text-center"><input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 4: VISUAL BRAND STYLE -->
-      <div id="tab-visual" class="dna-tab-content space-y-6 hidden">
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+          <!-- Slider 1 -->
           <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">AI Featured Image Generation Style</h3>
-            <p class="text-xs text-slate-400">Choose the visual aesthetic applied to all article thumbnails and social assets.</p>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <label class="p-4 rounded-2xl border-2 border-indigo-500 bg-indigo-500/10 cursor-pointer flex flex-col justify-between space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs text-indigo-500">Photorealistic Modern Tech</span>
-                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500"></i>
-              </div>
-              <p class="text-[11px] text-slate-400">Cinematic lighting, high fidelity, authentic software engineers in tech environments.</p>
-            </label>
-
-            <label class="p-4 rounded-2xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 cursor-pointer flex flex-col justify-between space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs">3D Isometric Tech</span>
-              </div>
-              <p class="text-[11px] text-slate-400">Vibrant, playful 3D isometric models and abstract cloud servers.</p>
-            </label>
-
-            <label class="p-4 rounded-2xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 cursor-pointer flex flex-col justify-between space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-xs">Minimalist Vector & Data</span>
-              </div>
-              <p class="text-[11px] text-slate-400">Clean diagrams, Swiss typography style, high information density.</p>
-            </label>
-          </div>
-
-          <!-- Color Pickers -->
-          <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Brand Palette Hex Codes</h4>
-            <div class="grid grid-cols-3 gap-4 text-xs">
-              <div>
-                <label class="block text-slate-400 text-[10px] mb-1">Primary Color</label>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-lg bg-[#6366F1] border border-white/20"></div>
-                  <input type="text" value="#6366F1" class="w-full p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs">
-                </div>
-              </div>
-              <div>
-                <label class="block text-slate-400 text-[10px] mb-1">Secondary Color</label>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-lg bg-[#8B5CF6] border border-white/20"></div>
-                  <input type="text" value="#8B5CF6" class="w-full p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs">
-                </div>
-              </div>
-              <div>
-                <label class="block text-slate-400 text-[10px] mb-1">Accent Glow</label>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-lg bg-[#06B6D4] border border-white/20"></div>
-                  <input type="text" value="#06B6D4" class="w-full p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs">
-                </div>
-              </div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+              <span class="text-slate-700 dark:text-slate-300">Formality Spectrum</span>
+              <span id="toneFormalityLabel" class="text-indigo-500 font-mono">85% Authoritative & Academic</span>
+            </div>
+            <input id="toneFormalitySlider" type="range" min="10" max="100" value="85" class="w-full accent-indigo-600 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+              <span>Casual & Conversational</span>
+              <span>Authoritative Executive</span>
             </div>
           </div>
 
-          <div class="pt-2 flex justify-end">
-            <button onclick="window.showToast('Visual brand aesthetic saved!', 'success')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-500/25">
-              Save Visual Styles
-            </button>
+          <!-- Slider 2 -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+              <span class="text-slate-700 dark:text-slate-300">Technical Depth & Complexity</span>
+              <span id="toneTechLabel" class="text-violet-500 font-mono">75% Senior Architect In-Depth</span>
+            </div>
+            <input id="toneTechSlider" type="range" min="10" max="100" value="75" class="w-full accent-violet-600 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+              <span>Beginner Accessible</span>
+              <span>Senior Architect / Code Heavy</span>
+            </div>
+          </div>
+
+          <!-- Slider 3 -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+              <span class="text-slate-700 dark:text-slate-300">Conviction & Energy</span>
+              <span id="toneEnergyLabel" class="text-cyan-500 font-mono">80% High-Conviction Passionate</span>
+            </div>
+            <input id="toneEnergySlider" type="range" min="10" max="100" value="80" class="w-full accent-cyan-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+              <span>Neutral & Objective</span>
+              <span>Bold, Opinionated & Visionary</span>
+            </div>
+          </div>
+
+          <!-- Slider 4 -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+              <span class="text-slate-700 dark:text-slate-300">Subtle Tech Humor / Wit</span>
+              <span id="toneHumorLabel" class="text-amber-500 font-mono">30% Reserved / Subtle Irony</span>
+            </div>
+            <input id="toneHumorSlider" type="range" min="0" max="100" value="30" class="w-full accent-amber-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+              <span>Strictly Professional</span>
+              <span>Playful & Sarcastic</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: LIVE DYNAMIC SAMPLE TEXT PREVIEW -->
+        <div class="lg:col-span-5 bte-card p-6 sm:p-8 rounded-3xl border border-indigo-500/30 glow-indigo flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Live Synthesis Preview</span>
+              </div>
+              <span class="text-[10px] font-mono text-indigo-400">Updates in real-time</span>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm leading-relaxed text-slate-800 dark:text-slate-200 font-serif italic">
+              <p id="liveToneSampleParagraph">
+                "In 2026, building scalable distributed systems is no longer a luxury reserved for FAANG. If your backend architecture lacks asynchronous event sourcing and edge-cached retrieval, you are actively sacrificing throughput. Horizons Unlimited benchmarks demonstrate that adopting vector indexes reduces API latency by 41%."
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Estimated Perplexity Score:</span>
+            <span class="font-bold text-emerald-400 font-mono">98.2% Human Expert Tone</span>
           </div>
         </div>
       </div>
 
+      <!-- BANNED WORDS & AI CLICHES BLACKLIST -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-4">
+          <div>
+            <h3 class="font-heading text-lg font-bold flex items-center gap-2">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-rose-500"></i>
+              <span>Banned Words & Anti-AI Cliché Filter</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Our LLM synthesis router strictly eliminates these phrases to ensure 100% human authenticity.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="newBannedWordInput" type="text" placeholder="Add custom banned word..." class="px-3 py-1.5 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs focus:border-indigo-500 focus:outline-none">
+            <button onclick="addBannedWord()" class="px-3.5 py-1.5 rounded-xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-all">
+              + Add
+            </button>
+          </div>
+        </div>
+
+        <!-- Banned Words Cloud -->
+        <div id="bannedWordsCloud" class="flex flex-wrap gap-2 text-xs">
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"delve into"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"tapestry"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"in today's digital age"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"game changer"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"vital role"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"seamlessly"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"realm"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"furthermore"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+          <span class="banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono">
+            <span>"testament to"</span>
+            <button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- INTERNAL LINKING KNOWLEDGE GRAPH -->
+      <div class="bte-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <h3 class="font-heading text-lg font-bold flex items-center gap-2">
+              <i data-lucide="link-2" class="w-4 h-4 text-cyan-400"></i>
+              <span>Proprietary Internal Link Repository</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">BlackTechEngine weaves these target links contextually into generated articles to boost your page ranks.</p>
+          </div>
+          <button onclick="bteToast.show('Internal Link added to graph!', 'success')" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">
+            + Add Target Link
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 pb-2">
+                <th class="pb-3">Destination Money Page</th>
+                <th class="pb-3">Preferred Anchor Phrases</th>
+                <th class="pb-3">Max Frequency</th>
+                <th class="pb-3">Priority</th>
+                <th class="pb-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+              <tr>
+                <td class="py-3 font-mono text-indigo-400">thehorizonsunlimited.com/ai-bootcamp</td>
+                <td class="py-3 font-bold text-slate-800 dark:text-slate-200">"AI engineering mentorship", "accelerated tech bootcamp"</td>
+                <td class="py-3">1 per 1,000 words</td>
+                <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">High</span></td>
+                <td class="py-3 text-right text-slate-400"><button class="hover:text-rose-500">Delete</button></td>
+              </tr>
+              <tr>
+                <td class="py-3 font-mono text-indigo-400">thehorizonsunlimited.com/career-roadmap</td>
+                <td class="py-3 font-bold text-slate-800 dark:text-slate-200">"tech career switchers roadmap", "software roadmap"</td>
+                <td class="py-3">1 per article</td>
+                <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Medium</span></td>
+                <td class="py-3 text-right text-slate-400"><button class="hover:text-rose-500">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
+
+    <!-- UNIFIED DASHBOARD FOOTER -->
+    <footer class="h-14 border-t border-slate-200 dark:border-slate-800/80 px-6 sm:px-8 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Brand DNA Vector Synchronized &bull; Horizons Unlimited</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Sign Out of Workspace?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Your autopilot schedule will continue running autonomously in the background.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Logged In
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Sign Out
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
   <script>
-    function switchDnaTab(tabId) {
-      document.querySelectorAll('.dna-tab-content').forEach(c => c.classList.add('hidden'));
-      document.querySelectorAll('.dna-tab-btn').forEach(b => {
-        b.className = 'dna-tab-btn px-4 py-2 rounded-xl text-slate-500 hover:text-white whitespace-nowrap';
-      });
+    // Live Tone Slider dynamic paragraph updates
+    const formalitySlider = document.getElementById('toneFormalitySlider');
+    const techSlider = document.getElementById('toneTechSlider');
+    const energySlider = document.getElementById('toneEnergySlider');
+    const sampleText = document.getElementById('liveToneSampleParagraph');
 
-      const target = document.getElementById(tabId);
-      if (target) target.classList.remove('hidden');
+    function updateSampleText() {
+      const f = parseInt(formalitySlider.value);
+      const t = parseInt(techSlider.value);
 
-      const btnId = tabId.replace('tab-', 'btn-');
-      const btn = document.getElementById(btnId);
-      if (btn) btn.className = 'dna-tab-btn px-4 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20 whitespace-nowrap';
-      if (window.lucide) window.lucide.createIcons();
+      document.getElementById('toneFormalityLabel').textContent = `${f}% ${f > 60 ? 'Authoritative & Academic' : 'Conversational & Direct'}`;
+      document.getElementById('toneTechLabel').textContent = `${t}% ${t > 60 ? 'Senior Architect Depth' : 'Accessible for General Tech'}`;
+
+      if (f > 70 && t > 70) {
+        sampleText.textContent = '"In 2026, building scalable distributed systems is no longer a luxury reserved for FAANG. If your backend architecture lacks asynchronous event sourcing and edge-cached retrieval, you are actively sacrificing throughput. Horizons Unlimited benchmarks demonstrate that adopting vector indexes reduces API latency by 41%."';
+      } else if (f <= 50) {
+        sampleText.textContent = '"Let’s be real: most software teams overcomplicate their tech stack. You don’t need 15 microservices to serve 1,000 users. Keep it simple, cache your queries at the edge, and focus on delivering software that actually moves the needle for your users."';
+      } else {
+        sampleText.textContent = '"Modern engineering leadership requires a pragmatic balance between rapid feature delivery and architectural integrity. By prioritizing clean API contracts and continuous automation, engineering teams at Horizons Unlimited scale efficiently without accumulating crippling technical debt."';
+      }
     }
 
+    formalitySlider?.addEventListener('input', updateSampleText);
+    techSlider?.addEventListener('input', updateSampleText);
+
+    // Banned words addition helper
     function addBannedWord() {
       const input = document.getElementById('newBannedWordInput');
-      const word = input.value.trim().toLowerCase();
-      if (!word) return;
-
-      const list = document.getElementById('bannedWordsList');
+      const val = input.value.trim();
+      if (!val) return;
+      const cloud = document.getElementById('bannedWordsCloud');
       const tag = document.createElement('span');
-      tag.className = 'px-2.5 py-1 rounded-lg text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5';
-      tag.innerHTML = `<span>${word}</span><button onclick="this.parentElement.remove()" class="hover:text-rose-200">&times;</button>`;
-      list.appendChild(tag);
+      tag.className = 'banned-tag px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-mono';
+      tag.innerHTML = `<span>"${val}"</span><button onclick="this.parentElement.remove()" class="hover:text-white">&times;</button>`;
+      cloud.appendChild(tag);
+      bteToast.show(`Added "${val}" to banned AI cliché blacklist`, 'success');
       input.value = '';
-      window.showToast(`Added "${word}" to AI blacklist!`, 'info');
+    }
+
+    // User profile dropdown toggle
+    document.getElementById('userProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('userProfileDropdown')?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('userProfileDropdown')?.classList.add('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
     }
   </script>
 </body>

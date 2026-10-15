@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autopilot Queue & Logs Monitor — BlackTechEngine Admin</title>
+  <title>Job Queues & Node Latency — BlackTechEngine Super Admin</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,250 +24,819 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT ADMIN SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- SUPER ADMIN COMMAND SIDEBAR -->
+  <aside id="adminSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
       
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-rose-500/25">
-            <i data-lucide="shield-alert" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-rose-500">Admin</span></div>
-            <div class="text-[9px] uppercase font-bold text-rose-400">Master Command</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="mt-6 space-y-6 flex-1">
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/25">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+        </div>
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Platform Control</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Executive Command</span>
-            </a>
-            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="users" class="w-4 h-4"></i>
-              <span>User & Workspaces</span>
-            </a>
-            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>AI Models & Prompts</span>
-            </a>
-            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Subscription Plans</span>
-            </a>
-            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-500/20">
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-cyan-400">Admin</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Super Admin Mode
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Platform Control</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
               <i data-lucide="activity" class="w-4 h-4"></i>
-              <span>Autopilot Queue Logs</span>
+              <span>Mission Control</span>
             </a>
-            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
-              <i data-lucide="gift" class="w-4 h-4"></i>
-              <span>Affiliates & Payouts</span>
+            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>Workspaces & Users</span>
             </a>
-          </nav>
+            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>AI Router & Prompts</span>
+            </a>
+            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>Plans & Pricing Tiers</span>
+            </a>
+          </div>
         </div>
 
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Shortcuts</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="../user/calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30">
-              <i data-lucide="external-link" class="w-4 h-4"></i>
-              <span>Switch to User View</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Operations & Infrastructure</div>
+          <div class="space-y-1">
+            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold border border-cyan-500/20 shadow-sm">
+              <i data-lucide="server" class="w-4 h-4"></i>
+              <span>Job Queues & Latency</span>
             </a>
-            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-white">
-              <i data-lucide="globe" class="w-4 h-4"></i>
-              <span>Public Website</span>
+            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-cyan-400 transition-colors">
+              <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+              <span>Affiliate Approvals</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Master Administrator</div>
-            <div class="text-[10px] text-rose-400 truncate">admin@blacktechengine.com</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Quick Navigation</div>
+          <div class="space-y-1">
+            <a href="../user/index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Switch to User Panel</span>
+            </a>
+            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-400 transition-colors">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>View Public Website</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SUPER ADMIN PROFILE MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="adminProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-cyan-400 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500 text-slate-900 font-black text-xs flex items-center justify-center shrink-0">SA</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Root Architect</div>
+              <div class="text-[10px] text-cyan-400 truncate">admin@blacktechengine.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="adminProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="../user/index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+            <span>User Sandbox View</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Exit Admin Mode</span>
+          </button>
         </div>
       </div>
-
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
       <div class="flex items-center gap-4">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Background Workers & Queue Monitor</h1>
-        <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">12 Workers Active</span>
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Operations & Infrastructure</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-cyan-400 font-bold">Job Queues & Worker Telemetry</span>
+        </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <button onclick="window.showToast('Refreshing live queue state from Redis...', 'info')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-rose-500"></i> Refresh
-        </button>
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Live Polling Indicator -->
+        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Redis Queue Sync: Active</span>
+        </div>
+
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-cyan-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <button onclick="retryAllFailedJobs()" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs transition-all">
+          <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Retry Failed (6)</span>
+        </button>
+
+        <button onclick="pauseResumeQueue(this)" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-slate-900 font-black text-xs shadow-md hover:scale-105 transition-all">
+          <i data-lucide="pause-circle" class="w-3.5 h-3.5"></i>
+          <span>Pause Queues</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-6 max-w-7xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-8">
       
-      <!-- QUEUE STATS -->
-      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div class="p-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-[10px] text-slate-400 uppercase font-bold">Total Jobs (24h)</div>
-          <div class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">4,892</div>
+      <!-- HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">Synthesis Workers & Job Queues</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Real-time Redis worker pools, AI generation backlogs, pipeline latencies, and cluster health.</p>
         </div>
-        <div class="p-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-[10px] text-slate-400 uppercase font-bold">Currently Processing</div>
-          <div class="text-2xl font-extrabold text-sky-400 mt-1 flex items-center gap-1.5">
-            <span>6</span>
-            <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-          </div>
-        </div>
-        <div class="p-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-[10px] text-slate-400 uppercase font-bold">Success Rate</div>
-          <div class="text-2xl font-extrabold text-emerald-400 mt-1">99.4%</div>
-        </div>
-        <div class="p-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-          <div class="text-[10px] text-slate-400 uppercase font-bold">Failed Payloads</div>
-          <div class="text-2xl font-extrabold text-rose-500 mt-1">1</div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400">Auto-refresh every 5s</span>
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
         </div>
       </div>
 
-      <!-- QUEUE LOGS TABLE -->
-      <div class="glass-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+      <!-- KEY METRICS CARDS -->
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bte-card p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Active Workers</span>
+            <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400"><i data-lucide="cpu" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">18 / 24</div>
+          <div class="text-[11px] text-emerald-500 font-bold mt-1 flex items-center gap-1">
+            <i data-lucide="check" class="w-3 h-3"></i> 75% Cluster Capacity
+          </div>
+        </div>
+
+        <div class="bte-card p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Jobs Queued</span>
+            <span class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400"><i data-lucide="layers" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">142</div>
+          <div class="text-[11px] text-amber-500 font-bold mt-1 flex items-center gap-1">
+            <i data-lucide="clock" class="w-3 h-3"></i> ~48s drain time
+          </div>
+        </div>
+
+        <div class="bte-card p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Completed Today</span>
+            <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400"><i data-lucide="check-circle-2" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">18,429</div>
+          <div class="text-[11px] text-cyan-400 font-bold mt-1 flex items-center gap-1">
+            <i data-lucide="trending-up" class="w-3 h-3"></i> +14.2% vs yesterday
+          </div>
+        </div>
+
+        <div class="bte-card p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Failed / Errored</span>
+            <span class="p-1.5 rounded-lg bg-rose-500/10 text-rose-500"><i data-lucide="alert-triangle" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-rose-500">6</div>
+          <div class="text-[11px] text-slate-400 font-semibold mt-1">
+            0.03% overall failure rate
+          </div>
+        </div>
+
+        <div class="bte-card p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm col-span-2 lg:col-span-1">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-slate-400">Avg Pipeline Latency</span>
+            <span class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400"><i data-lucide="zap" class="w-4 h-4"></i></span>
+          </div>
+          <div class="font-heading text-2xl font-black text-slate-900 dark:text-white">2.14s</div>
+          <div class="text-[11px] text-emerald-400 font-bold mt-1 flex items-center gap-1">
+            <i data-lucide="arrow-down-right" class="w-3 h-3"></i> -180ms p95 latency
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKER NODES & CLUSTER TOPOLOGY -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="font-heading text-lg font-bold">Distributed Worker Nodes</h2>
+            <p class="text-xs text-slate-400">Autonomous processing nodes handling LLM synthesis, schema generation, and SERP crawling.</p>
+          </div>
+          <button onclick="bteToast.show('Scaling worker cluster... +4 nodes provisioned', 'info')" class="text-xs font-bold text-cyan-400 hover:underline flex items-center gap-1">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Cluster Node
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Node 1 -->
+          <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-mono text-xs font-bold text-slate-900 dark:text-white">worker-node-us-east-01</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Healthy</span>
+            </div>
+            <div class="mt-4 space-y-3 text-xs">
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>CPU Utilization</span>
+                  <span class="font-mono font-bold text-slate-200">58%</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div class="h-full bg-emerald-400 rounded-full" style="width: 58%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>RAM (Redis BullMQ)</span>
+                  <span class="font-mono font-bold text-slate-200">6.2 / 16 GB</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div class="h-full bg-indigo-500 rounded-full" style="width: 39%"></div>
+                </div>
+              </div>
+              <div class="pt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-200/50 dark:border-slate-800/50">
+                <span>Assigned Model: <strong class="text-slate-200 font-mono">Claude 3.5 Sonnet</strong></span>
+                <span class="text-cyan-400 font-mono font-bold">1.82s avg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Node 2 -->
+          <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-mono text-xs font-bold text-slate-900 dark:text-white">worker-node-eu-west-02</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Healthy</span>
+            </div>
+            <div class="mt-4 space-y-3 text-xs">
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>CPU Utilization</span>
+                  <span class="font-mono font-bold text-slate-200">71%</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div class="h-full bg-indigo-500 rounded-full" style="width: 71%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>RAM (Redis BullMQ)</span>
+                  <span class="font-mono font-bold text-slate-200">11.4 / 16 GB</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div class="h-full bg-amber-400 rounded-full" style="width: 71%"></div>
+                </div>
+              </div>
+              <div class="pt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-200/50 dark:border-slate-800/50">
+                <span>Assigned Model: <strong class="text-slate-200 font-mono">GPT-4o Omnichannel</strong></span>
+                <span class="text-cyan-400 font-mono font-bold">2.41s avg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Node 3 -->
+          <div class="bte-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                <span class="font-mono text-xs font-bold text-slate-900 dark:text-white">worker-node-ap-se-03</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">High Load</span>
+            </div>
+            <div class="mt-4 space-y-3 text-xs">
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>CPU Utilization</span>
+                  <span class="font-mono font-bold text-slate-200">89%</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div class="h-full bg-amber-400 rounded-full" style="width: 89%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>RAM (Redis BullMQ)</span>
+                  <span class="font-mono font-bold text-slate-200">14.1 / 16 GB</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                  <div class="h-full bg-rose-500 rounded-full" style="width: 88%"></div>
+                </div>
+              </div>
+              <div class="pt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-200/50 dark:border-slate-800/50">
+                <span>Assigned Model: <strong class="text-slate-200 font-mono">Gemini 1.5 Flash</strong></span>
+                <span class="text-amber-400 font-mono font-bold">3.12s avg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE SYNTHESIS QUEUES TABLE & CONTROLS -->
+      <div class="bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+        
+        <!-- Table Toolbar -->
+        <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="filterQueue('all', this)" class="queue-tab px-3 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20">
+              All Jobs (166)
+            </button>
+            <button onclick="filterQueue('active', this)" class="queue-tab px-3 py-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold">
+              Active (18)
+            </button>
+            <button onclick="filterQueue('queued', this)" class="queue-tab px-3 py-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold">
+              Queued (142)
+            </button>
+            <button onclick="filterQueue('failed', this)" class="queue-tab px-3 py-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold">
+              Failed (6)
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="queueSearchInput" onkeyup="searchQueueJobs()" placeholder="Search Job ID or Tenant..." class="pl-8 pr-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-cyan-400 w-56">
+            </div>
+            <button onclick="flushCompletedJobs()" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span>Flush Completed</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Jobs Table -->
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-800/40 text-slate-400">
-                <th class="p-4 font-bold text-slate-900 dark:text-white">Job ID & Task Type</th>
-                <th class="p-4 font-bold text-slate-900 dark:text-white">Customer / Domain</th>
-                <th class="p-4 font-bold text-slate-900 dark:text-white">Model Dispatched</th>
-                <th class="p-4 font-bold text-slate-900 dark:text-white">Latency</th>
-                <th class="p-4 font-bold text-slate-900 dark:text-white">Token Cost</th>
-                <th class="p-4 font-bold text-slate-900 dark:text-white text-center">Status</th>
-                <th class="p-4 font-bold text-slate-900 dark:text-white text-right">Action</th>
+          <table class="w-full text-left text-xs" id="queueTable">
+            <thead class="bg-slate-100/50 dark:bg-slate-900/50 text-slate-400 font-semibold uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-800">
+              <tr>
+                <th class="p-4">Job ID & Timestamp</th>
+                <th class="p-4">Target Workspace</th>
+                <th class="p-4">Pipeline Operation</th>
+                <th class="p-4">Assigned LLM</th>
+                <th class="p-4">Status & Progress</th>
+                <th class="p-4">Node</th>
+                <th class="p-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
               
-              <!-- Job 1 -->
-              <tr>
+              <!-- Job 1 (Active) -->
+              <tr class="job-row hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors" data-status="active">
                 <td class="p-4">
-                  <div class="font-mono text-indigo-400 font-bold">#JOB-88419</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Article Generation & Schema Injection</div>
+                  <div class="font-mono font-bold text-slate-900 dark:text-cyan-400">#job_syn_98124</div>
+                  <div class="text-[10px] text-slate-400">Just now (1.4s ago)</div>
                 </td>
-                <td class="p-4 font-semibold text-slate-900 dark:text-white">Horizons Unlimited (thehorizonsunlimited.com)</td>
-                <td class="p-4 font-mono">Claude 3.7 Sonnet</td>
-                <td class="p-4 font-mono text-slate-400">14.2s</td>
-                <td class="p-4 font-mono text-emerald-500 font-bold">$0.038</td>
-                <td class="p-4 text-center">
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">
-                    Success
+                <td class="p-4 font-semibold text-slate-800 dark:text-slate-200">
+                  Acme Corp (ID: ws_01)
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 font-semibold text-[11px]">
+                    <i data-lucide="file-text" class="w-3 h-3"></i> Long-Form Blog Synthesis
                   </span>
                 </td>
-                <td class="p-4 text-right">
-                  <button onclick="window.showToast('Showing raw JSON debug payload', 'info')" class="text-slate-400 hover:text-white font-mono text-[11px]">View JSON</button>
+                <td class="p-4 font-mono text-slate-400">
+                  claude-3-5-sonnet
                 </td>
-              </tr>
-
-              <!-- Job 2 -->
-              <tr>
                 <td class="p-4">
-                  <div class="font-mono text-indigo-400 font-bold">#JOB-88420</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">WordPress REST Webhook Delivery</div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span class="text-cyan-400 font-bold">Processing 68%</span>
+                  </div>
+                  <div class="w-28 h-1.5 rounded-full bg-slate-800 mt-1 overflow-hidden">
+                    <div class="h-full bg-cyan-400 rounded-full" style="width: 68%"></div>
+                  </div>
                 </td>
-                <td class="p-4 font-semibold text-slate-900 dark:text-white">Horizons Unlimited (thehorizonsunlimited.com)</td>
-                <td class="p-4 font-mono text-slate-400">REST Client v2</td>
-                <td class="p-4 font-mono text-slate-400">0.8s</td>
-                <td class="p-4 font-mono text-slate-400">$0.000</td>
-                <td class="p-4 text-center">
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">
-                    Success
-                  </span>
-                </td>
-                <td class="p-4 text-right">
-                  <button onclick="window.showToast('Showing raw JSON debug payload', 'info')" class="text-slate-400 hover:text-white font-mono text-[11px]">View JSON</button>
-                </td>
-              </tr>
-
-              <!-- Job 3 (Processing) -->
-              <tr>
-                <td class="p-4">
-                  <div class="font-mono text-indigo-400 font-bold">#JOB-88421</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Flux Pro 1.1 Featured Image Render</div>
-                </td>
-                <td class="p-4 font-semibold text-slate-900 dark:text-white">CloudScale Agency (cloudscale.co)</td>
-                <td class="p-4 font-mono">Flux 1.1 Pro</td>
-                <td class="p-4 font-mono text-slate-400">8.4s...</td>
-                <td class="p-4 font-mono text-slate-400">$0.040</td>
-                <td class="p-4 text-center">
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-400 animate-pulse">
-                    Processing
-                  </span>
-                </td>
-                <td class="p-4 text-right">
-                  <span class="text-[10px] text-slate-400">Working...</span>
-                </td>
-              </tr>
-
-              <!-- Job 4 (Failed with Retry button) -->
-              <tr class="bg-rose-500/5">
-                <td class="p-4">
-                  <div class="font-mono text-rose-400 font-bold">#JOB-88415</div>
-                  <div class="text-[10px] text-rose-400 mt-0.5">Shopify API Push (Timeout 504)</div>
-                </td>
-                <td class="p-4 font-semibold text-slate-900 dark:text-white">DevSprint Bootcamps</td>
-                <td class="p-4 font-mono text-slate-400">Shopify REST</td>
-                <td class="p-4 font-mono text-rose-400">30.0s</td>
-                <td class="p-4 font-mono text-slate-400">$0.000</td>
-                <td class="p-4 text-center">
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400">
-                    Failed (504)
-                  </span>
-                </td>
-                <td class="p-4 text-right">
-                  <button onclick="window.showToast('Retrying Shopify push job #JOB-88415...', 'info'); this.textContent = '✓ Retrying...'; this.disabled = true;" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs">
-                    Retry Job
+                <td class="p-4 font-mono text-[11px] text-slate-400">us-east-01</td>
+                <td class="p-4 text-right space-x-1">
+                  <button onclick="inspectJobPayload('job_syn_98124', 'Acme Corp', 'Long-Form Blog Synthesis', 'Active (68%)')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-cyan-400 hover:border-cyan-400" title="Inspect Trace & Payload">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="cancelJob('job_syn_98124')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-rose-400 hover:border-rose-400" title="Terminate Worker">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
                   </button>
                 </td>
               </tr>
 
+              <!-- Job 2 (Active) -->
+              <tr class="job-row hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors" data-status="active">
+                <td class="p-4">
+                  <div class="font-mono font-bold text-slate-900 dark:text-cyan-400">#job_dna_98123</div>
+                  <div class="text-[10px] text-slate-400">3.8s ago</div>
+                </td>
+                <td class="p-4 font-semibold text-slate-800 dark:text-slate-200">
+                  Nexus Global AI (ID: ws_04)
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-400 font-semibold text-[11px]">
+                    <i data-lucide="dna" class="w-3 h-3"></i> Brand DNA Vector Crawl
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-slate-400">
+                  gpt-4o-omni
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-violet-400 animate-ping"></span>
+                    <span class="text-violet-400 font-bold">Vectorizing 42%</span>
+                  </div>
+                  <div class="w-28 h-1.5 rounded-full bg-slate-800 mt-1 overflow-hidden">
+                    <div class="h-full bg-violet-500 rounded-full" style="width: 42%"></div>
+                  </div>
+                </td>
+                <td class="p-4 font-mono text-[11px] text-slate-400">eu-west-02</td>
+                <td class="p-4 text-right space-x-1">
+                  <button onclick="inspectJobPayload('job_dna_98123', 'Nexus Global AI', 'Brand DNA Vector Crawl', 'Active (42%)')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-cyan-400 hover:border-cyan-400">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="cancelJob('job_dna_98123')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-rose-400 hover:border-rose-400">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Job 3 (Queued) -->
+              <tr class="job-row hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors" data-status="queued">
+                <td class="p-4">
+                  <div class="font-mono font-bold text-slate-900 dark:text-cyan-400">#job_soc_98122</div>
+                  <div class="text-[10px] text-slate-400">8.1s in queue</div>
+                </td>
+                <td class="p-4 font-semibold text-slate-800 dark:text-slate-200">
+                  OmniFlow Media (ID: ws_03)
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 font-semibold text-[11px]">
+                    <i data-lucide="share-2" class="w-3 h-3"></i> LinkedIn 8-Slide Carousel
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-slate-400">
+                  claude-3-5-sonnet
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold text-[10px]">
+                    <i data-lucide="clock" class="w-3 h-3"></i> Waiting for Worker (Slot 3)
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-[11px] text-slate-400">Pending</td>
+                <td class="p-4 text-right space-x-1">
+                  <button onclick="inspectJobPayload('job_soc_98122', 'OmniFlow Media', 'LinkedIn Carousel', 'Queued')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-cyan-400 hover:border-cyan-400">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="cancelJob('job_soc_98122')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-rose-400 hover:border-rose-400">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Job 4 (Failed) -->
+              <tr class="job-row hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors" data-status="failed">
+                <td class="p-4">
+                  <div class="font-mono font-bold text-rose-500">#job_geo_98120</div>
+                  <div class="text-[10px] text-rose-400">Failed (Timeout 60s)</div>
+                </td>
+                <td class="p-4 font-semibold text-slate-800 dark:text-slate-200">
+                  AlphaGrowth Ventures (ID: ws_07)
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-400 font-semibold text-[11px]">
+                    <i data-lucide="search" class="w-3 h-3"></i> SERP Competitor Gap Crawler
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-slate-400">
+                  gemini-1-5-flash
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500 font-bold text-[10px]">
+                    <i data-lucide="alert-octagon" class="w-3 h-3"></i> HTTP 429 RateLimitExceeded
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-[11px] text-slate-400">ap-se-03</td>
+                <td class="p-4 text-right space-x-1">
+                  <button onclick="inspectJobPayload('job_geo_98120', 'AlphaGrowth Ventures', 'SERP Competitor Gap', 'Failed: HTTP 429', true)" class="p-1.5 rounded-lg border border-rose-500/40 text-rose-400 hover:bg-rose-500/10 font-bold" title="View Error Trace">
+                    <i data-lucide="file-code" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="retrySingleJob('job_geo_98120')" class="p-1.5 rounded-lg border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/10 font-bold" title="Retry with Sonnet Fallback">
+                    <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Job 5 (Queued) -->
+              <tr class="job-row hover:bg-slate-100/40 dark:hover:bg-slate-800/40 transition-colors" data-status="queued">
+                <td class="p-4">
+                  <div class="font-mono font-bold text-slate-900 dark:text-cyan-400">#job_gbp_98119</div>
+                  <div class="text-[10px] text-slate-400">12.4s in queue</div>
+                </td>
+                <td class="p-4 font-semibold text-slate-800 dark:text-slate-200">
+                  Apex Law Partners (ID: ws_06)
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-semibold text-[11px]">
+                    <i data-lucide="map-pin" class="w-3 h-3"></i> GBP Weekly Post & Schema
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-slate-400">
+                  gpt-4o-omni
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold text-[10px]">
+                    <i data-lucide="clock" class="w-3 h-3"></i> Waiting for Worker (Slot 5)
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-[11px] text-slate-400">Pending</td>
+                <td class="p-4 text-right space-x-1">
+                  <button onclick="inspectJobPayload('job_gbp_98119', 'Apex Law Partners', 'GBP Weekly Post', 'Queued')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-cyan-400 hover:border-cyan-400">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="cancelJob('job_gbp_98119')" class="p-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-rose-400 hover:border-rose-400">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                  </button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+
+        <div class="p-4 border-t border-slate-200 dark:border-slate-800 text-slate-400 text-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div>Showing 5 most recent real-time stream jobs (Total: 166 in queue)</div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Cluster Heartbeat OK (12ms ping)</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ADMIN FOOTER -->
+    <footer class="h-12 border-t border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between text-[11px] text-slate-400 bg-white/50 dark:bg-slate-900/50">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+        <span>BullMQ Cluster Node Telemetry: Online</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
+  </div>
+
+  <!-- PAYLOAD / ERROR TRACE MODAL -->
+  <div id="jobTraceModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeJobTraceModal()"></div>
+    <div class="relative w-full max-w-2xl rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 animate-fadeIn">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+        <div class="flex items-center gap-2">
+          <div class="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 font-mono text-xs">
+            <i data-lucide="terminal" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="modalJobTitle" class="font-heading text-lg font-bold">Job Telemetry Payload</h3>
+            <span id="modalJobSubtitle" class="text-xs text-slate-400 font-mono">#job_syn_98124</span>
+          </div>
+        </div>
+        <button onclick="closeJobTraceModal()" class="p-2 rounded-xl text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
       </div>
 
-    </main>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Queue Meta & Execution Trace</label>
+          <div id="modalTraceContent" class="p-4 rounded-xl bg-slate-950 text-cyan-300 font-mono text-xs overflow-x-auto border border-slate-800 max-h-60 leading-relaxed">
+            {
+              "job_id": "job_syn_98124",
+              "workspace_id": "ws_01",
+              "pipeline": "blog_synthesis_v3",
+              "brand_dna_loaded": true,
+              "temperature": 0.35,
+              "target_word_count": 2800,
+              "geo_entities_injected": 14,
+              "step_status": "generating_citations",
+              "node_ip": "10.0.4.18",
+              "elapsed_seconds": 1.48
+            }
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-indigo-400"></i>
+            <span>Worker has allocated 512MB RAM and 2 vCPUs for this job.</span>
+          </span>
+          <span class="font-mono font-bold text-cyan-400">p95: 2.1s</span>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeJobTraceModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-xs font-bold text-slate-300">
+          Close Inspector
+        </button>
+        <button onclick="bteToast.show('Job cloned and pushed to priority queue!', 'success'); closeJobTraceModal();" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-900 font-black text-xs">
+          Re-queue with Priority
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Exit Super Admin Session?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Returning to login screen will terminate root elevated permissions.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Active
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Exit Admin
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script>
+    // Admin profile dropdown toggle
+    document.getElementById('adminProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('adminProfileDropdown')?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('adminProfileDropdown')?.classList.add('hidden');
+    });
+
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
+    }
+
+    // Filter queue jobs
+    function filterQueue(status, btn) {
+      document.querySelectorAll('.queue-tab').forEach(b => {
+        b.className = 'queue-tab px-3 py-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold';
+      });
+      btn.className = 'queue-tab px-3 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20';
+
+      const rows = document.querySelectorAll('.job-row');
+      rows.forEach(row => {
+        if (status === 'all' || row.dataset.status === status) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function searchQueueJobs() {
+      const q = document.getElementById('queueSearchInput').value.toLowerCase();
+      document.querySelectorAll('.job-row').forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    function cancelJob(jobId) {
+      if (confirm(`Terminate worker processing for ${jobId}?`)) {
+        bteToast.show(`Worker terminated for ${jobId}. Job removed from queue.`, 'info');
+      }
+    }
+
+    function retrySingleJob(jobId) {
+      bteToast.show(`Retrying ${jobId} using Claude 3.5 Sonnet fallback route...`, 'info');
+      setTimeout(() => {
+        bteToast.show(`${jobId} successfully recovered and finished!`, 'success');
+      }, 1500);
+    }
+
+    function retryAllFailedJobs() {
+      bteToast.show('Dispatching 6 failed jobs to US-East-01 worker pool with automatic retry exponential backoff...', 'info');
+    }
+
+    let isPaused = false;
+    function pauseResumeQueue(btn) {
+      isPaused = !isPaused;
+      if (isPaused) {
+        btn.innerHTML = `<i data-lucide="play-circle" class="w-3.5 h-3.5"></i><span>Resume Queues</span>`;
+        btn.classList.remove('from-cyan-500', 'to-indigo-600');
+        btn.classList.add('bg-amber-500');
+        bteToast.show('Worker queues paused. Running jobs will finish; new jobs will stay buffered.', 'warning');
+      } else {
+        btn.innerHTML = `<i data-lucide="pause-circle" class="w-3.5 h-3.5"></i><span>Pause Queues</span>`;
+        btn.classList.remove('bg-amber-500');
+        btn.classList.add('from-cyan-500', 'to-indigo-600');
+        bteToast.show('Worker queues resumed. Redis workers consuming jobs.', 'success');
+      }
+      lucide.createIcons();
+    }
+
+    function flushCompletedJobs() {
+      bteToast.show('Flushed 18,429 archived completion keys from Redis memory.', 'success');
+    }
+
+    function inspectJobPayload(id, tenant, op, status, isError = false) {
+      document.getElementById('modalJobSubtitle').innerText = `#${id} — ${tenant}`;
+      if (isError) {
+        document.getElementById('modalTraceContent').innerHTML = `{
+  "job_id": "${id}",
+  "tenant": "${tenant}",
+  "operation": "${op}",
+  "error_type": "UpstreamRateLimitError",
+  "status_code": 429,
+  "message": "Resource has been exhausted (e.g. check quota).",
+  "recommended_action": "Switch route to Claude 3.5 Sonnet or retry after 30s.",
+  "stack_trace": [
+    "File '/app/workers/serp_crawler.py', line 89, in execute",
+    "File '/app/llm/gemini_client.py', line 142, in generate_with_retry"
+  ]
+}`;
+      } else {
+        document.getElementById('modalTraceContent').innerHTML = `{
+  "job_id": "${id}",
+  "tenant": "${tenant}",
+  "operation": "${op}",
+  "status": "${status}",
+  "pipeline_version": "v3.2-prod",
+  "concurrency_group": "tier_growth",
+  "memory_allocated_mb": 512,
+  "redis_queue": "bull:bte_synthesis:wait",
+  "created_at": "2026-10-15T20:20:00Z"
+}`;
+      }
+      document.getElementById('jobTraceModal').classList.remove('hidden');
+      document.getElementById('jobTraceModal').classList.add('flex');
+    }
+
+    function closeJobTraceModal() {
+      document.getElementById('jobTraceModal').classList.add('hidden');
+      document.getElementById('jobTraceModal').classList.remove('flex');
+    }
+  </script>
 </body>
 </html>

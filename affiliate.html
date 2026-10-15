@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Affiliate Partner Program — 30% Recurring Lifetime Commission</title>
+  <title>Affiliate Partner Program (30% Recurring) — BlackTechEngine</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,174 +24,331 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- NAVIGATION -->
-  <header class="sticky top-0 z-40 glass-nav transition-colors duration-300">
+  <!-- UNIFIED HEADER NAVIGATION -->
+  <header class="sticky top-0 z-40 bte-glass-nav transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
-          <i data-lucide="sparkles" class="w-5 h-5"></i>
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
-        <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+        <div>
+          <span class="font-heading text-2xl font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">Autonomous SEO & GEO SaaS</span>
+        </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+      <!-- Desktop Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
         <a href="index.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
-        <a href="index.html#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
-        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+        <a href="features.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
         <a href="about.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
+        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
         <a href="blog.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
-        <a href="affiliate.html" class="text-indigo-600 dark:text-indigo-400 font-semibold transition-colors">Affiliates</a>
+        <a href="affiliate.html" class="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1.5">
+          <span>Affiliates</span>
+          <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30">30%</span>
+        </a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+      <!-- Right Utility Actions -->
+      <div class="flex items-center gap-3.5">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
         </button>
-        <a href="login.html" class="hidden sm:inline-flex text-sm font-semibold px-4 py-2 hover:text-indigo-600">Sign In</a>
-        <a href="signup.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25">
-          Join Program
+
+        <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+          Sign In
         </a>
+
+        <a href="signup.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <span>Start Autopilot</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+
+        <!-- Mobile Hamburger -->
+        <button id="mobileMenuBtn" class="lg:hidden p-2.5 rounded-xl text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobileMenu" class="hidden lg:hidden px-6 pt-3 pb-6 space-y-3 bg-white dark:bg-[#0E1526] border-b border-slate-200 dark:border-slate-800">
+      <a href="index.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Home</a>
+      <a href="features.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Features</a>
+      <a href="about.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">About GEO</a>
+      <a href="pricing.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Pricing</a>
+      <a href="blog.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Blog</a>
+      <a href="affiliate.html" class="block py-2 text-sm font-bold text-indigo-600 dark:text-indigo-400">Affiliate Partner (30%)</a>
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-3">
+        <a href="login.html" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Sign In</a>
+        <a href="signup.html" class="w-1/2 text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold">Start Free</a>
       </div>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="py-20 text-center relative overflow-hidden">
-    <div class="max-w-4xl mx-auto px-4">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-400 text-xs font-bold uppercase tracking-wider mb-6">
-        <i data-lucide="gift" class="w-4 h-4"></i> High-Converting SaaS Affiliate Partnership
-      </div>
+  <!-- HERO SECTION -->
+  <section class="relative pt-20 pb-20 overflow-hidden text-center">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[780px] h-[380px] bg-gradient-to-tr from-violet-600/20 via-indigo-600/20 to-cyan-400/10 blur-[140px] rounded-full pointer-events-none"></div>
 
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
-        Earn <span class="gradient-text">30% Recurring Commission</span> for Life
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-400 text-xs font-bold uppercase tracking-wider mb-6">
+        <i data-lucide="gift" class="w-3.5 h-3.5"></i>
+        <span>30% Lifetime Recurring Commission</span>
+      </div>
+      <h1 class="font-heading text-4xl sm:text-6xl font-black tracking-tight max-w-4xl mx-auto leading-tight">
+        Build Predictable Monthly Income: <span class="gradient-text-primary">Refer BlackTechEngine</span>
       </h1>
-      <p class="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-        Refer agencies, creators, and business owners to BlackTechEngine. Earn 30% of their subscription every single month they remain a customer. No limits, no caps.
+      <p class="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+        Earn every single month for the life of every customer you introduce. Industry-leading 60-day cookie window, fast monthly payouts, and dedicated creator support.
       </p>
 
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="signup.html" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-sm shadow-xl shadow-indigo-500/25 hover:scale-105 transition-all">
-          Become an Affiliate Partner
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#partnerCalculator" class="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-bold text-base shadow-xl shadow-indigo-500/30 hover:scale-105 transition-all">
+          Calculate Your Earnings
         </a>
-        <a href="user/affiliate-panel.html" class="px-6 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-          Affiliate Dashboard Demo
+        <a href="signup.html?role=affiliate" class="px-8 py-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold text-base hover:border-indigo-500 transition-all">
+          Join Partner Program
         </a>
       </div>
     </div>
   </section>
 
   <!-- INTERACTIVE COMMISSION CALCULATOR -->
-  <section class="py-14 max-w-4xl mx-auto px-4">
-    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-8">
-      <div class="text-center">
-        <h2 class="text-2xl font-extrabold">Interactive Earnings Calculator</h2>
-        <p class="text-xs text-slate-500 mt-1">Drag the slider to see your recurring passive income projection</p>
+  <section id="partnerCalculator" class="py-20 border-t border-slate-200 dark:border-slate-800/80 bg-slate-100/40 dark:bg-[#0E1526]/40">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight">Interactive Partner Income Calculator</h2>
+        <p class="text-slate-600 dark:text-slate-300 mt-2 text-sm">See how your recurring passive income compounds as you refer customers.</p>
       </div>
 
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Referred Active Customers:</span>
-          <span class="px-4 py-1.5 rounded-xl bg-violet-600 text-white font-mono font-bold text-lg shadow-md shadow-violet-500/30">
-            <span id="referralsCount">25</span> Customers
-          </span>
-        </div>
-        <input 
-          id="affiliateSlider" 
-          type="range" 
-          min="5" 
-          max="200" 
-          value="25" 
-          step="5" 
-          class="w-full cursor-pointer"
-        >
-        <div class="flex justify-between text-[11px] text-slate-400 mt-2 font-mono">
-          <span>5 referrals</span>
-          <span>50 referrals</span>
-          <span>100 referrals</span>
-          <span>200 referrals</span>
+      <div class="bte-card p-6 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-6">
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-2">
+                <span class="text-slate-700 dark:text-slate-300">Active Referred Customers</span>
+                <span id="affiliateRefCount" class="text-violet-500 font-mono text-sm">25 Referrals</span>
+              </div>
+              <input id="affiliateRefSlider" type="range" min="1" max="200" value="25" step="1" class="w-full accent-violet-600 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+                <span>1 user</span>
+                <span>50 users</span>
+                <span>200 users</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-2">
+                <span class="text-slate-700 dark:text-slate-300">Average Plan Value</span>
+                <span id="affiliatePlanValue" class="text-indigo-500 font-mono text-sm">$99 / month (Growth)</span>
+              </div>
+              <select id="affiliatePlanSelect" class="w-full p-3 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200">
+                <option value="49">Starter Tier ($49/mo) &rarr; $14.70/mo per user</option>
+                <option value="99" selected>Growth Tier ($99/mo) &rarr; $29.70/mo per user</option>
+                <option value="249">Agency Tier ($249/mo) &rarr; $74.70/mo per user</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Payout Card -->
+          <div class="p-6 rounded-2xl bg-gradient-to-br from-violet-950/40 via-indigo-950/40 to-slate-900 border border-violet-500/30 text-center space-y-4">
+            <div>
+              <div class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Your Monthly Recurring Payout</div>
+              <div id="affiliateMonthlyEarnings" class="text-4xl sm:text-5xl font-black font-heading text-cyan-400 mt-1">$742.50</div>
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex justify-around text-xs">
+              <div>
+                <div class="text-slate-400 text-[10px]">Annualized Passive</div>
+                <div id="affiliateAnnualEarnings" class="font-bold text-slate-200 text-sm">$8,910.00</div>
+              </div>
+              <div>
+                <div class="text-slate-400 text-[10px]">Commission Rate</div>
+                <div class="font-bold text-violet-400 text-sm">30% For Life</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="p-5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 text-center">
-          <div class="text-xs text-indigo-500 font-bold uppercase tracking-wider">Monthly Recurring Income</div>
-          <div id="monthlyEarnings" class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-2">$743</div>
-          <div class="text-[11px] text-slate-400 mt-1">Paid directly to your bank every 30 days</div>
+  <!-- 3-STEP VISUAL HOW IT WORKS -->
+  <section class="py-20 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight">How the Partner Program Works</h2>
+        <p class="text-slate-600 dark:text-slate-300 mt-2 text-base">Start earning within 5 minutes with our frictionless onboard system.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bte-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="link" class="w-7 h-7"></i>
+          </div>
+          <div class="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2">Step 01</div>
+          <h3 class="font-heading text-xl font-bold mb-2">Grab Your Unique Link</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            Create an affiliate account in 60 seconds and access your personalized tracking link with a 60-day cookie window.
+          </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-800 text-center">
-          <div class="text-xs text-violet-500 font-bold uppercase tracking-wider">Yearly Passive Income</div>
-          <div id="yearlyEarnings" class="text-4xl font-extrabold text-violet-600 dark:text-violet-400 mt-2">$8,910</div>
-          <div class="text-[11px] text-slate-400 mt-1">Compound income while you sleep</div>
+        <div class="bte-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-violet-500/10 text-violet-500 flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="share-2" class="w-7 h-7"></i>
+          </div>
+          <div class="text-xs font-bold text-violet-500 uppercase tracking-wider mb-2">Step 02</div>
+          <h3 class="font-heading text-xl font-bold mb-2">Share With Your Network</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            Promote to founders, agency owners, YouTubers, and content marketers using our pre-designed banners and swipe copy.
+          </p>
+        </div>
+
+        <div class="bte-card p-8 rounded-3xl border border-slate-200 dark:border-slate-800 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="badge-dollar-sign" class="w-7 h-7"></i>
+          </div>
+          <div class="text-xs font-bold text-cyan-500 uppercase tracking-wider mb-2">Step 03</div>
+          <h3 class="font-heading text-xl font-bold mb-2">Collect Monthly Payouts</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            Receive automated monthly payouts on the 1st of every month via Stripe, PayPal, or direct Wise wire transfer.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3-STEP VISUAL HOW IT WORKS CARDS -->
-  <section class="py-20 max-w-6xl mx-auto px-4">
-    <div class="text-center mb-14">
-      <h2 class="text-xs uppercase tracking-widest text-indigo-500 font-bold mb-2">Simplicity First</h2>
-      <h3 class="text-3xl font-extrabold">How the Affiliate Program Works</h3>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4">
-        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold text-xl">
-          1
+  <!-- MARKETING KIT PROMO -->
+  <section class="py-16 bg-slate-100/50 dark:bg-[#0E1526]/50 border-t border-slate-200 dark:border-slate-800/80">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bte-card p-8 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 uppercase tracking-wider">Turnkey Assets</span>
+          <h3 class="font-heading text-2xl font-bold mt-2">Ready-to-Use Affiliate Marketing Kit</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-lg">
+            High-converting banner ads (all sizes), email sequence templates, video review talking points, and Twitter/LinkedIn viral hooks.
+          </p>
         </div>
-        <h4 class="text-lg font-bold">Get Your Tracking Link</h4>
-        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Sign up in 30 seconds. Access your affiliate dashboard with personalized tracking links, banner kits, and email templates.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4">
-        <div class="w-12 h-12 rounded-2xl bg-violet-500/10 text-violet-500 flex items-center justify-center font-bold text-xl">
-          2
-        </div>
-        <h4 class="text-lg font-bold">Promote to Your Audience</h4>
-        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Share your link with your newsletter readers, YouTube subscribers, Twitter/X followers, or marketing clients who need hands-off SEO.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4">
-        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold text-xl">
-          3
-        </div>
-        <h4 class="text-lg font-bold">Earn 30% Every Single Month</h4>
-        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Receive automatic payouts via PayPal, Stripe, or Wise on the 1st of every month with our guaranteed 60-day cookie tracking window.
-        </p>
+        <button onclick="bteToast.show('Marketing Asset Kit downloaded successfully!', 'success')" class="px-6 py-3.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs flex items-center gap-2 hover:scale-105 transition-all shrink-0">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Download Partner Kit (.ZIP)</span>
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="mt-auto bg-slate-100 dark:bg-[#080B12] border-t border-slate-200 dark:border-slate-800/80 py-10 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>&copy; 2026 BlackTechEngine, Inc. All rights reserved.</div>
-      <div class="flex gap-4">
-        <a href="index.html" class="hover:text-indigo-500">Home</a>
-        <a href="pricing.html" class="hover:text-indigo-500">Pricing</a>
-        <a href="affiliate.html" class="text-indigo-500 font-semibold">Affiliate</a>
-        <a href="login.html" class="hover:text-indigo-500">Sign In</a>
+  <!-- UNIFIED FOOTER -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#070A11] text-slate-600 dark:text-slate-400 text-sm transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        
+        <!-- Brand Info -->
+        <div class="lg:col-span-2 space-y-4">
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <span class="font-heading text-2xl font-black text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          </a>
+          <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+            The next-generation autonomous SEO and GEO (Generative Engine Optimization) platform. Transforming websites into authoritative, AI-cited industry leaders.
+          </p>
+          <div class="pt-2 flex items-center gap-3 text-slate-500 dark:text-slate-400">
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="github" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+          </div>
+        </div>
+
+        <!-- Product Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Platform</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="features.html" class="hover:text-indigo-500 transition-colors">Features Overview</a></li>
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">GEO 3.0 Engine</a></li>
+            <li><a href="pricing.html" class="hover:text-indigo-500 transition-colors">Pricing & Plans</a></li>
+            <li><a href="user/index.html" class="hover:text-indigo-500 transition-colors">User Dashboard Demo</a></li>
+            <li><a href="admin/index.html" class="hover:text-indigo-500 transition-colors">Super Admin Demo</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Resources</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="blog.html" class="hover:text-indigo-500 transition-colors">AI & SEO Blog</a></li>
+            <li><a href="blog-single.html" class="hover:text-indigo-500 transition-colors">Latest Guide</a></li>
+            <li><a href="affiliate.html" class="hover:text-indigo-500 transition-colors">Affiliate Program (30%)</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Documentation</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">API Reference</a></li>
+          </ul>
+        </div>
+
+        <!-- Company Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Company</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Contact Support</a></li>
+            <li><a href="login.html" class="hover:text-indigo-500 transition-colors">Client Sign In</a></li>
+            <li><a href="signup.html" class="hover:text-indigo-500 transition-colors">Create Account</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-12 mt-12 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div>
+          &copy; 2026 BlackTechEngine, Inc. All rights reserved. Built with precision for autonomous SEO.
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-indigo-500">Privacy Policy</a>
+          <a href="#" class="hover:text-indigo-500">Terms of Service</a>
+          <a href="#" class="hover:text-indigo-500">Security & GDPR</a>
+        </div>
       </div>
     </div>
   </footer>

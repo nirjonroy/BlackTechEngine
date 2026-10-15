@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Articles Manager & Live SEO Editor — BlackTechEngine</title>
+  <title>Article Library & Live SEO Editor — BlackTechEngine Autopilot</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,473 +24,574 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- FIXED LEFT SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+  <!-- UNIFIED DASHBOARD SIDEBAR -->
+  <aside id="dashboardSidebar" class="w-64 bte-surface border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full lg:translate-x-0">
     <div class="p-5 flex flex-col h-full overflow-y-auto">
-      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
-            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
-        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
-        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
-      </div>
-
-      <div class="mt-6 space-y-6 flex-1">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          <span class="font-heading text-lg font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[9px] uppercase tracking-wider text-slate-400 font-bold">User Workspace</span>
+        </div>
+      </a>
+
+      <!-- Workspace Switcher Selector -->
+      <div class="mt-4 p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">HU</div>
+          <div class="truncate">
+            <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Horizons Unlimited</div>
+            <div class="text-[10px] text-emerald-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Autopilot Active</div>
+          </div>
+        </div>
+        <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="mt-6 space-y-6 flex-1 text-xs font-semibold">
+        <!-- Group 1: Core -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Core Autopilot</div>
+          <div class="space-y-1">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              <span>Dashboard</span>
+              <span>Dashboard Overview</span>
             </a>
-            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="calendar" class="w-4 h-4"></i>
-                <span>Content Calendar</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>Content Calendar</span>
             </a>
-            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="dna" class="w-4 h-4"></i>
               <span>Brand DNA Studio</span>
             </a>
-            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20">
               <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>Articles Manager</span>
+              <span>Articles & SEO Editor</span>
             </a>
-            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          </div>
+        </div>
+
+        <!-- Group 2: Distribution -->
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Omnichannel & Local</div>
+          <div class="space-y-1">
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="share-2" class="w-4 h-4"></i>
-              <span>Social Media Studio</span>
+              <span>Social Media Drip</span>
             </a>
-            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="map-pin" class="w-4 h-4"></i>
-                <span>Google Business</span>
-              </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            <a href="google-business.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <span>Google Business Profile</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 3: Intelligence -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Intelligence & SEO</div>
+          <div class="space-y-1">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-              <span>Analytics & GEO</span>
+              <span>GEO & Traffic Analytics</span>
             </a>
-            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <i data-lucide="target" class="w-4 h-4"></i>
-              <span>Keywords & Clusters</span>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="search" class="w-4 h-4"></i>
+              <span>Keyword Gap Hunter</span>
             </a>
-            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <div class="flex items-center gap-3">
-                <i data-lucide="gauge" class="w-4 h-4"></i>
-                <span>Site Speed & CWV</span>
-              </div>
-              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            <a href="site-speed.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Site Speed & Health</span>
             </a>
-          </nav>
+          </div>
         </div>
 
+        <!-- Group 4: Settings -->
         <div>
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
-          <nav class="space-y-1 text-xs font-semibold">
-            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
-              <i data-lucide="plug" class="w-4 h-4"></i>
-              <span>Integrations Hub</span>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Settings & Account</div>
+          <div class="space-y-1">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="blocks" class="w-4 h-4"></i>
+              <span>CMS Integrations</span>
             </a>
-            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="credit-card" class="w-4 h-4"></i>
-              <span>Billing & Credits</span>
+              <span>Billing & Quota</span>
             </a>
-            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="gift" class="w-4 h-4"></i>
               <span>Affiliate Earnings</span>
             </a>
-            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
               <i data-lucide="settings" class="w-4 h-4"></i>
               <span>Settings</span>
             </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
-          <div class="truncate text-xs">
-            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
-            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
           </div>
-          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </nav>
+
+      <!-- USER PROFILE DROPDOWN MENU -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 relative">
+        <button id="userProfileToggle" class="w-full p-2.5 rounded-xl bte-card border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-indigo-500 transition-all text-left">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">AM</div>
+            <div class="truncate">
+              <div class="text-xs font-bold truncate text-slate-800 dark:text-slate-200">Alex Morgan</div>
+              <div class="text-[10px] text-slate-400 truncate">alex@thehorizonsunlimited.com</div>
+            </div>
+          </div>
+          <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <!-- Dropdown Popup -->
+        <div id="userProfileDropdown" class="hidden absolute bottom-full left-0 w-full mb-2 bte-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+          <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+            <span>View Profile</span>
+          </a>
+          <a href="settings.html?tab=team" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>Team Members</span>
+          </a>
+          <a href="billing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
+            <span>Upgrade to Agency</span>
+          </a>
+          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+          <button onclick="confirmLogoutModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Log Out</span>
+          </button>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN WRAPPER -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
     
-    <!-- TOP BAR -->
-    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
-      <div class="flex items-center gap-3">
-        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Articles & SEO Hub</h1>
-        <span class="text-xs text-slate-400">48 Articles in Database</span>
+    <!-- TOPBAR -->
+    <header class="h-16 bte-glass-nav border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
+      <div class="flex items-center gap-4">
+        <button id="sidebarMobileBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+          <span>Horizons Unlimited</span>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-indigo-500 font-bold">Article Library</span>
+        </div>
       </div>
 
+      <!-- Right Utility Actions -->
       <div class="flex items-center gap-3">
-        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
         </button>
 
-        <button data-modal-target="newArticleModal" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-500/25">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>+ New Article</span>
+        <!-- Generate Instant Article Button -->
+        <button onclick="openLiveEditor('The 2026 Generative Engine Optimization Benchmark', 'GEO 3.0 citations', 2640, 96)" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold shadow-md shadow-indigo-500/20 hover:scale-105 transition-all">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>Live SEO Editor</span>
         </button>
       </div>
     </header>
 
     <!-- CONTENT BODY -->
-    <main class="p-6 sm:p-8 space-y-6 max-w-7xl w-full mx-auto">
+    <main class="p-4 sm:p-8 flex-1 space-y-6">
       
-      <!-- SEARCH & FILTER TOOLBAR -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
-        <div class="relative flex-1 max-w-md">
-          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-          <input type="text" placeholder="Search by title, target keyword, or tag..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-indigo-500">
+      <!-- HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h1 class="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight">Article Library & Live SEO Command</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Review, edit, and inspect generative readiness scores of all synthesized articles.</p>
         </div>
-
         <div class="flex items-center gap-2">
-          <select class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
-            <option>All Statuses</option>
-            <option>Published</option>
-            <option>Scheduled</option>
-            <option>Draft</option>
-          </select>
-          <select class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
-            <option>Highest SEO Score</option>
-            <option>Recently Created</option>
-            <option>Most Words</option>
-          </select>
+          <button onclick="bteToast.show('Exporting 14 articles as CSV...', 'info')" class="px-3 py-1.5 rounded-xl bte-card border border-slate-300 dark:border-slate-700 hover:border-indigo-500 text-xs font-bold flex items-center gap-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
 
-      <!-- ARTICLES TABLE -->
-      <div class="overflow-x-auto glass-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
-        <table class="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-800/40 text-slate-400">
-              <th class="p-4 font-bold text-slate-900 dark:text-white">Article Title & Details</th>
-              <th class="p-4 font-bold text-slate-900 dark:text-white">Status</th>
-              <th class="p-4 font-bold text-slate-900 dark:text-white">Target Keyword</th>
-              <th class="p-4 font-bold text-slate-900 dark:text-white">Length</th>
-              <th class="p-4 font-bold text-slate-900 dark:text-white text-center">SEO Score</th>
-              <th class="p-4 font-bold text-slate-900 dark:text-white text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-            
-            <!-- Row 1 -->
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-              <td class="p-4">
-                <div class="font-bold text-slate-900 dark:text-white text-sm">
-                  From Junior Dev to AI Engineer: The 2026 Skills & Salary Roadmap
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Updated 2 hours ago • Category: Career Transitions</div>
-              </td>
-              <td class="p-4">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30">
-                  Scheduled Today
-                </span>
-              </td>
-              <td class="p-4 font-mono text-indigo-400">junior dev to ai engineer</td>
-              <td class="p-4">2,640 words</td>
-              <td class="p-4 text-center">
-                <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  98/100
-                </span>
-              </td>
-              <td class="p-4 text-right space-x-2">
-                <button onclick="openLiveEditor('From Junior Dev to AI Engineer: The 2026 Skills & Salary Roadmap', 'junior dev to ai engineer', 98)" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
-                  Edit
-                </button>
-                <button onclick="window.showToast('Pushed update directly to WordPress!', 'success')" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800">
-                  Push CMS
-                </button>
-              </td>
-            </tr>
+      <!-- FILTER & SEARCH BAR -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+          <button class="px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white font-bold">All (20)</button>
+          <button class="px-3.5 py-1.5 rounded-lg bte-card border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-500">Published (14)</button>
+          <button class="px-3.5 py-1.5 rounded-lg bte-card border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-500">Scheduled (4)</button>
+          <button class="px-3.5 py-1.5 rounded-lg bte-card border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-500">Drafts (2)</button>
+        </div>
 
-            <!-- Row 2 -->
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-              <td class="p-4">
-                <div class="font-bold text-slate-900 dark:text-white text-sm">
-                  The 2026 Generative Engine Optimization (GEO) Blueprint
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Published Oct 14 • Featured Pillar Article</div>
-              </td>
-              <td class="p-4">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  ✓ Published
-                </span>
-              </td>
-              <td class="p-4 font-mono text-indigo-400">generative engine optimization</td>
-              <td class="p-4">3,200 words</td>
-              <td class="p-4 text-center">
-                <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  99/100
-                </span>
-              </td>
-              <td class="p-4 text-right space-x-2">
-                <button onclick="openLiveEditor('The 2026 Generative Engine Optimization (GEO) Blueprint', 'generative engine optimization', 99)" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
-                  Edit
-                </button>
-                <a href="../blog-single.html" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800">
-                  Preview
-                </a>
-              </td>
-            </tr>
-
-            <!-- Row 3 -->
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-              <td class="p-4">
-                <div class="font-bold text-slate-900 dark:text-white text-sm">
-                  Full Stack Cloud Architecture Roadmap: Certifications vs Portfolios
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Scheduled Oct 16 • Category: Cloud</div>
-              </td>
-              <td class="p-4">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30">
-                  Scheduled Oct 16
-                </span>
-              </td>
-              <td class="p-4 font-mono text-indigo-400">cloud architecture roadmap</td>
-              <td class="p-4">2,150 words</td>
-              <td class="p-4 text-center">
-                <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  95/100
-                </span>
-              </td>
-              <td class="p-4 text-right space-x-2">
-                <button onclick="openLiveEditor('Full Stack Cloud Architecture Roadmap', 'cloud architecture roadmap', 95)" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
-                  Edit
-                </button>
-                <button onclick="window.showToast('Triggering immediate CMS Webhook push!', 'info')" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs">
-                  Push Now
-                </button>
-              </td>
-            </tr>
-
-            <!-- Row 4 -->
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-              <td class="p-4">
-                <div class="font-bold text-slate-900 dark:text-white text-sm">
-                  Top 10 High-Paying Remote Tech Careers (2026 Salary Guide)
-                </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Published Oct 12 • Category: Careers</div>
-              </td>
-              <td class="p-4">
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  ✓ Published
-                </span>
-              </td>
-              <td class="p-4 font-mono text-indigo-400">remote tech careers 2026</td>
-              <td class="p-4">2,890 words</td>
-              <td class="p-4 text-center">
-                <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  98/100
-                </span>
-              </td>
-              <td class="p-4 text-right space-x-2">
-                <button onclick="openLiveEditor('Top 10 High-Paying Remote Tech Careers', 'remote tech careers 2026', 98)" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
-                  Edit
-                </button>
-                <button onclick="window.showToast('Repurposing to LinkedIn carousel deck!', 'info')" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs">
-                  Repurpose
-                </button>
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
+        <div class="relative w-full sm:w-64">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input type="text" placeholder="Search by title or keyword..." class="w-full pl-9 pr-4 py-2 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 text-xs focus:border-indigo-500 focus:outline-none">
+        </div>
       </div>
 
+      <!-- MODERN DATA TABLE (PER USER INSTRUCTION: NO BACKDATED DESIGN) -->
+      <div class="bte-card rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/60 font-bold">
+                <th class="py-4 px-6 w-10"><input type="checkbox" class="accent-indigo-600 rounded"></th>
+                <th class="py-4 px-4">Article Title</th>
+                <th class="py-4 px-4">Target Keyword</th>
+                <th class="py-4 px-4">Words</th>
+                <th class="py-4 px-4">GEO Score</th>
+                <th class="py-4 px-4">Channels</th>
+                <th class="py-4 px-4">Status</th>
+                <th class="py-4 px-6 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
+              
+              <!-- Row 1 -->
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="py-4 px-6"><input type="checkbox" class="accent-indigo-600 rounded"></td>
+                <td class="py-4 px-4">
+                  <div class="font-bold text-slate-900 dark:text-slate-100 text-sm">The 2026 Generative Engine Optimization Benchmark</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Auditing 10,000 prompts across Perplexity, ChatGPT & Gemini</div>
+                </td>
+                <td class="py-4 px-4 font-mono text-indigo-500 font-bold">GEO citations 2026</td>
+                <td class="py-4 px-4 font-mono text-slate-400">2,640w</td>
+                <td class="py-4 px-4">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-mono">96%</span>
+                </td>
+                <td class="py-4 px-4">
+                  <div class="flex items-center gap-1.5 text-slate-400">
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">WP</span>
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">LI</span>
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">X</span>
+                  </div>
+                </td>
+                <td class="py-4 px-4">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500">Published</span>
+                </td>
+                <td class="py-4 px-6 text-right space-x-2">
+                  <button onclick="openLiveEditor('The 2026 Generative Engine Optimization Benchmark', 'GEO citations 2026', 2640, 96)" class="font-bold text-indigo-500 hover:underline">
+                    Edit Live
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="py-4 px-6"><input type="checkbox" class="accent-indigo-600 rounded"></td>
+                <td class="py-4 px-4">
+                  <div class="font-bold text-slate-900 dark:text-slate-100 text-sm">How to Eliminate AI Cliches From Your Content Pipe</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Comprehensive negative prompt and regex dictionaries</div>
+                </td>
+                <td class="py-4 px-4 font-mono text-indigo-500 font-bold">eliminate AI cliches</td>
+                <td class="py-4 px-4 font-mono text-slate-400">2,400w</td>
+                <td class="py-4 px-4">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-mono">94%</span>
+                </td>
+                <td class="py-4 px-4">
+                  <div class="flex items-center gap-1.5 text-slate-400">
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">WP</span>
+                  </div>
+                </td>
+                <td class="py-4 px-4">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500">Published</span>
+                </td>
+                <td class="py-4 px-6 text-right space-x-2">
+                  <button onclick="openLiveEditor('How to Eliminate AI Cliches From Your Content Pipe', 'eliminate AI cliches', 2400, 94)" class="font-bold text-indigo-500 hover:underline">
+                    Edit Live
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="py-4 px-6"><input type="checkbox" class="accent-indigo-600 rounded"></td>
+                <td class="py-4 px-4">
+                  <div class="font-bold text-slate-900 dark:text-slate-100 text-sm">Top 10 Remote AI Engineering Jobs (Salary Study)</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Auditing 500+ job descriptions and compensation matrices</div>
+                </td>
+                <td class="py-4 px-4 font-mono text-indigo-500 font-bold">remote AI engineering jobs</td>
+                <td class="py-4 px-4 font-mono text-slate-400">2,180w</td>
+                <td class="py-4 px-4">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 font-mono">91%</span>
+                </td>
+                <td class="py-4 px-4">
+                  <div class="flex items-center gap-1.5 text-slate-400">
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">WP</span>
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">LI</span>
+                  </div>
+                </td>
+                <td class="py-4 px-4">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Scheduled (Oct 16)</span>
+                </td>
+                <td class="py-4 px-6 text-right space-x-2">
+                  <button onclick="openLiveEditor('Top 10 Remote AI Engineering Jobs (Salary Study)', 'remote AI engineering jobs', 2180, 91)" class="font-bold text-indigo-500 hover:underline">
+                    Edit Live
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <td class="py-4 px-6"><input type="checkbox" class="accent-indigo-600 rounded"></td>
+                <td class="py-4 px-4">
+                  <div class="font-bold text-slate-900 dark:text-slate-100 text-sm">System Design Interview Blueprint 2026</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Architecting event-driven and distributed microservices</div>
+                </td>
+                <td class="py-4 px-4 font-mono text-indigo-500 font-bold">system design interview</td>
+                <td class="py-4 px-4 font-mono text-slate-400">3,100w</td>
+                <td class="py-4 px-4">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 font-mono">95%</span>
+                </td>
+                <td class="py-4 px-4">
+                  <div class="flex items-center gap-1.5 text-slate-400">
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">WP</span>
+                    <span class="p-1 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">GBP</span>
+                  </div>
+                </td>
+                <td class="py-4 px-4">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400">Scheduled (Oct 23)</span>
+                </td>
+                <td class="py-4 px-6 text-right space-x-2">
+                  <button onclick="openLiveEditor('System Design Interview Blueprint 2026', 'system design interview', 3100, 95)" class="font-bold text-indigo-500 hover:underline">
+                    Edit Live
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
+
+    <!-- UNIFIED DASHBOARD FOOTER -->
+    <footer class="h-14 border-t border-slate-200 dark:border-slate-800/80 px-6 sm:px-8 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Article Library &bull; Auto-Syncing with WordPress API</span>
+      </div>
+      <div>&copy; 2026 BlackTechEngine.</div>
+    </footer>
   </div>
 
-  <!-- SIDE-BY-SIDE LIVE SEO EDITOR MODAL -->
-  <div id="liveEditorModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-2 sm:p-4">
-    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-md"></div>
-
-    <div class="relative w-full max-w-7xl h-[94vh] rounded-3xl glass-card bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col z-10 overflow-hidden animate-fadeIn">
+  <!-- FULLSCREEN / SPLIT LIVE SIDE-BY-SIDE SEO EDITOR MODAL -->
+  <div id="liveSeoEditorModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-2 sm:p-6">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/85 backdrop-blur-md" onclick="closeLiveEditor()"></div>
+    
+    <div class="relative w-full max-w-7xl h-[92vh] bte-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col z-10 overflow-hidden animate-fadeIn">
       
-      <!-- Editor Top Bar -->
-      <div class="h-16 px-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0 bg-slate-50 dark:bg-slate-900/50">
+      <!-- Top Modal Bar -->
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-100/60 dark:bg-slate-900/60">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
             <i data-lucide="edit-3" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 class="font-extrabold text-sm text-slate-900 dark:text-white">Side-by-Side Live SEO Editor</h3>
-            <span class="text-[10px] text-slate-400">Live Brand DNA & Schema validation active</span>
+            <h3 class="font-heading font-bold text-base text-slate-900 dark:text-white">Live Side-by-Side SEO & GEO Editor</h3>
+            <span class="text-[11px] text-slate-400 font-mono">Autonomous Draft Engine &bull; Horizons Unlimited</span>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
-          <button onclick="window.showToast('Draft autosaved to cloud!', 'info')" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
-            Save Draft
+          <button onclick="bteToast.show('Article auto-published to WordPress!', 'success'); closeLiveEditor()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md flex items-center gap-1.5 transition-all">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Publish to WordPress Now</span>
           </button>
-          <button onclick="window.showToast('Article published directly to WordPress CMS!', 'success'); window.closeModal('liveEditorModal');" class="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25">
-            Publish to Website
-          </button>
-          <button data-modal-close class="p-2 rounded-xl text-slate-400 hover:text-white">
+          <button onclick="closeLiveEditor()" class="p-2 text-slate-400 hover:text-white rounded-xl">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Split Screen Body -->
-      <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
+      <!-- Split Main Body -->
+      <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0 overflow-hidden">
         
-        <!-- Left: Rich Text Article Editor (7 Cols) -->
-        <div class="lg:col-span-8 p-6 overflow-y-auto space-y-5 border-r border-slate-200 dark:border-slate-800">
+        <!-- LEFT: RICH ARTICLE TEXT EDITOR (8 COLS) -->
+        <div class="lg:col-span-8 p-6 overflow-y-auto space-y-4 border-r border-slate-200 dark:border-slate-800">
           <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Article Title (H1)</label>
-            <input id="editorTitleInput" type="text" class="w-full text-xl sm:text-2xl font-extrabold p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500">
+            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Headline (H1)</label>
+            <input id="editorTitleInput" type="text" value="The 2026 Generative Engine Optimization Benchmark" class="w-full text-xl sm:text-2xl font-heading font-extrabold px-3 py-2 rounded-xl bte-surface border border-slate-300 dark:border-slate-700 focus:border-indigo-500 focus:outline-none text-slate-900 dark:text-white">
           </div>
 
-          <div class="grid grid-cols-2 gap-4 text-xs">
-            <div>
-              <label class="block font-bold text-slate-400 mb-1">SEO Meta Title (60 chars max)</label>
-              <input type="text" value="Junior Dev to AI Engineer: The 2026 Roadmap" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            </div>
-            <div>
-              <label class="block font-bold text-slate-400 mb-1">Target Keyword Anchor</label>
-              <input id="editorKeywordInput" type="text" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-mono text-indigo-400">
-            </div>
+          <!-- Formatting Toolbar Simulation -->
+          <div class="flex items-center gap-1 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded font-bold">B</button>
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded italic">I</button>
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded underline">U</button>
+            <div class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-1"></div>
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded">H2</button>
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded">H3</button>
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded"><i data-lucide="link" class="w-3.5 h-3.5"></i></button>
+            <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded"><i data-lucide="code" class="w-3.5 h-3.5"></i></button>
           </div>
 
+          <!-- Content Textarea -->
           <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Meta Description</label>
-            <textarea rows="2" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs">Discover the exact architectural roadmap, skills matrix, and salary benchmarks to transition from a junior software developer into a certified AI Engineer in 2026.</textarea>
-          </div>
+            <textarea id="editorBodyInput" rows="18" class="w-full p-4 rounded-2xl bte-surface border border-slate-300 dark:border-slate-700 focus:border-indigo-500 focus:outline-none text-xs sm:text-sm leading-relaxed text-slate-800 dark:text-slate-200 font-sans" oninput="updateEditorWordCount(this.value)">The shift toward AI-synthesized answer engines (ChatGPT Search, Perplexity Pro, and Gemini) has invalidated legacy keyword stuffing techniques. Search algorithms now index entity graphs and factual density rather than keyword recurrence.
 
-          <!-- Article Content Body -->
-          <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Full Article Body (Markdown Supported)</label>
-            <textarea rows="14" class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs font-mono leading-relaxed text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"># Introduction: The Evolution of Software Engineering in 2026
+According to our empirical benchmark analyzing 10,000 queries, pages that deliver structured answers within the first 150 words achieve an 84% higher citation probability in generative results.
 
-The software engineering industry has undergone its most radical transformation since the advent of cloud computing. In 2026, junior software engineers who rely purely on traditional CRUD operations face an increasingly competitive market.
-
-## The AI Engineering Skill Matrix
-To command six-figure salaries, modern developers must master three core pillars:
-1. **Retrieval-Augmented Generation (RAG):** Connecting large models to vector databases like Pinecone, Milvus, and pgvector.
-2. **Autonomous Multi-Agent Orchestration:** Building self-correcting agentic loops using frameworks like LangGraph and CrewAI.
-3. **Model Evaluation & Fine-Tuning (LoRA):** Tailoring open-weights models (Llama 3.3, Mistral) for proprietary enterprise contexts.
-
-## Salary Benchmarks by Experience
-According to Horizons Unlimited's 2026 placement dataset, engineers transitioning into AI roles saw an average salary increase of 42% ($148,000 median starting package).
-</textarea>
+Key Findings from Horizons Unlimited:
+1. Information gain score directly dictates whether an LLM will link your URL or omit citations.
+2. Embedding JSON-LD TechArticle metadata increases machine parsing accuracy by 4.2x.
+3. Avoiding synthetic clichés ensures higher reader trust and lower bounce rates.</textarea>
           </div>
         </div>
 
-        <!-- Right: Circular SEO Score & Live Checklist (4 Cols) -->
-        <div class="lg:col-span-4 p-6 overflow-y-auto space-y-6 bg-slate-50/50 dark:bg-[#0B0F19]/50">
+        <!-- RIGHT: LIVE SEO & GEO REAL-TIME METRICS (4 COLS) -->
+        <div class="lg:col-span-4 p-6 overflow-y-auto space-y-6 bg-slate-50/50 dark:bg-slate-900/30">
           
-          <!-- Circular Score Widget -->
-          <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 text-center space-y-3">
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Real-Time SEO & GEO Score</div>
-            
-            <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
-              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                <path class="text-slate-200 dark:text-slate-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="text-emerald-500" stroke-dasharray="98, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              </svg>
-              <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span id="editorScoreDisplay" class="text-3xl font-extrabold text-emerald-500">98</span>
-                <span class="text-[10px] text-slate-400 font-bold uppercase">Exceptional</span>
-              </div>
-            </div>
-
-            <p class="text-xs text-slate-400">High probability of ranking in ChatGPT citations and Google Top 3.</p>
+          <!-- Score Circular Gauge -->
+          <div class="p-5 rounded-2xl bte-card border border-slate-200 dark:border-slate-800 text-center">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">GEO Citation Readiness</div>
+            <div id="editorScoreLabel" class="text-4xl font-black font-heading text-emerald-400">96 / 100</div>
+            <div class="text-[11px] text-slate-400 mt-1">High probability for ChatGPT & Perplexity Citations</div>
           </div>
 
-          <!-- Optimization Checklist -->
-          <div class="space-y-3">
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">On-Page GEO Audit</div>
-            
-            <div class="space-y-2 text-xs">
-              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-emerald-500">
-                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-700 dark:text-slate-300">Target keyword present in H1 title</span>
-              </div>
-              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-emerald-500">
-                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-700 dark:text-slate-300">Target keyword in first 100 words</span>
-              </div>
-              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-emerald-500">
-                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-700 dark:text-slate-300">Article JSON-LD Schema valid</span>
-              </div>
-              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-emerald-500">
-                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-700 dark:text-slate-300">3 internal links mapped naturally</span>
-              </div>
-              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-emerald-500">
-                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-700 dark:text-slate-300">Banned AI words strictly purged (0 found)</span>
-              </div>
-              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-amber-500">
-                <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-                <span class="text-slate-700 dark:text-slate-300">Add 1 more structured Markdown comparison table</span>
-              </div>
+          <!-- Real-Time Metrics -->
+          <div class="space-y-3 text-xs">
+            <div class="flex justify-between p-2.5 rounded-xl bte-surface border border-slate-200 dark:border-slate-800">
+              <span class="text-slate-400">Live Word Count:</span>
+              <strong id="editorWordCount" class="text-slate-200 font-mono">2,640 words</strong>
+            </div>
+            <div class="flex justify-between p-2.5 rounded-xl bte-surface border border-slate-200 dark:border-slate-800">
+              <span class="text-slate-400">Target Keyword Density:</span>
+              <strong class="text-indigo-400 font-mono">1.4% (Optimal)</strong>
+            </div>
+            <div class="flex justify-between p-2.5 rounded-xl bte-surface border border-slate-200 dark:border-slate-800">
+              <span class="text-slate-400">Reading Time:</span>
+              <strong class="text-slate-200 font-mono">11 min</strong>
             </div>
           </div>
 
+          <!-- Information Gain Checklist -->
+          <div class="p-4 rounded-2xl bte-card border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs">
+            <div class="font-bold text-slate-800 dark:text-slate-200 mb-2">Algorithm Checklist</div>
+            <div class="flex items-center gap-2 text-emerald-400">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>Primary benchmark stats detected</span>
+            </div>
+            <div class="flex items-center gap-2 text-emerald-400">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>JSON-LD Schema attached</span>
+            </div>
+            <div class="flex items-center gap-2 text-emerald-400">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>Zero banned AI clichés found</span>
+            </div>
+            <div class="flex items-center gap-2 text-emerald-400">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>Internal link to bootcamp embedded</span>
+            </div>
+          </div>
+
+          <button onclick="bteToast.show('Draft saved to database!', 'success')" class="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:border-indigo-500">
+            Save Draft Changes
+          </button>
         </div>
-
       </div>
+    </div>
+  </div>
 
+  <!-- LOGOUT MODAL -->
+  <div id="logoutModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full max-w-sm rounded-3xl bte-card border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 text-center animate-fadeIn">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-3 font-bold">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold">Sign Out of Workspace?</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Your autopilot schedule will continue running autonomously in the background.</p>
+      <div class="flex gap-2">
+        <button onclick="closeLogoutModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+          Stay Logged In
+        </button>
+        <a href="../login.html" class="w-1/2 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center justify-center">
+          Yes, Sign Out
+        </a>
+      </div>
     </div>
   </div>
 
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/main.js"></script>
   <script>
-    function openLiveEditor(title, keyword, score) {
-      const modal = document.getElementById('liveEditorModal');
-      const titleInput = document.getElementById('editorTitleInput');
-      const kwInput = document.getElementById('editorKeywordInput');
-      const scoreDisplay = document.getElementById('editorScoreDisplay');
+    function openLiveEditor(title, kw, words, score) {
+      document.getElementById('editorTitleInput').value = title;
+      document.getElementById('editorWordCount').textContent = `${words} words`;
+      document.getElementById('editorScoreLabel').textContent = `${score} / 100`;
+      document.getElementById('liveSeoEditorModal').classList.remove('hidden');
+      document.getElementById('liveSeoEditorModal').classList.add('flex');
+    }
+    function closeLiveEditor() {
+      document.getElementById('liveSeoEditorModal').classList.add('hidden');
+      document.getElementById('liveSeoEditorModal').classList.remove('flex');
+    }
+    function updateEditorWordCount(val) {
+      const words = val.trim().split(/\s+/).filter(Boolean).length;
+      document.getElementById('editorWordCount').textContent = `${words} words`;
+    }
 
-      if (titleInput) titleInput.value = title;
-      if (kwInput) kwInput.value = keyword;
-      if (scoreDisplay) scoreDisplay.textContent = score;
+    // User profile dropdown toggle
+    document.getElementById('userProfileToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('userProfileDropdown')?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('userProfileDropdown')?.classList.add('hidden');
+    });
 
-      window.openModal('liveEditorModal');
+    function confirmLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+      document.getElementById('logoutModal').classList.add('flex');
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      document.getElementById('logoutModal').classList.remove('flex');
     }
   </script>
 </body>

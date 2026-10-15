@@ -1,16 +1,14 @@
 /**
- * BlackTechEngine - Dual Theme System (Default: DARK MODE)
- * Persistent theme management across all public, user, and admin screens.
+ * BlackTechEngine - Production Dual Theme System (Default: DARK MODE)
  */
 
 (function () {
-  // Theme state initialization
   function getPreferredTheme() {
     const saved = localStorage.getItem('bte_theme');
-    if (saved) {
-      return saved;
+    if (saved === 'light') {
+      return 'light';
     }
-    // Default is strictly DARK MODE as specified in the requirements
+    // Default is strictly DARK MODE
     return 'dark';
   }
 
@@ -24,25 +22,24 @@
       root.classList.add('light');
     }
     localStorage.setItem('bte_theme', theme);
-    updateToggleIcons(theme);
+    updateIcons(theme);
   }
 
-  function updateToggleIcons(theme) {
-    const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #themeToggle, #themeToggleNav, #themeToggleSidebar');
-    toggleBtns.forEach(btn => {
-      const sunIcon = btn.querySelector('.theme-icon-sun');
-      const moonIcon = btn.querySelector('.theme-icon-moon');
-      const label = btn.querySelector('.theme-label');
+  function updateIcons(theme) {
+    document.querySelectorAll('.theme-toggle-btn, #themeToggle, #themeToggleNav, #themeToggleSidebar').forEach(btn => {
+      const sun = btn.querySelector('.theme-icon-sun');
+      const moon = btn.querySelector('.theme-icon-moon');
+      const text = btn.querySelector('.theme-text');
 
       if (theme === 'dark') {
-        if (sunIcon) sunIcon.classList.remove('hidden');
-        if (moonIcon) moonIcon.classList.add('hidden');
-        if (label) label.textContent = 'Light Mode';
+        if (sun) sun.classList.remove('hidden');
+        if (moon) moon.classList.add('hidden');
+        if (text) text.textContent = 'Light Mode';
         btn.setAttribute('title', 'Switch to Light Mode');
       } else {
-        if (sunIcon) sunIcon.classList.add('hidden');
-        if (moonIcon) moonIcon.classList.remove('hidden');
-        if (label) label.textContent = 'Dark Mode';
+        if (sun) sun.classList.add('hidden');
+        if (moon) moon.classList.remove('hidden');
+        if (text) text.textContent = 'Dark Mode';
         btn.setAttribute('title', 'Switch to Dark Mode');
       }
     });
@@ -52,18 +49,14 @@
     const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
     const nextTheme = current === 'dark' ? 'light' : 'dark';
     applyTheme(nextTheme);
-
-    // Trigger custom event if charts or dynamic elements need repainting
-    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: nextTheme } }));
+    window.dispatchEvent(new CustomEvent('bteThemeChanged', { detail: { theme: nextTheme } }));
   };
 
-  // Immediate execution before DOM ready to prevent any flash of unstyled content
-  const currentTheme = getPreferredTheme();
-  applyTheme(currentTheme);
+  // Immediate execution before DOM ready
+  applyTheme(getPreferredTheme());
 
-  // Bind to DOM when loaded
   document.addEventListener('DOMContentLoaded', () => {
-    updateToggleIcons(getPreferredTheme());
+    updateIcons(getPreferredTheme());
 
     document.querySelectorAll('.theme-toggle-btn, #themeToggle, #themeToggleNav, #themeToggleSidebar').forEach(btn => {
       btn.addEventListener('click', (e) => {

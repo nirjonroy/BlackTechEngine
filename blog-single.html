@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The 2026 Generative Engine Optimization (GEO) Blueprint — BlackTechEngine</title>
+  <title>The 2026 GEO Benchmark — BlackTechEngine Lab</title>
   
+  <!-- Anti-FOUC Theme Initialization (Dark Mode Default) -->
   <script>
     if (localStorage.getItem('bte_theme') === 'light') {
       document.documentElement.classList.remove('dark');
@@ -15,6 +16,7 @@
     }
   </script>
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,232 +24,395 @@
       theme: {
         extend: {
           colors: {
-            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
-            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
-            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            violet: {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+            },
+            cyan: {
+              400: '#22D3EE',
+              500: '#06B6D4',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0E1526',
+              card: '#131C31',
+              border: '#222F4C'
+            }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
       }
     }
   </script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="assets/css/custom.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- NAVIGATION -->
-  <header class="sticky top-0 z-40 glass-nav transition-colors duration-300">
+  <!-- UNIFIED HEADER NAVIGATION -->
+  <header class="sticky top-0 z-40 bte-glass-nav transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
-          <i data-lucide="sparkles" class="w-5 h-5"></i>
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
-        <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+        <div>
+          <span class="font-heading text-2xl font-black tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+          <span class="block text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">Autonomous SEO & GEO SaaS</span>
+        </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+      <!-- Desktop Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
         <a href="index.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
-        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+        <a href="features.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
         <a href="about.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
-        <a href="blog.html" class="text-indigo-600 dark:text-indigo-400 font-semibold transition-colors">Blog</a>
-        <a href="affiliate.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Affiliates</a>
+        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+        <a href="blog.html" class="text-indigo-600 dark:text-indigo-400 font-bold">Blog</a>
+        <a href="affiliate.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+          <span>Affiliates</span>
+          <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-violet-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/30">30%</span>
+        </a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+      <!-- Right Utility Actions -->
+      <div class="flex items-center gap-3.5">
+        <!-- Sun/Moon Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105" aria-label="Toggle Theme">
           <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
           <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
         </button>
-        <a href="login.html" class="hidden sm:inline-flex text-sm font-semibold px-4 py-2 hover:text-indigo-600">Sign In</a>
-        <a href="signup.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25">
-          Start Autopilot
+
+        <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+          Sign In
         </a>
+
+        <a href="signup.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <span>Start Autopilot</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+
+        <!-- Mobile Hamburger -->
+        <button id="mobileMenuBtn" class="lg:hidden p-2.5 rounded-xl text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobileMenu" class="hidden lg:hidden px-6 pt-3 pb-6 space-y-3 bg-white dark:bg-[#0E1526] border-b border-slate-200 dark:border-slate-800">
+      <a href="index.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Home</a>
+      <a href="features.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Features</a>
+      <a href="about.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">About GEO</a>
+      <a href="pricing.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Pricing</a>
+      <a href="blog.html" class="block py-2 text-sm font-bold text-indigo-600 dark:text-indigo-400">Blog</a>
+      <a href="affiliate.html" class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Affiliate Partner (30%)</a>
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-3">
+        <a href="login.html" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Sign In</a>
+        <a href="signup.html" class="w-1/2 text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold">Start Free</a>
       </div>
     </div>
   </header>
 
   <!-- BREADCRUMBS & ARTICLE HEADER -->
-  <article class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-20">
-    <div class="max-w-4xl mx-auto mb-10">
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-4">
+  <div class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-100/30 dark:bg-[#0E1526]/30 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 text-xs text-slate-500 mb-4">
+        <a href="index.html" class="hover:text-indigo-500">Home</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
         <a href="blog.html" class="hover:text-indigo-500">Blog</a>
-        <span>/</span>
-        <span class="text-indigo-500 font-medium">Generative Engine Optimization</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-indigo-500 truncate">GEO 3.0 Citation Benchmark</span>
       </div>
 
-      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-        The 2026 Generative Engine Optimization (GEO) Blueprint: How We Outranked Wikipedia on ChatGPT
-      </h1>
-
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-slate-200 dark:border-slate-800">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-400 text-white flex items-center justify-center font-bold text-sm">
-            RA
-          </div>
-          <div>
-            <div class="font-bold text-sm text-slate-900 dark:text-white">Dr. Robert Adams</div>
-            <div class="text-xs text-slate-400">Principal SEO Architect • Horizons Unlimited Case Study</div>
-          </div>
+      <div class="max-w-4xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 mb-4">
+          Empirical Research &bull; GEO Strategy
         </div>
-
-        <div class="flex items-center gap-4 text-xs text-slate-400">
-          <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-4 h-4"></i> Oct 14, 2026</span>
-          <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 8 min read</span>
-          <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold border border-emerald-500/20">Verified GEO</span>
+        <h1 class="font-heading text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-slate-900 dark:text-white">
+          The 2026 Generative Engine Optimization Benchmark: Winning Citations on ChatGPT Search, Gemini & Perplexity
+        </h1>
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center">HU</div>
+            <div>
+              <span class="font-bold text-slate-800 dark:text-slate-200">Horizons Unlimited Research Team</span>
+              <span class="block text-[11px] text-slate-400">Published Oct 14, 2026 &bull; 11 min read</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="navigator.clipboard.writeText(window.location.href); bteToast.show('Article link copied to clipboard!', 'info')" class="p-2 rounded-xl bte-card border border-slate-200 dark:border-slate-800 hover:text-indigo-500 flex items-center gap-1.5 font-bold text-xs">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Share</span>
+            </button>
+            <button onclick="window.print()" class="p-2 rounded-xl bte-card border border-slate-200 dark:border-slate-800 hover:text-indigo-500">
+              <i data-lucide="printer" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- 3-COLUMN LAYOUT (Sticky TOC, Article Body, Sticky Promo CTA) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-      
-      <!-- LEFT: STICKY TABLE OF CONTENTS -->
-      <aside class="hidden lg:block lg:col-span-3">
-        <div class="sticky top-28 p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Table of Contents</div>
-          <nav class="space-y-2 text-xs">
-            <a href="#section-1" class="block text-indigo-500 font-semibold hover:underline">1. The Death of 10 Blue Links</a>
-            <a href="#section-2" class="block text-slate-600 dark:text-slate-400 hover:text-indigo-500">2. How LLMs Choose Citations</a>
-            <a href="#section-3" class="block text-slate-600 dark:text-slate-400 hover:text-indigo-500">3. The 4-Step GEO Blueprint</a>
-            <a href="#section-4" class="block text-slate-600 dark:text-slate-400 hover:text-indigo-500">4. Horizons Unlimited Results</a>
-            <a href="#section-5" class="block text-slate-600 dark:text-slate-400 hover:text-indigo-500">5. Schema JSON-LD Implementation</a>
-          </nav>
-        </div>
-      </aside>
-
-      <!-- MIDDLE: ARTICLE CONTENT -->
-      <div class="lg:col-span-6 space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+  <!-- ARTICLE CONTENT & SIDEBAR GRID -->
+  <main class="py-12 flex-1">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
-        <!-- Featured Image -->
-        <div class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl bg-slate-900 h-72 sm:h-96 flex items-center justify-center relative">
-          <div class="absolute inset-0 bg-gradient-to-tr from-indigo-950 via-slate-900 to-violet-950 opacity-90"></div>
-          <div class="relative z-10 text-center p-6">
-            <i data-lucide="cpu" class="w-16 h-16 text-indigo-400 mx-auto mb-3"></i>
-            <h3 class="text-xl sm:text-2xl font-extrabold text-white">Generative Engine Optimization</h3>
-            <p class="text-xs text-indigo-200 mt-1">From PageRank to Semantic Citation Vectors</p>
-          </div>
-        </div>
+        <!-- LEFT: STICKY TABLE OF CONTENTS (DESKTOP) -->
+        <aside class="hidden lg:block lg:col-span-3">
+          <div class="sticky top-28 space-y-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Table of Contents</div>
+            <nav class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400 border-l-2 border-slate-200 dark:border-slate-800 pl-3">
+              <a href="#section-1" class="block py-1 hover:text-indigo-500 font-semibold text-indigo-500 border-l-2 -ml-[14px] pl-3 border-indigo-500">1. The Shift to Answer Engines</a>
+              <a href="#section-2" class="block py-1 hover:text-indigo-500">2. Why Keyword Density Fails</a>
+              <a href="#section-3" class="block py-1 hover:text-indigo-500">3. The Information-Gain Equation</a>
+              <a href="#section-4" class="block py-1 hover:text-indigo-500">4. Schema JSON-LD for LLMs</a>
+              <a href="#section-5" class="block py-1 hover:text-indigo-500">5. Continuous Autonomous Workflow</a>
+            </nav>
 
-        <section id="section-1" class="space-y-4">
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">1. The Death of 10 Blue Links</h2>
-          <p>
-            For over two decades, search engine optimization was straightforward: identify target keywords, acquire backlinks with exact match anchors, and maintain keyword density. By 2026, over 40% of queries that previously landed on organic search now terminate inside conversational answers generated by ChatGPT, Google Gemini, and Perplexity.
-          </p>
-          <p>
-            When a user asks: <em>"What is the best tech career accelerator for transitioning into cloud architecture?"</em>, the model doesn't give them 10 blue links. It produces a synthesized recommendation with 2–3 cited authoritative sources. If your brand isn't in those citations, your organic visibility is practically zero.
-          </p>
-        </section>
-
-        <!-- Key Takeaway Box -->
-        <div class="p-5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-2">
-          <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs uppercase tracking-wider">
-            <i data-lucide="lightbulb" class="w-4 h-4"></i> Key GEO Takeaway
-          </div>
-          <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-            LLMs do not rank by PageRank alone. They rank by <strong>Information Density</strong>, <strong>Factuality Consensus</strong>, and <strong>Direct Semantic Answers</strong> formatted in structured Markdown tables.
-          </p>
-        </div>
-
-        <section id="section-2" class="space-y-4">
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">2. How LLMs Choose Citations</h2>
-          <p>
-            Our research team at BlackTechEngine benchmarked over 100,000 queries across Gemini and ChatGPT Search. We discovered three primary criteria that govern citation likelihood:
-          </p>
-          <ul class="list-disc pl-5 space-y-2 text-sm">
-            <li><strong>Unique Structured Entity Definitions:</strong> Articles that lead with clear, unambiguous definitions within the first 120 words are cited 3.4x more frequently.</li>
-            <li><strong>Proprietary Quantitative Datasets:</strong> Models seek empirical evidence. Citing specific metrics (e.g. "94% placement rate in 180 days") forces the LLM to anchor its claim to your article.</li>
-            <li><strong>Freshness Recency Triggers:</strong> High-frequency weekly publishing signals active authority to Retrieval-Augmented Generation (RAG) scrapers.</li>
-          </ul>
-        </section>
-
-        <section id="section-3" class="space-y-4">
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">3. The 4-Step GEO Blueprint</h2>
-          <p>
-            Here is the exact protocol automated by BlackTechEngine:
-          </p>
-          <ol class="list-decimal pl-5 space-y-2 text-sm">
-            <li><strong>Brand DNA Extraction:</strong> Auto-extract your proprietary terminology so the AI never writes like a generic Wikipedia summary.</li>
-            <li><strong>Semantic Gap Discovery:</strong> Target high-intent queries where existing answers lack numerical benchmarks.</li>
-            <li><strong>Schema-Injected Generation:</strong> Inject JSON-LD FAQ and Article schema directly into the document head.</li>
-            <li><strong>Omnichannel Dwell-Time Amplification:</strong> Repurpose the article into LinkedIn carousels to drive high-engagement social referral traffic.</li>
-          </ol>
-        </section>
-
-        <section id="section-4" class="space-y-4">
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">4. Horizons Unlimited Results</h2>
-          <p>
-            Applying this exact engine to <em>Horizons Unlimited (thehorizonsunlimited.com)</em>, we published 45 targeted tech career guides over 60 days. The result was unprecedented:
-          </p>
-          <div class="grid grid-cols-2 gap-4 text-xs pt-2">
-            <div class="p-4 rounded-xl glass-card border border-slate-200 dark:border-slate-800 text-center">
-              <div class="text-2xl font-extrabold text-indigo-500">+380%</div>
-              <div class="text-slate-400 mt-1">Perplexity & ChatGPT Citations</div>
-            </div>
-            <div class="p-4 rounded-xl glass-card border border-slate-200 dark:border-slate-800 text-center">
-              <div class="text-2xl font-extrabold text-emerald-500">85,000+</div>
-              <div class="text-slate-400 mt-1">Monthly Organic Applicants</div>
+            <div class="pt-6">
+              <div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs">
+                <div class="font-bold text-indigo-500 mb-1">Key Insight</div>
+                <p class="text-slate-600 dark:text-slate-300">Websites with unique primary research are 7.2x more likely to be cited in ChatGPT Search.</p>
+              </div>
             </div>
           </div>
-        </section>
+        </aside>
 
-        <section id="section-5" class="space-y-4">
-          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">5. Schema JSON-LD Implementation</h2>
-          <p>
-            BlackTechEngine automatically attaches valid JSON-LD metadata for all articles to ensure immediate ingestion by RAG crawlers:
+        <!-- CENTER: MAIN ARTICLE TEXT -->
+        <article class="lg:col-span-6 space-y-8 text-slate-700 dark:text-slate-300 text-base leading-relaxed">
+          
+          <p class="text-lg font-normal text-slate-800 dark:text-slate-200 leading-relaxed">
+            The era of scrolling past three Google sponsored ads to click a 10-blue-link is rapidly declining. In 2026, generative search engines powered by Retrieval-Augmented Generation (RAG)—including ChatGPT Search, Google Gemini, and Perplexity Pro—now answer user intent directly inside synthesized dialogs.
           </p>
-          <div class="p-4 rounded-2xl bg-slate-900 text-slate-300 font-mono text-xs overflow-x-auto border border-slate-800">
-<pre>{
+
+          <section id="section-1" class="space-y-4 pt-4">
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              1. The Shift to Answer Engines
+            </h2>
+            <p>
+              When a user asks: <em>"What is the best way to architect a microservices event pipeline for an AI application?"</em>, the search engine does not rank the website with the highest backlinks. It retrieves vector embeddings from 5-10 indexed sources, extracts concise factual assertions, and synthesizes a direct answer—attributing citations to the most authoritative source.
+            </p>
+            <div class="p-4 rounded-2xl bte-surface border-l-4 border-indigo-500 text-sm italic">
+              "If your content merely rephrases what Wikipedia or 50 other blogs already state, the LLM will compress your article into latent space without awarding a hyperlink citation."
+            </div>
+          </section>
+
+          <section id="section-2" class="space-y-4 pt-6">
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              2. Why Traditional Keyword Density Fails
+            </h2>
+            <p>
+              Traditional SEO relied on exact-match keyword stuffing (e.g., repeating "best cloud architecture" 14 times in 2,000 words). LLMs use cosine similarity across high-dimensional semantic spaces. Repeating a keyword does not trick an embedding model; in fact, repetitive vocabulary degrades text perplexity and reduces citation likelihood.
+            </p>
+          </section>
+
+          <section id="section-3" class="space-y-4 pt-6">
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              3. The Information-Gain Equation
+            </h2>
+            <p>
+              To rank on modern answer engines, content must score high on Google's patented <strong>Information Gain Score</strong>. The mathematical representation formulated by our research lab:
+            </p>
+            
+            <!-- Styled Formula Box -->
+            <div class="p-5 rounded-2xl bg-slate-900 text-white font-mono text-center text-sm sm:text-base border border-slate-800 shadow-inner">
+              CitationScore = &alpha;(NewEntities) + &beta;(EmpiricalMetrics) - &gamma;(RepetitiveEntropy)
+            </div>
+
+            <p>
+              BlackTechEngine automates this by cross-referencing your Brand DNA with competitor URLs, deliberately injecting unique statistics, primary findings, and contrastive definitions that retriever agents favor.
+            </p>
+          </section>
+
+          <section id="section-4" class="space-y-4 pt-6">
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              4. Schema JSON-LD Engineered for LLMs
+            </h2>
+            <p>
+              Structured metadata is the bridge between human readability and machine comprehension. Below is the exact JSON-LD snippet injected autonomously into every article published via BlackTechEngine:
+            </p>
+
+            <!-- Code Block with Copy Button -->
+            <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden text-xs font-mono">
+              <div class="px-4 py-2.5 bg-slate-950 flex justify-between items-center text-slate-400 border-b border-slate-800">
+                <span>schema-geo-article.json</span>
+                <button onclick="bteToast.show('Schema copied to clipboard!', 'success')" class="hover:text-white flex items-center gap-1">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span>Copy</span>
+                </button>
+              </div>
+              <pre class="p-4 overflow-x-auto text-indigo-300"><code>{
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  "headline": "2026 Generative Engine Optimization Blueprint",
+  "headline": "Generative Engine Optimization 2026 Benchmark",
   "author": {
-    "@type": "Person",
-    "name": "Dr. Robert Adams"
-  },
-  "publisher": {
     "@type": "Organization",
-    "name": "BlackTechEngine",
-    "logo": "https://thehorizonsunlimited.com/logo.png"
+    "name": "Horizons Unlimited"
   },
-  "about": ["SEO", "Generative AI", "GEO 3.0"]
-}</pre>
-          </div>
-        </section>
+  "citation": [
+    "https://thehorizonsunlimited.com/research/geo-benchmark"
+  ],
+  "about": [
+    {"@type": "Thing", "name": "Artificial Intelligence"},
+    {"@type": "Thing", "name": "Generative Engine Optimization"}
+  ]
+}</code></pre>
+            </div>
+          </section>
 
+          <section id="section-5" class="space-y-4 pt-6">
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              5. The Continuous Autonomous Workflow
+            </h2>
+            <p>
+              Achieving consistent generative engine visibility is not a one-time audit—it requires continuous cadence. By syncing with BlackTechEngine, your website continuously crawls search query changes, drafts long-form authoritative responses, and pushes them straight into your CMS with zero manual bottleneck.
+            </p>
+          </section>
+
+          <!-- Author Bio Box -->
+          <div class="mt-12 p-6 rounded-3xl bte-card border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold text-lg flex items-center justify-center shrink-0">
+              HU
+            </div>
+            <div>
+              <div class="font-bold text-slate-900 dark:text-white text-base">Horizons Unlimited Research Lab</div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Pioneering the intersection of artificial intelligence, high-scale software engineering, and autonomous search discovery algorithms.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- RIGHT: STICKY CONVERSION PROMO & RELATED POSTS -->
+        <aside class="lg:col-span-3 space-y-6">
+          <div class="sticky top-28 space-y-6">
+            
+            <!-- Promo Box -->
+            <div class="bte-card p-6 rounded-3xl border border-indigo-500/30 glow-indigo text-center">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-400 text-white flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-500/25">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+              </div>
+              <h3 class="font-heading text-lg font-bold">Put This on Autopilot</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                Connect your website URL in 60 seconds and let BlackTechEngine publish 3 GEO-optimized articles this week.
+              </p>
+              <a href="signup.html" class="mt-4 block w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs shadow-md shadow-indigo-500/20 hover:scale-105 transition-all">
+                Start Free 14-Day Trial
+              </a>
+              <span class="block text-[10px] text-slate-400 mt-2">No credit card required &bull; Cancel anytime</span>
+            </div>
+
+            <!-- Related Posts Box -->
+            <div class="bte-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
+              <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Related Articles</div>
+              <div class="space-y-3 text-xs">
+                <a href="blog-single.html" class="block group">
+                  <div class="font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-500 transition-colors">How to Eliminate AI Cliches From Your Writing</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">8 min read &bull; Prompting</div>
+                </a>
+                <a href="blog-single.html" class="block group border-t border-slate-200 dark:border-slate-800 pt-3">
+                  <div class="font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-500 transition-colors">LinkedIn Carousel Drip Engine Breakdown</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">6 min read &bull; Social</div>
+                </a>
+                <a href="blog-single.html" class="block group border-t border-slate-200 dark:border-slate-800 pt-3">
+                  <div class="font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-500 transition-colors">Google Maps 3-Pack Autopilot Setup</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">7 min read &bull; Local SEO</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
+    </div>
+  </main>
 
-      <!-- RIGHT: STICKY PROMO CTA -->
-      <aside class="lg:col-span-3">
-        <div class="sticky top-28 p-6 rounded-3xl bg-gradient-to-br from-indigo-900/40 via-violet-900/30 to-slate-900 border-2 border-indigo-500/40 glass-card space-y-4 shadow-xl">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
-            <i data-lucide="zap" class="w-5 h-5"></i>
-          </div>
-          <h3 class="text-lg font-extrabold text-white">Automate Your GEO with BlackTechEngine</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Put this entire framework on 100% autopilot. Get 30 high-impact, calibrated articles published directly to your website every month.
-          </p>
-          <a href="signup.html" class="block w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold text-xs text-center shadow-lg shadow-indigo-500/30 hover:scale-105 transition-all">
-            Start 14-Day Free Trial
+  <!-- UNIFIED FOOTER -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#070A11] text-slate-600 dark:text-slate-400 text-sm transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        
+        <!-- Brand Info -->
+        <div class="lg:col-span-2 space-y-4">
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <span class="font-heading text-2xl font-black text-slate-900 dark:text-white">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
           </a>
-          <div class="text-[10px] text-center text-slate-400">
-            No credit card • 60s setup
+          <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+            The next-generation autonomous SEO and GEO (Generative Engine Optimization) platform. Transforming websites into authoritative, AI-cited industry leaders.
+          </p>
+          <div class="pt-2 flex items-center gap-3 text-slate-500 dark:text-slate-400">
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="github" class="w-4 h-4"></i></a>
+            <a href="#" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:text-indigo-500 hover:scale-110 transition-all"><i data-lucide="youtube" class="w-4 h-4"></i></a>
           </div>
         </div>
-      </aside>
 
-    </div>
-  </article>
+        <!-- Product Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Platform</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="features.html" class="hover:text-indigo-500 transition-colors">Features Overview</a></li>
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">GEO 3.0 Engine</a></li>
+            <li><a href="pricing.html" class="hover:text-indigo-500 transition-colors">Pricing & Plans</a></li>
+            <li><a href="user/index.html" class="hover:text-indigo-500 transition-colors">User Dashboard Demo</a></li>
+            <li><a href="admin/index.html" class="hover:text-indigo-500 transition-colors">Super Admin Demo</a></li>
+          </ul>
+        </div>
 
-  <!-- FOOTER -->
-  <footer class="mt-auto bg-slate-100 dark:bg-[#080B12] border-t border-slate-200 dark:border-slate-800/80 py-10 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>&copy; 2026 BlackTechEngine, Inc. All rights reserved.</div>
-      <div class="flex gap-4">
-        <a href="index.html" class="hover:text-indigo-500">Home</a>
-        <a href="pricing.html" class="hover:text-indigo-500">Pricing</a>
-        <a href="blog.html" class="hover:text-indigo-500">Blog</a>
-        <a href="login.html" class="hover:text-indigo-500">Sign In</a>
+        <!-- Resources Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Resources</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="blog.html" class="hover:text-indigo-500 transition-colors">AI & SEO Blog</a></li>
+            <li><a href="blog-single.html" class="hover:text-indigo-500 transition-colors">Latest Guide</a></li>
+            <li><a href="affiliate.html" class="hover:text-indigo-500 transition-colors">Affiliate Program (30%)</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Documentation</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">API Reference</a></li>
+          </ul>
+        </div>
+
+        <!-- Company Col -->
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider mb-4">Company</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="about.html" class="hover:text-indigo-500 transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-indigo-500 transition-colors">Contact Support</a></li>
+            <li><a href="login.html" class="hover:text-indigo-500 transition-colors">Client Sign In</a></li>
+            <li><a href="signup.html" class="hover:text-indigo-500 transition-colors">Create Account</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-12 mt-12 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div>
+          &copy; 2026 BlackTechEngine, Inc. All rights reserved. Built with precision for autonomous SEO.
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-indigo-500">Privacy Policy</a>
+          <a href="#" class="hover:text-indigo-500">Terms of Service</a>
+          <a href="#" class="hover:text-indigo-500">Security & GDPR</a>
+        </div>
       </div>
     </div>
   </footer>
