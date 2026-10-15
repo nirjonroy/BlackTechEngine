@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\SeoSettingController;
+use App\Http\Controllers\Admin\BlogController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,6 +56,14 @@ Route::post('/admin/seo-settings/store', [SeoSettingController::class, 'store'])
 Route::get('/admin/seo-settings/{id}/edit', [SeoSettingController::class, 'edit'])->name('admin.seo.edit');
 Route::post('/admin/seo-settings/{id}/update', [SeoSettingController::class, 'update'])->name('admin.seo.update');
 Route::get('/admin/seo-settings/{id}/delete', [SeoSettingController::class, 'destroy'])->name('admin.seo.destroy');
-    });
+
+Route::get('/admin/blogs', [BlogController::class, 'index'])->name('admin.blogs.index');
+Route::get('/admin/blogs/create', [BlogController::class, 'create'])->name('admin.blogs.create');
+Route::post('/admin/blogs/store', [BlogController::class, 'store'])->name('admin.blogs.store');
+Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
+Route::post('/admin/blogs/{id}/update', [BlogController::class, 'update'])->name('admin.blogs.update');
+Route::get('/admin/blogs/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+
+});
 
 require __DIR__.'/auth.php';
