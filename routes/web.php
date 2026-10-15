@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\AboutPageController;
+use App\Http\Controllers\Admin\SeoSettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +49,12 @@ Route::get('/admin/settings', [SiteSettingController::class, 'index'])->name('ad
 Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
 Route::get('/admin/about-page', [AboutPageController::class, 'index'])->name('admin.about.index');
 Route::post('/admin/about-page', [AboutPageController::class, 'update'])->name('admin.about.update');
+Route::get('/admin/seo-settings', [SeoSettingController::class, 'index'])->name('admin.seo.index');
+Route::get('/admin/seo-settings/create', [SeoSettingController::class, 'create'])->name('admin.seo.create');
+Route::post('/admin/seo-settings/store', [SeoSettingController::class, 'store'])->name('admin.seo.store');
+Route::get('/admin/seo-settings/{id}/edit', [SeoSettingController::class, 'edit'])->name('admin.seo.edit');
+Route::post('/admin/seo-settings/{id}/update', [SeoSettingController::class, 'update'])->name('admin.seo.update');
+Route::get('/admin/seo-settings/{id}/delete', [SeoSettingController::class, 'destroy'])->name('admin.seo.destroy');
     });
 
 require __DIR__.'/auth.php';
