@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\AboutPageController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,6 +46,8 @@ Route::middleware('auth:admin')->group(function () {
    
 Route::get('/admin/settings', [SiteSettingController::class, 'index'])->name('admin.settings.index');
 Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
+Route::get('/admin/about-page', [AboutPageController::class, 'index'])->name('admin.about.index');
+Route::post('/admin/about-page', [AboutPageController::class, 'update'])->name('admin.about.update');
     });
 
 require __DIR__.'/auth.php';
