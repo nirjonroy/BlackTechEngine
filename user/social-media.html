@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media Studio — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
+            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
+        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
+        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
+      </div>
+
+      <div class="mt-6 space-y-6 flex-1">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Content Calendar</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            </a>
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="dna" class="w-4 h-4"></i>
+              <span>Brand DNA Studio</span>
+            </a>
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>Articles Manager</span>
+            </a>
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Social Media Studio</span>
+            </a>
+            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Google Business</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>Analytics & GEO</span>
+            </a>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Keywords & Clusters</span>
+            </a>
+            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span>Site Speed & CWV</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="plug" class="w-4 h-4"></i>
+              <span>Integrations Hub</span>
+            </a>
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Billing & Credits</span>
+            </a>
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliate Earnings</span>
+            </a>
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Settings</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="truncate text-xs">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
+            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
+          </div>
+          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP BAR -->
+    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      <div class="flex items-center gap-3">
+        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Social Media Studio & Drip Autopilot</h1>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+          4 Channels Linked
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Smart Drip Reshare Toggle -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs">
+          <span class="font-bold text-indigo-700 dark:text-indigo-300">Smart Drip Reshare</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked onchange="window.showToast('Smart Drip Reshare schedule active for next 14 days!', 'success')" class="sr-only peer">
+            <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+          </label>
+        </div>
+
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+      
+      <!-- Source Article Banner -->
+      <div class="p-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Source Article</span>
+          <h3 class="font-extrabold text-sm text-slate-900 dark:text-white mt-0.5">
+            From Junior Dev to AI Engineer: The 2026 Skills & Salary Roadmap
+          </h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="window.showToast('Regenerating all 4 social formats with fresh hooks...', 'info')" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-500"></i> Regenerate Hooks
+          </button>
+          <button onclick="window.showToast('Dispatched all 4 social formats to queue!', 'success')" class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md">
+            Publish All Channels
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 SOCIAL MEDIA FORMAT PREVIEWS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- CARD 1: LINKEDIN CAROUSEL DECK (WITH INTERACTIVE SLIDER) -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2 text-blue-500 font-bold text-xs">
+              <i data-lucide="share-2" class="w-4 h-4"></i> LinkedIn Carousel Generator
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold">5 Slides Built</span>
+          </div>
+
+          <!-- Interactive Carousel Visual Frame -->
+          <div class="rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 p-6 border border-indigo-500/30 text-white space-y-4 min-h-[260px] flex flex-col justify-between relative shadow-lg">
+            
+            <div class="flex items-center justify-between text-xs text-indigo-300">
+              <span class="font-bold">Horizons Unlimited</span>
+              <span id="carouselSlideNum" class="font-mono text-[10px] px-2 py-0.5 rounded bg-white/10">Slide 1 of 5</span>
+            </div>
+
+            <!-- Slide Content (Interactive) -->
+            <div id="carouselSlideContent" class="space-y-2 py-4">
+              <span class="text-xs font-mono text-cyan-400">2026 Developer Blueprint 🚀</span>
+              <h4 class="text-lg sm:text-xl font-extrabold leading-snug">
+                The Exact 3-Month Roadmap to Transition into an AI Engineer
+              </h4>
+              <p class="text-xs text-slate-300">
+                Swipe right to see the core tech stack, compensation benchmarks, and free project ideas &rarr;
+              </p>
+            </div>
+
+            <!-- Carousel Controls -->
+            <div class="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
+              <button onclick="prevSlide()" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <span class="text-[10px] text-slate-400">Swipe or click arrows</span>
+              <button onclick="nextSlide()" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+          </div>
+
+          <!-- Post Copy -->
+          <div class="text-xs text-slate-600 dark:text-slate-300 space-y-1">
+            <div class="font-bold text-slate-900 dark:text-white">Caption Hook:</div>
+            <p class="italic bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+              "Most junior software engineers are worried about AI taking their jobs. But the smartest ones are becoming AI Engineers instead. Here is our 5-slide curriculum playbook 👇"
+            </p>
+          </div>
+        </div>
+
+        <!-- CARD 2: X (TWITTER) THREAD AUTO-DRIP -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs">
+              <i data-lucide="twitter" class="w-4 h-4"></i> X (Twitter) 5-Tweet Thread
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-semibold">Drip Cadence: 1 hr</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            
+            <!-- Tweet 1 (Hook) -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2 relative">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-[10px]">HU</div>
+                <span class="font-bold text-slate-900 dark:text-white">Horizons Unlimited</span>
+                <span class="text-slate-400 text-[11px]">@thehorizonsunl • 1/5</span>
+              </div>
+              <p class="text-slate-700 dark:text-slate-200 leading-relaxed font-mono text-[11px]">
+                Junior developers in 2026 are facing a crossroads: remain a generic CRUD builder, or pivot into an AI Engineer earning $145K+.<br><br>
+                Here is the 3-step blueprint we use to train engineers at Horizons Unlimited 🧵👇
+              </p>
+            </div>
+
+            <!-- Tweet 2 (Body) -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-[10px]">HU</div>
+                <span class="font-bold text-slate-900 dark:text-white">Horizons Unlimited</span>
+                <span class="text-slate-400 text-[11px]">@thehorizonsunl • 2/5</span>
+              </div>
+              <p class="text-slate-700 dark:text-slate-200 leading-relaxed font-mono text-[11px]">
+                Step 1: Stop writing basic Python scripts. Learn Vector DB indexing (Pinecone/Milvus), RAG latency profiling, and multi-agent coordination with LangGraph.
+              </p>
+            </div>
+
+          </div>
+
+          <button onclick="window.showToast('Thread scheduled to publish on X!', 'success')" class="w-full py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">
+            Schedule Thread on X
+          </button>
+        </div>
+
+        <!-- CARD 3: FACEBOOK COMMUNITY POST -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2 text-indigo-400 font-bold text-xs">
+              <i data-lucide="facebook" class="w-4 h-4"></i> Facebook Page & Group Post
+            </div>
+            <span class="text-[10px] text-slate-400">Scheduled for Tomorrow</span>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center">HU</div>
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white">Horizons Unlimited Page</div>
+                <div class="text-[10px] text-slate-400">Public Tech Community</div>
+              </div>
+            </div>
+            <p class="text-slate-700 dark:text-slate-200 leading-relaxed">
+              Thinking about transitioning into high-growth tech in 2026? We just published our complete career transformation breakdown with live compensation data and portfolio requirements.
+            </p>
+            <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+              <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&auto=format&fit=crop&q=60" class="w-full h-32 object-cover" alt="FB Preview">
+              <div class="p-3 bg-slate-100 dark:bg-slate-900">
+                <div class="text-[10px] text-indigo-400 font-mono uppercase">thehorizonsunlimited.com</div>
+                <div class="font-bold text-slate-900 dark:text-white">From Junior Dev to AI Engineer Roadmap</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: INSTAGRAM GRAPHIC & HASHTAGS -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2 text-pink-500 font-bold text-xs">
+              <i data-lucide="instagram" class="w-4 h-4"></i> Instagram Card & Hashtags
+            </div>
+            <span class="text-[10px] text-slate-400">Square 1080x1080</span>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+            <div class="h-44 rounded-xl bg-gradient-to-tr from-purple-900 to-indigo-900 flex flex-col justify-center items-center text-center p-4 border border-purple-500/30">
+              <i data-lucide="sparkles" class="w-8 h-8 text-cyan-400 mb-2"></i>
+              <div class="text-white font-extrabold text-sm max-w-xs">AI Engineer Salary Benchmark 2026: $148,000 Median</div>
+              <div class="text-indigo-200 text-[10px] mt-1">Horizons Unlimited Career Intelligence</div>
+            </div>
+            <div class="text-[11px] text-slate-400 space-y-1">
+              <div class="font-bold text-slate-700 dark:text-slate-300">Auto-Generated Hashtag Cluster:</div>
+              <p class="text-indigo-400">#AIEngineering #TechCareers #SoftwareEngineering #HorizonsUnlimited #CodingBootcamp #LearnToCode2026</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    const slides = [
+      {
+        num: 'Slide 1 of 5',
+        tag: '2026 Developer Blueprint 🚀',
+        title: 'The Exact 3-Month Roadmap to Transition into an AI Engineer',
+        desc: 'Swipe right to see the core tech stack, compensation benchmarks, and free project ideas →'
+      },
+      {
+        num: 'Slide 2 of 5',
+        tag: 'Pillar 1: Vector Architecture',
+        title: 'Master RAG & Vector Embeddings',
+        desc: 'Learn semantic search with Pinecone and pgvector. Understand chunking strategies and cosine similarity.'
+      },
+      {
+        num: 'Slide 3 of 5',
+        tag: 'Pillar 2: Autonomous Agents',
+        title: 'Multi-Agent Loops with LangGraph',
+        desc: 'Move past single prompts. Implement self-correcting evaluation loops that handle enterprise ambiguity.'
+      },
+      {
+        num: 'Slide 4 of 5',
+        tag: 'Real Compensation Figures',
+        title: '$148,000 Starting Package Benchmark',
+        desc: 'AI engineers earn 40%+ more than standard web developers across US and remote global tech firms.'
+      },
+      {
+        num: 'Slide 5 of 5',
+        tag: 'Action Plan',
+        title: 'Start Your Transition with Horizons Unlimited',
+        desc: 'Visit thehorizonsunlimited.com to view our 2026 AI Engineering immersion curriculum.'
+      }
+    ];
+
+    let currentSlide = 0;
+
+    function renderSlide() {
+      const s = slides[currentSlide];
+      document.getElementById('carouselSlideNum').textContent = s.num;
+      document.getElementById('carouselSlideContent').innerHTML = `
+        <span class="text-xs font-mono text-cyan-400">${s.tag}</span>
+        <h4 class="text-lg sm:text-xl font-extrabold leading-snug">${s.title}</h4>
+        <p class="text-xs text-slate-300">${s.desc}</p>
+      `;
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      renderSlide();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      renderSlide();
+    }
+  </script>
+</body>
+</html>

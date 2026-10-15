@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace Settings & White-Label — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
+            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
+        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
+        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
+      </div>
+
+      <div class="mt-6 space-y-6 flex-1">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Content Calendar</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            </a>
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="dna" class="w-4 h-4"></i>
+              <span>Brand DNA Studio</span>
+            </a>
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>Articles Manager</span>
+            </a>
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Social Media Studio</span>
+            </a>
+            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Google Business</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>Analytics & GEO</span>
+            </a>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Keywords & Clusters</span>
+            </a>
+            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span>Site Speed & CWV</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="plug" class="w-4 h-4"></i>
+              <span>Integrations Hub</span>
+            </a>
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Billing & Credits</span>
+            </a>
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliate Earnings</span>
+            </a>
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Settings</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="truncate text-xs">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
+            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
+          </div>
+          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP BAR -->
+    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      <div class="flex items-center gap-3">
+        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Workspace Profile & White-Label Settings</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="p-6 sm:p-8 space-y-8 max-w-4xl w-full mx-auto">
+      
+      <!-- PROFILE SETTINGS CARD -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">User Profile</h3>
+          <p class="text-xs text-slate-400">Manage your personal credentials and notification email</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-400 text-white font-bold text-xl flex items-center justify-center shadow-lg">
+            AL
+          </div>
+          <div>
+            <button onclick="window.showToast('Select avatar photo from your device', 'info')" class="px-3.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">
+              Change Avatar
+            </button>
+            <div class="text-[10px] text-slate-400 mt-1">PNG, JPG or WebP (Max 2MB)</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+            <input type="text" value="Alex Livingstone" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Work Email</label>
+            <input type="email" value="alex@thehorizonsunlimited.com" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="window.showToast('Profile information updated!', 'success')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md">
+            Save Profile
+          </button>
+        </div>
+      </div>
+
+      <!-- TEAM MEMBER INVITATIONS -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Team Member Seats</h3>
+          <p class="text-xs text-slate-400">Invite team members or content editors to your workspace</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="email" placeholder="colleague@thehorizonsunlimited.com" class="flex-1 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+          <select class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+            <option>Content Editor</option>
+            <option>Workspace Admin</option>
+            <option>Read-Only Viewer</option>
+          </select>
+          <button onclick="window.showToast('Team invitation dispatched!', 'success')" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-md">
+            Invite Seat
+          </button>
+        </div>
+
+        <div class="space-y-2.5 pt-2 text-xs">
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">AL</div>
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white block">Alex Livingstone</span>
+                <span class="text-[10px] text-slate-400">alex@thehorizonsunlimited.com</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">Workspace Owner</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-full bg-violet-600 text-white flex items-center justify-center font-bold text-xs">SK</div>
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white block">Sarah K.</span>
+                <span class="text-[10px] text-slate-400">sarah@thehorizonsunlimited.com</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/20 text-slate-400">Editor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHITE-LABEL AGENCY BRANDING -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-bold text-indigo-500 uppercase tracking-wider">
+            <i data-lucide="shield" class="w-4 h-4"></i> Agency Tier Feature
+          </div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1">White-Label Client Portal & Custom CNAME</h3>
+          <p class="text-xs text-slate-400">Remove all BlackTechEngine branding and present reports under your custom domain.</p>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Custom CNAME Domain</label>
+            <input type="text" value="seo.thehorizonsunlimited.com" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-indigo-400">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Portal Display Name</label>
+              <input type="text" value="Horizons SEO Command" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Accent Theme Color</label>
+              <input type="text" value="#6366F1" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="window.showToast('White-label domain DNS records verified (SSL Active)!', 'success')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md">
+            Save White-Label Branding
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

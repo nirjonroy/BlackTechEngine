@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About BlackTechEngine & GEO Architecture</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- NAVIGATION -->
+  <header class="sticky top-0 z-40 glass-nav transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <a href="index.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
+        <a href="index.html#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
+        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+        <a href="about.html" class="text-indigo-600 dark:text-indigo-400 font-semibold transition-colors">About GEO</a>
+        <a href="blog.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
+        <a href="affiliate.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Affiliates</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+          <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
+        </button>
+        <a href="login.html" class="hidden sm:inline-flex text-sm font-semibold px-4 py-2 hover:text-indigo-600">Sign In</a>
+        <a href="signup.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="py-20 text-center relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4">
+      <span class="px-3.5 py-1 text-xs font-bold rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 uppercase tracking-wider">
+        The Future of Organic Discovery
+      </span>
+      <h1 class="mt-6 text-4xl sm:text-6xl font-extrabold tracking-tight">
+        From Traditional SEO to <span class="gradient-text">Generative Engine Optimization</span>
+      </h1>
+      <p class="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Search has evolved. Buyers don't just type 3 keywords into Google anymore—they ask ChatGPT, Gemini, Claude, and Perplexity for authoritative recommendations. Here is how BlackTechEngine puts you in every answer.
+      </p>
+    </div>
+  </section>
+
+  <!-- STEP-BY-STEP GEO DIAGRAM SECTION -->
+  <section class="py-16 max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-14">
+      <h2 class="text-2xl sm:text-3xl font-extrabold">The Autonomous AI SEO + GEO Engine Architecture</h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">A closed-loop 4-stage pipeline that works 24/7 without manual intervention.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+      <!-- Step 1 -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 relative">
+        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold text-lg">
+          01
+        </div>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">Brand DNA Extraction</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Deep crawls your website, extracts your positioning, tone of voice, product features, and target personas into a vector knowledge graph.
+        </p>
+        <div class="pt-2 text-[11px] font-mono text-indigo-500">Vector Embeddings • Tone Weights</div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 relative">
+        <div class="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center font-bold text-lg">
+          02
+        </div>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">Semantic Gap Mining</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Identifies high-intent queries where LLMs currently lack authoritative citations or competitors have weak, outdated coverage.
+        </p>
+        <div class="pt-2 text-[11px] font-mono text-violet-500">Cluster Analysis • Citation Gaps</div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 relative">
+        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold text-lg">
+          03
+        </div>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">Autonomous Synthesis</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Multi-agent LLM consensus writes exhaustive, original 2,500+ word guides with schema markup, tables, data points, and custom AI images.
+        </p>
+        <div class="pt-2 text-[11px] font-mono text-cyan-500">Schema JSON-LD • Auto Internal Links</div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 relative">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-lg">
+          04
+        </div>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">Omnichannel Push</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Instantly publishes to your CMS (WordPress, Shopify, Webflow) and drips carousel cards and threads across LinkedIn, X, and Facebook.
+        </p>
+        <div class="pt-2 text-[11px] font-mono text-emerald-500">REST Webhooks • Social Drip Schedule</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STATS COUNTER -->
+  <section class="py-16 bg-slate-100/50 dark:bg-[#0F172A]/50 border-y border-slate-200 dark:border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">99.2%</div>
+        <div class="text-xs text-slate-500 mt-1 font-semibold uppercase tracking-wider">AI Hallucination Guard</div>
+      </div>
+      <div>
+        <div class="text-4xl font-extrabold text-violet-600 dark:text-violet-400">3.4M+</div>
+        <div class="text-xs text-slate-500 mt-1 font-semibold uppercase tracking-wider">Keyword Rankings Tracked</div>
+      </div>
+      <div>
+        <div class="text-4xl font-extrabold text-cyan-500">140+</div>
+        <div class="text-xs text-slate-500 mt-1 font-semibold uppercase tracking-wider">Countries Supported</div>
+      </div>
+      <div>
+        <div class="text-4xl font-extrabold text-emerald-500">99.98%</div>
+        <div class="text-xs text-slate-500 mt-1 font-semibold uppercase tracking-wider">API Uptime SLA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE VALUES -->
+  <section class="py-24 max-w-6xl mx-auto px-4">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-xs uppercase tracking-widest text-indigo-500 font-bold mb-2">Our Operating Creed</h2>
+      <h3 class="text-3xl font-extrabold">Built with Integrity, Built for Dominance</h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-bold text-slate-900 dark:text-white">Zero Generic AI Slop</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          We strictly reject surface-level rewrites. Every piece must provide proprietary analysis, specific examples, real figures, and actionable blueprints.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center">
+          <i data-lucide="cpu" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-bold text-slate-900 dark:text-white">Multi-LLM Ensemble</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          No single model is best at everything. We route deep research to Gemini 2.5 Pro, narrative prose to Claude 3.7 Sonnet, and imagery to Flux Pro.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center">
+          <i data-lucide="zap" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-bold text-slate-900 dark:text-white">Radical Autonomy</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Software should do the heavy lifting so founders and marketers can focus on strategy, customer love, and product excellence.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto bg-slate-100 dark:bg-[#080B12] border-t border-slate-200 dark:border-slate-800/80 py-10 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>&copy; 2026 BlackTechEngine, Inc. All rights reserved.</div>
+      <div class="flex gap-4">
+        <a href="index.html" class="hover:text-indigo-500">Home</a>
+        <a href="pricing.html" class="hover:text-indigo-500">Pricing</a>
+        <a href="affiliate.html" class="hover:text-indigo-500">Affiliate</a>
+        <a href="login.html" class="hover:text-indigo-500">Sign In</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

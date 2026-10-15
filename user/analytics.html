@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics & GEO Tracking — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
+            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
+        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
+        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
+      </div>
+
+      <div class="mt-6 space-y-6 flex-1">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Content Calendar</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            </a>
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="dna" class="w-4 h-4"></i>
+              <span>Brand DNA Studio</span>
+            </a>
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>Articles Manager</span>
+            </a>
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Social Media Studio</span>
+            </a>
+            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Google Business</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>Analytics & GEO</span>
+            </a>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Keywords & Clusters</span>
+            </a>
+            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span>Site Speed & CWV</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="plug" class="w-4 h-4"></i>
+              <span>Integrations Hub</span>
+            </a>
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Billing & Credits</span>
+            </a>
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliate Earnings</span>
+            </a>
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Settings</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="truncate text-xs">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
+            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
+          </div>
+          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP BAR -->
+    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      <div class="flex items-center gap-3">
+        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Organic Traffic & Generative Search Visibility</h1>
+        <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">GSC Connected</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+      
+      <!-- GSC CLICKS & IMPRESSIONS CHART CARD -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Google Search Console Organic Clicks vs Impressions</h3>
+            <p class="text-xs text-slate-400">Past 90 days organic trajectory for thehorizonsunlimited.com</p>
+          </div>
+          <div class="flex items-center gap-4 text-xs font-mono font-bold">
+            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-indigo-500 inline-block"></span> Total Clicks: 24,190</span>
+            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-cyan-400 inline-block"></span> Impressions: 420,800</span>
+          </div>
+        </div>
+
+        <div class="h-64 w-full">
+          <canvas id="trafficChart"></canvas>
+        </div>
+      </div>
+
+      <!-- AI SEARCH VISIBILITY TRACKER -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-bold text-indigo-500 uppercase tracking-wider">
+            <i data-lucide="cpu" class="w-4 h-4"></i> Generative Engine Optimization (GEO) Radar
+          </div>
+          <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">AI Recommendation & Citation Market Share</h3>
+          <p class="text-xs text-slate-400">Tracking how often ChatGPT, Gemini, and Perplexity reference Horizons Unlimited as an authoritative recommendation.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-slate-900 dark:text-white">ChatGPT Search</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Top 3 Cited</span>
+            </div>
+            <div class="text-3xl font-extrabold text-emerald-500">642</div>
+            <div class="text-xs text-slate-400">Total verified citations on tech career queries</div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-slate-900 dark:text-white">Perplexity AI</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-400">#1 Source</span>
+            </div>
+            <div class="text-3xl font-extrabold text-indigo-500">518</div>
+            <div class="text-xs text-slate-400">Citations across coding bootcamps & AI engineering</div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-slate-900 dark:text-white">Google Gemini</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400">88% Share</span>
+            </div>
+            <div class="text-3xl font-extrabold text-cyan-500">330</div>
+            <div class="text-xs text-slate-400">Featured in Gemini Overview AI summaries</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CONTENT DECAY TABLE -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Content Decay & Refresh Detector</h3>
+            <p class="text-xs text-slate-400">Articles older than 90 days suffering ranking drift. Refresh with 1 click to update stats.</p>
+          </div>
+          <span class="text-xs font-mono font-bold text-amber-500">2 Articles Need Refresh</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400">
+                <th class="pb-3 font-semibold">Article Title</th>
+                <th class="pb-3 font-semibold">Peak Rank</th>
+                <th class="pb-3 font-semibold">Current Rank</th>
+                <th class="pb-3 font-semibold">Estimated Traffic Loss</th>
+                <th class="pb-3 font-semibold text-right">Autopilot Fix</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+              <tr>
+                <td class="py-3 font-semibold text-slate-900 dark:text-white">
+                  Best Cloud Computing Certifications 2025 (Needs 2026 Update)
+                </td>
+                <td class="py-3 font-mono text-emerald-500">Pos #2</td>
+                <td class="py-3 font-mono text-amber-500">Pos #8 (-6)</td>
+                <td class="py-3 text-rose-400">-420 clicks/mo</td>
+                <td class="py-3 text-right">
+                  <button onclick="window.showToast('Re-indexing, updating stats to 2026, and re-publishing!', 'success'); this.textContent = '✓ Refreshing...'; this.disabled = true;" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
+                    Refresh Article
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 font-semibold text-slate-900 dark:text-white">
+                  Full Stack Developer Roadmap: Front End vs Back End
+                </td>
+                <td class="py-3 font-mono text-emerald-500">Pos #1</td>
+                <td class="py-3 font-mono text-amber-500">Pos #5 (-4)</td>
+                <td class="py-3 text-rose-400">-190 clicks/mo</td>
+                <td class="py-3 text-right">
+                  <button onclick="window.showToast('Re-indexing, updating stats to 2026, and re-publishing!', 'success'); this.textContent = '✓ Refreshing...'; this.disabled = true;" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
+                    Refresh Article
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('trafficChart');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10', 'Week 11', 'Week 12'],
+            datasets: [
+              {
+                label: 'Organic Clicks',
+                data: [420, 580, 890, 1100, 1450, 1900, 2300, 2800, 3400, 4100, 4900, 5600],
+                borderColor: '#6366F1',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                tension: 0.4,
+                fill: true
+              },
+              {
+                label: 'Impressions (÷10)',
+                data: [1200, 1600, 2400, 3100, 4200, 5800, 7200, 9100, 11400, 14200, 18500, 24000],
+                borderColor: '#06B6D4',
+                backgroundColor: 'transparent',
+                borderDash: [5, 5],
+                tension: 0.4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: document.documentElement.classList.contains('dark') ? '#94A3B8' : '#475569'
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: '#94A3B8' }
+              },
+              y: {
+                grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                ticks: { color: '#94A3B8' }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

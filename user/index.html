@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Overview — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+
+  <!-- FIXED LEFT SIDEBAR (SORO AI STYLE) -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
+            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Website Switcher Dropdown -->
+      <div class="mt-4 relative">
+        <button data-dropdown-toggle="siteSwitcherMenu" class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-xs hover:border-indigo-500 transition-colors text-left">
+          <div class="truncate pr-2">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
+            <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
+          </div>
+          <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="siteSwitcherMenu" class="dropdown-menu hidden absolute top-full left-0 right-0 mt-1 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl z-50 text-xs space-y-1">
+          <div class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-between">
+            <span>Horizons Unlimited</span>
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </div>
+          <a href="#" class="block p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+            CloudScale Labs (Dev)
+          </a>
+          <button data-modal-target="addWebsiteModal" class="w-full text-left p-2 rounded-lg text-indigo-500 font-semibold hover:bg-indigo-50 dark:hover:bg-indigo-950/30 flex items-center gap-1.5 border-t border-slate-200 dark:border-slate-800 mt-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>+ Add New Website</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN NAVIGATION MENU -->
+      <div class="mt-6 space-y-6 flex-1">
+        
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Content Calendar</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            </a>
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="dna" class="w-4 h-4"></i>
+              <span>Brand DNA Studio</span>
+            </a>
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>Articles Manager</span>
+            </a>
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Social Media Studio</span>
+            </a>
+            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Google Business</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>Analytics & GEO</span>
+            </a>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Keywords & Clusters</span>
+            </a>
+            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span>Site Speed & CWV</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="plug" class="w-4 h-4"></i>
+              <span>Integrations Hub</span>
+            </a>
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Billing & Credits</span>
+            </a>
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliate Earnings</span>
+            </a>
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Settings</span>
+            </a>
+          </nav>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM PROFILE & HELP -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+        <!-- Support Button -->
+        <button data-modal-target="supportModal" class="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/60 text-xs font-semibold hover:text-indigo-500 transition-colors">
+          <i data-lucide="headphones" class="w-3.5 h-3.5"></i>
+          <span>Get Help 24/7</span>
+        </button>
+
+        <!-- User Profile Card -->
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="flex items-center gap-2.5 truncate">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-400 text-white font-bold text-xs flex items-center justify-center shrink-0">
+              AL
+            </div>
+            <div class="truncate text-xs">
+              <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
+              <div class="text-[10px] text-slate-400 truncate">alex@thehorizons...</div>
+            </div>
+          </div>
+          <a href="../login.html" title="Sign Out" class="p-1.5 text-slate-400 hover:text-rose-500 transition-colors">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP UTILITY BAR -->
+    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      
+      <div class="flex items-center gap-4">
+        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Workspace Overview</h1>
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Autopilot Active</span>
+        </span>
+      </div>
+
+      <!-- Right Utility Controls -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Credits Badge -->
+        <a href="billing.html" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
+          <span class="font-medium text-slate-700 dark:text-slate-300">Credits: <strong class="text-indigo-600 dark:text-indigo-400">22 / 30</strong></span>
+        </a>
+
+        <!-- Dark/Light Theme Switcher -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-colors" title="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <!-- New Article Action -->
+        <a href="calendar.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-500/25 transition-all">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">New Article</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- DASHBOARD CONTENT BODY -->
+    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+      
+      <!-- WELCOME BANNER -->
+      <div class="rounded-3xl bg-gradient-to-r from-indigo-900/60 via-violet-900/40 to-[#0F172A] p-6 sm:p-8 border border-indigo-500/30 glass-card relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <div class="space-y-2">
+          <span class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">Target Domain: thehorizonsunlimited.com</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Your Autopilot Pipeline is Healthy & Humming 🚀</h2>
+          <p class="text-xs sm:text-sm text-slate-300 max-w-xl">
+            7 high-value articles are queued for publishing over the next 14 days. Your generative engine citation rate increased by <strong class="text-emerald-400">+28.4%</strong> this month.
+          </p>
+        </div>
+        <div class="flex gap-3 shrink-0">
+          <a href="calendar.html" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-lg hover:bg-indigo-500 transition-all">
+            View Live Calendar
+          </a>
+          <a href="brand-dna.html" class="px-5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-200 font-semibold text-xs hover:bg-slate-700 transition-all">
+            Brand DNA
+          </a>
+        </div>
+      </div>
+
+      <!-- 4 SUMMARY STAT CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Card 1 -->
+        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Articles Published</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">48</div>
+          <div class="flex items-center gap-1.5 text-[11px] text-emerald-500 font-semibold mt-1">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +8 published this month
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Scheduled in Queue</span>
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">7</div>
+          <div class="flex items-center gap-1.5 text-[11px] text-indigo-400 font-semibold mt-1">
+            <i data-lucide="clock" class="w-3.5 h-3.5"></i> Next post today at 3:00 PM
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Organic Traffic Growth</span>
+            <div class="w-8 h-8 rounded-lg bg-violet-500/10 text-violet-500 flex items-center justify-center">
+              <i data-lucide="trending-up" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">+342%</div>
+          <div class="flex items-center gap-1.5 text-[11px] text-emerald-500 font-semibold mt-1">
+            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> 84,200 unique impressions
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">AI Search Citations</span>
+            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">1,490</div>
+          <div class="flex items-center gap-1.5 text-[11px] text-cyan-400 font-semibold mt-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> ChatGPT & Perplexity
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TWO COLUMN SECTION: ONBOARDING CHECKLIST & UPCOMING SCHEDULED POSTS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Onboarding Checklist (4 of 5 complete) -->
+        <div class="lg:col-span-5 glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white">Workspace Health Checklist</h3>
+              <p class="text-[11px] text-slate-400">4 of 5 optimization steps completed</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-mono text-xs font-bold">80%</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Website Architecture Scanned
+              </span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Brand DNA Voice Calibrated
+              </span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> WordPress CMS REST API Connected
+              </span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+              <span class="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> LinkedIn & X Socials Linked
+              </span>
+              <span class="text-[10px] text-emerald-500 font-bold uppercase">Done</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/50">
+              <span class="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 font-medium">
+                <i data-lucide="circle" class="w-4 h-4 text-indigo-400"></i> Connect Google Search Console API
+              </span>
+              <a href="integrations.html" class="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Connect &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Upcoming Scheduled Posts Queue -->
+        <div class="lg:col-span-7 glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white">Upcoming Autopilot Queue</h3>
+              <p class="text-[11px] text-slate-400">Next articles queued for autonomous publishing</p>
+            </div>
+            <a href="calendar.html" class="text-xs text-indigo-500 font-semibold hover:underline">Open Calendar &rarr;</a>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            
+            <!-- Item 1 (Today) -->
+            <div class="p-3.5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/40 border-2 border-indigo-500/80 flex items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-600 text-white">Today 3:00 PM</span>
+                  <span class="text-slate-400 text-[10px]">Keyword: career transition into tech</span>
+                </div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">
+                  From Junior Dev to AI Engineer: The 2026 Skills & Salary Roadmap
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">Score: 98</span>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/20 text-sky-400">Oct 17, 10:00 AM</span>
+                  <span class="text-slate-400 text-[10px]">Keyword: full stack cloud certification</span>
+                </div>
+                <div class="font-bold text-slate-800 dark:text-slate-200">
+                  Best Cloud Certifications in 2026: AWS vs Azure vs GCP Breakdown
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">Score: 95</span>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/20 text-sky-400">Oct 19, 2:30 PM</span>
+                  <span class="text-slate-400 text-[10px]">Keyword: remote tech jobs no experience</span>
+                </div>
+                <div class="font-bold text-slate-800 dark:text-slate-200">
+                  How Non-Technical Professionals Break Into 6-Figure Tech Roles
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-[10px]">Score: 96</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ADD WEBSITE MODAL -->
+  <div id="addWebsiteModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-md rounded-2xl glass-card bg-white dark:bg-slate-900 p-6 z-10 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <h3 class="font-bold text-sm">Add New Website to Workspace</h3>
+        <button data-modal-close class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Website Name</label>
+          <input type="text" placeholder="e.g. Acme Tech" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Domain URL</label>
+          <input type="url" placeholder="https://acmetech.io" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        </div>
+      </div>
+      <div class="pt-2 flex gap-2">
+        <button onclick="window.showToast('Scanning new domain and initializing Brand DNA!', 'success'); window.closeModal('addWebsiteModal');" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">Start AI Scan</button>
+        <button data-modal-close class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT 24/7 MODAL -->
+  <div id="supportModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-md rounded-2xl glass-card bg-white dark:bg-slate-900 p-6 z-10 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <h3 class="font-bold text-sm flex items-center gap-2"><i data-lucide="headphones" class="w-4 h-4 text-indigo-500"></i> Get Priority Support 24/7</h3>
+        <button data-modal-close class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <p class="text-xs text-slate-400">Our engineering and SEO strategist team is live to assist with CMS webhooks, GEO rankings, or API issues.</p>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Issue Topic</label>
+          <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+            <option>WordPress / Shopify Webhook Publishing</option>
+            <option>Brand DNA Voice Tuning</option>
+            <option>Credits & Billing</option>
+            <option>Other Technical Question</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Message</label>
+          <textarea rows="3" placeholder="Describe what you need help with..." class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"></textarea>
+        </div>
+      </div>
+      <div class="pt-2 flex gap-2">
+        <button onclick="window.showToast('Support ticket #BTE-9241 created! Strategist will reply shortly.', 'info'); window.closeModal('supportModal');" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">Send Ticket</button>
+        <button data-modal-close class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

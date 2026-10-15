@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Started with BlackTechEngine — 3-Step Setup Wizard</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen antialiased flex flex-col justify-between p-4 sm:p-6 lg:p-8">
+
+  <!-- TOP BAR -->
+  <header class="max-w-4xl w-full mx-auto flex items-center justify-between py-2">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+      </div>
+      <span class="text-lg font-extrabold tracking-tight">BlackTech<span class="text-indigo-500">Engine</span></span>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+        <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+        <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+      </button>
+      <a href="login.html" class="text-xs font-semibold hover:text-indigo-500">Already have an account? Sign in</a>
+    </div>
+  </header>
+
+  <!-- ONBOARDING WIZARD CARD -->
+  <main class="max-w-2xl w-full mx-auto my-8">
+    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl relative">
+      
+      <!-- STEP INDICATOR BAR -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-400 mb-2">
+          <span id="stepLabel1" class="text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">1</span> Account
+          </span>
+          <span id="stepLabel2" class="flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-[10px]">2</span> Website Scan
+          </span>
+          <span id="stepLabel3" class="flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-[10px]">3</span> Autopilot Schedule
+          </span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div id="wizardProgressBar" class="bg-indigo-600 h-full w-1/3 transition-all duration-300"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: CREATE ACCOUNT -->
+      <div id="wizardStep1" class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Create Your 14-Day Free Trial</h2>
+          <p class="text-xs text-slate-500 mt-1">Start ranking your website in Google and generative search engines today.</p>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Your Full Name</label>
+            <input id="userName" type="text" value="Alex Livingstone" placeholder="Alex Livingstone" class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Work Email</label>
+            <input id="userEmail" type="email" value="alex@thehorizonsunlimited.com" placeholder="alex@company.com" class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Choose Password</label>
+            <input id="userPassword" type="password" value="SuperSecurePass2026!" class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <button onclick="goToStep(2)" class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2">
+          <span>Continue to Website Scan</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- STEP 2: WEBSITE URL & BRAND DNA SCAN -->
+      <div id="wizardStep2" class="space-y-5 hidden">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Enter Your Target Website</h2>
+          <p class="text-xs text-slate-500 mt-1">BlackTechEngine will crawl your domain and calibrate your unique brand voice.</p>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Website URL</label>
+            <div class="relative">
+              <i data-lucide="globe" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input id="wizardUrl" type="url" value="https://thehorizonsunlimited.com" class="w-full pl-10 pr-3 p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-indigo-500 font-mono text-xs">
+            </div>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Primary Industry / Niche</label>
+            <select class="w-full p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+              <option selected>Tech Career Education & Training</option>
+              <option>B2B SaaS / Software</option>
+              <option>E-Commerce / Consumer Goods</option>
+              <option>Fintech & Financial Advisory</option>
+              <option>Digital Agency / Consulting</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Target Editorial Voice</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="p-3 rounded-xl border border-indigo-500 bg-indigo-500/10 cursor-pointer flex flex-col items-center text-center">
+                <input type="radio" name="tone" checked class="hidden">
+                <span class="font-bold text-indigo-500">Authoritative</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Industry leader</span>
+              </label>
+              <label class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 cursor-pointer flex flex-col items-center text-center">
+                <input type="radio" name="tone" class="hidden">
+                <span class="font-bold">Conversational</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Engaging & friendly</span>
+              </label>
+              <label class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-indigo-500 cursor-pointer flex flex-col items-center text-center">
+                <input type="radio" name="tone" class="hidden">
+                <span class="font-bold">Technical</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Deep engineering</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button onclick="goToStep(1)" class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+            Back
+          </button>
+          <button onclick="goToStep(3)" class="flex-1 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2">
+            <span>Scan & Set Schedule</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: SCHEDULE & CONNECT SOCIALS -->
+      <div id="wizardStep3" class="space-y-5 hidden">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Configure Autopilot Schedule</h2>
+          <p class="text-xs text-slate-500 mt-1">Pick how often articles should be generated and distributed.</p>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Publishing Cadence</label>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 text-center cursor-pointer hover:border-indigo-500">
+                <div class="font-bold">3x / Week</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">12 posts/mo</div>
+              </div>
+              <div class="p-3 rounded-xl border-2 border-indigo-500 bg-indigo-500/10 text-center cursor-pointer">
+                <div class="font-bold text-indigo-500">Daily Autopilot</div>
+                <div class="text-[10px] text-indigo-400 mt-0.5">30 posts/mo (Optimal)</div>
+              </div>
+              <div class="p-3 rounded-xl border border-slate-300 dark:border-slate-700 text-center cursor-pointer hover:border-indigo-500">
+                <div class="font-bold">Aggressive</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">60 posts/mo</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-2">Automated Syndication Channels</label>
+            <div class="space-y-2">
+              <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                <span class="flex items-center gap-2.5 font-semibold">
+                  <i data-lucide="file-text" class="w-4 h-4 text-indigo-500"></i> WordPress / CMS Direct Push
+                </span>
+                <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
+              </label>
+              <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                <span class="flex items-center gap-2.5 font-semibold">
+                  <i data-lucide="share-2" class="w-4 h-4 text-blue-500"></i> LinkedIn Carousel Generator
+                </span>
+                <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
+              </label>
+              <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                <span class="flex items-center gap-2.5 font-semibold">
+                  <i data-lucide="twitter" class="w-4 h-4 text-cyan-400"></i> X (Twitter) Thread Drip
+                </span>
+                <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button onclick="goToStep(2)" class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+            Back
+          </button>
+          <a href="user/calendar.html" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2 text-center">
+            <span>Launch My Autopilot Dashboard</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-slate-400 py-3">
+    &copy; 2026 BlackTechEngine, Inc. 14-day free trial • Cancel anytime
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    function goToStep(step) {
+      document.getElementById('wizardStep1').classList.add('hidden');
+      document.getElementById('wizardStep2').classList.add('hidden');
+      document.getElementById('wizardStep3').classList.add('hidden');
+
+      const progressBar = document.getElementById('wizardProgressBar');
+      const label1 = document.getElementById('stepLabel1');
+      const label2 = document.getElementById('stepLabel2');
+      const label3 = document.getElementById('stepLabel3');
+
+      if (step === 1) {
+        document.getElementById('wizardStep1').classList.remove('hidden');
+        progressBar.style.width = '33.3%';
+        label1.className = 'text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 font-bold';
+        label2.className = 'text-slate-400 flex items-center gap-1.5';
+        label3.className = 'text-slate-400 flex items-center gap-1.5';
+      } else if (step === 2) {
+        document.getElementById('wizardStep2').classList.remove('hidden');
+        progressBar.style.width = '66.6%';
+        label1.className = 'text-emerald-500 flex items-center gap-1.5';
+        label2.className = 'text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 font-bold';
+        label3.className = 'text-slate-400 flex items-center gap-1.5';
+      } else if (step === 3) {
+        document.getElementById('wizardStep3').classList.remove('hidden');
+        progressBar.style.width = '100%';
+        label1.className = 'text-emerald-500 flex items-center gap-1.5';
+        label2.className = 'text-emerald-500 flex items-center gap-1.5';
+        label3.className = 'text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 font-bold';
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing & Plans — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- NAVIGATION -->
+  <header class="sticky top-0 z-40 glass-nav transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <a href="index.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
+        <a href="index.html#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
+        <a href="pricing.html" class="text-indigo-600 dark:text-indigo-400 font-semibold transition-colors">Pricing</a>
+        <a href="about.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
+        <a href="blog.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
+        <a href="affiliate.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Affiliates</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+          <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
+        </button>
+        <a href="login.html" class="hidden sm:inline-flex text-sm font-semibold px-4 py-2 hover:text-indigo-600">Sign In</a>
+        <a href="signup.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PRICING HEADER -->
+  <section class="pt-16 pb-12 text-center max-w-4xl mx-auto px-4">
+    <span class="px-3.5 py-1 text-xs font-bold rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 uppercase tracking-wider">
+      Transparent, Predictable Pricing
+    </span>
+    <h1 class="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
+      Invest in Ranking, <span class="gradient-text">Not Headcount</span>
+    </h1>
+    <p class="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+      Every plan comes with full access to our Brand DNA engine, multi-channel syndication, and automatic CMS publishing.
+    </p>
+
+    <!-- BILLING TOGGLE (MONTHLY VS ANNUAL) -->
+    <div class="mt-10 inline-flex items-center gap-3 p-1.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 shadow-md">
+      <span class="text-sm font-bold text-slate-700 dark:text-slate-300 px-3">Monthly Billing</span>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input id="billingToggle" type="checkbox" class="sr-only peer">
+        <div class="w-14 h-7 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-slate-600 peer-checked:bg-indigo-600"></div>
+      </label>
+      <span class="text-sm font-bold text-slate-700 dark:text-slate-300 px-3 flex items-center gap-1.5">
+        <span>Annual Billing</span>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">Save 20%</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- 3 PRICING CARDS -->
+  <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+      
+      <!-- Card 1: Starter -->
+      <div class="glass-card rounded-3xl p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+        <div>
+          <div class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Starter</div>
+          <h3 class="text-2xl font-extrabold mt-1 text-slate-900 dark:text-white">Solopreneurs & Small Blogs</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Perfect for single websites needing consistent search authority.</p>
+
+          <div class="mt-6 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold text-slate-900 dark:text-white">$<span id="priceStarter">49</span></span>
+            <span class="price-period text-xs text-slate-400 font-medium">/month</span>
+          </div>
+
+          <div class="mt-8 space-y-3.5 text-xs text-slate-700 dark:text-slate-300">
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>10 Articles</strong> / month</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 1 Connected Website</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Automated WordPress / Shopify Push</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Brand DNA & Tone Calibration</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> High-Resolution AI Featured Images</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Standard SEO Keyword Research</div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+          <a href="signup.html" class="block w-full py-3 rounded-xl border border-slate-300 dark:border-slate-700 font-semibold text-xs text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+            Start 14-Day Free Trial
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: Growth (MOST POPULAR) -->
+      <div class="glass-card rounded-3xl p-8 border-2 border-indigo-500 glow-border relative flex flex-col justify-between shadow-2xl bg-indigo-500/5">
+        <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-[11px] font-bold uppercase tracking-wider shadow-lg">
+          Most Popular • 30-Day Content Autopilot
+        </div>
+
+        <div>
+          <div class="text-sm font-bold text-indigo-500 uppercase tracking-wider mt-2">Growth</div>
+          <h3 class="text-2xl font-extrabold mt-1 text-slate-900 dark:text-white">Fast-Growing SaaS & Brands</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Complete autonomous SEO and social media multi-channel presence.</p>
+
+          <div class="mt-6 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold text-slate-900 dark:text-white">$<span id="priceGrowth">99</span></span>
+            <span class="price-period text-xs text-slate-400 font-medium">/month</span>
+          </div>
+
+          <div class="mt-8 space-y-3.5 text-xs text-slate-700 dark:text-slate-300">
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>30 Articles</strong> / month (Daily post cadence)</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>3 Connected Websites</strong></div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>Visual Content Calendar</strong> with Smart Auto-Fill</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>Social Media Studio:</strong> LinkedIn, FB, X & IG</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>Google Business Profile</strong> Posts & Review Responder</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Generative Engine Optimization (GEO) Tracking</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Custom Internal Link Rules & Blacklist</div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+          <a href="signup.html" class="block w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs text-center shadow-lg shadow-indigo-500/30 hover:scale-[1.02] transition-all">
+            Start 14-Day Free Trial
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 3: Agency -->
+      <div class="glass-card rounded-3xl p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+        <div>
+          <div class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Agency</div>
+          <h3 class="text-2xl font-extrabold mt-1 text-slate-900 dark:text-white">Marketing Agencies & Portfolios</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Manage multiple client brands with client portals and API access.</p>
+
+          <div class="mt-6 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold text-slate-900 dark:text-white">$<span id="priceAgency">249</span></span>
+            <span class="price-period text-xs text-slate-400 font-medium">/month</span>
+          </div>
+
+          <div class="mt-8 space-y-3.5 text-xs text-slate-700 dark:text-slate-300">
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>100 Articles</strong> / month</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>10 Connected Websites</strong></div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> <strong>White-Label Client Reports & Dashboards</strong></div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Unlimited Team Seat Invitations</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> REST Webhook API & Headless CMS Pushes</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Dedicated Account Strategist</div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+          <a href="signup.html" class="block w-full py-3 rounded-xl border border-slate-300 dark:border-slate-700 font-semibold text-xs text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+            Start 14-Day Free Trial
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl sm:text-3xl font-extrabold">Detailed Feature Comparison</h2>
+      <p class="text-xs text-slate-500 mt-1">Side-by-side technical breakdown across all tiers</p>
+    </div>
+
+    <div class="overflow-x-auto glass-card rounded-2xl border border-slate-200 dark:border-slate-800">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-800/40">
+            <th class="p-4 font-bold text-slate-900 dark:text-white">Core Feature</th>
+            <th class="p-4 font-bold text-slate-900 dark:text-white text-center">Starter</th>
+            <th class="p-4 font-bold text-indigo-500 text-center">Growth (Recommended)</th>
+            <th class="p-4 font-bold text-slate-900 dark:text-white text-center">Agency</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+          <tr>
+            <td class="p-4 font-semibold">Monthly Article Limit</td>
+            <td class="p-4 text-center">10 articles</td>
+            <td class="p-4 text-center font-bold text-indigo-500">30 articles</td>
+            <td class="p-4 text-center">100 articles</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">Connected Websites</td>
+            <td class="p-4 text-center">1 site</td>
+            <td class="p-4 text-center font-bold text-indigo-500">3 sites</td>
+            <td class="p-4 text-center">10 sites</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">Brand DNA Voice Extraction</td>
+            <td class="p-4 text-center text-emerald-500">✓</td>
+            <td class="p-4 text-center text-emerald-500">✓</td>
+            <td class="p-4 text-center text-emerald-500">✓</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">Visual Content Calendar & Auto-Fill</td>
+            <td class="p-4 text-center text-slate-400">—</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">Social Media Multi-Channel Studio</td>
+            <td class="p-4 text-center text-slate-400">—</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">Google Business Profile Manager</td>
+            <td class="p-4 text-center text-slate-400">—</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">AI Search Engine Tracking (ChatGPT/Perplexity)</td>
+            <td class="p-4 text-center text-slate-400">—</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+          </tr>
+          <tr>
+            <td class="p-4 font-semibold">White-Label Client Dashboards</td>
+            <td class="p-4 text-center text-slate-400">—</td>
+            <td class="p-4 text-center text-slate-400">—</td>
+            <td class="p-4 text-center text-emerald-500 font-bold">✓ Included</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ ACCORDION -->
+  <section class="py-16 max-w-4xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl font-extrabold">Frequently Asked Questions</h2>
+      <p class="text-xs text-slate-500 mt-1">Got questions? We've got answers.</p>
+    </div>
+
+    <div class="accordion-group space-y-4" data-exclusive="true">
+      
+      <!-- FAQ 1 -->
+      <div class="rounded-2xl glass-card border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <button class="accordion-header w-full p-5 text-left font-bold text-sm flex items-center justify-between text-slate-900 dark:text-white">
+          <span>Will AI-generated articles get penalized by Google?</span>
+          <i data-lucide="chevron-down" class="accordion-icon w-4 h-4 transition-transform text-slate-400"></i>
+        </button>
+        <div class="accordion-content hidden px-5 pb-5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-3">
+          No. Google's official Search guidelines explicitly state that they reward high-quality content regardless of how it is produced. BlackTechEngine ensures every article includes original research, structured data, verified sources, and real-world examples that satisfy Google's E-E-A-T criteria.
+        </div>
+      </div>
+
+      <!-- FAQ 2 -->
+      <div class="rounded-2xl glass-card border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <button class="accordion-header w-full p-5 text-left font-bold text-sm flex items-center justify-between text-slate-900 dark:text-white">
+          <span>Can I review and edit articles before they are published?</span>
+          <i data-lucide="chevron-down" class="accordion-icon w-4 h-4 transition-transform text-slate-400"></i>
+        </button>
+        <div class="accordion-content hidden px-5 pb-5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-3">
+          Yes! You can choose between "100% Full Autopilot" (where articles publish automatically on schedule) or "Review First" mode, where articles sit in your review queue until you click approve. You can also edit any article using our live split-screen SEO editor.
+        </div>
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="rounded-2xl glass-card border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <button class="accordion-header w-full p-5 text-left font-bold text-sm flex items-center justify-between text-slate-900 dark:text-white">
+          <span>What CMS platforms do you support?</span>
+          <i data-lucide="chevron-down" class="accordion-icon w-4 h-4 transition-transform text-slate-400"></i>
+        </button>
+        <div class="accordion-content hidden px-5 pb-5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-3">
+          We offer direct 1-click publishing integrations with WordPress (via Application Password or REST API), Shopify Blogs, Webflow CMS, Wix Studio, Ghost, and custom REST Webhooks for headless architectures.
+        </div>
+      </div>
+
+      <!-- FAQ 4 -->
+      <div class="rounded-2xl glass-card border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <button class="accordion-header w-full p-5 text-left font-bold text-sm flex items-center justify-between text-slate-900 dark:text-white">
+          <span>What happens if I run out of article credits?</span>
+          <i data-lucide="chevron-down" class="accordion-icon w-4 h-4 transition-transform text-slate-400"></i>
+        </button>
+        <div class="accordion-content hidden px-5 pb-5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-3">
+          You can purchase instant top-up credit packs directly from your Billing dashboard at $4/article, or easily upgrade to the next plan tier with prorated billing.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto bg-slate-100 dark:bg-[#080B12] border-t border-slate-200 dark:border-slate-800/80 py-10 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>&copy; 2026 BlackTechEngine, Inc. All rights reserved.</div>
+      <div class="flex gap-4">
+        <a href="index.html" class="hover:text-indigo-500">Home</a>
+        <a href="pricing.html" class="text-indigo-500 font-semibold">Pricing</a>
+        <a href="affiliate.html" class="hover:text-indigo-500">Affiliate</a>
+        <a href="login.html" class="hover:text-indigo-500">Sign In</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

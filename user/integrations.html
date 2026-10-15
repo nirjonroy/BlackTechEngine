@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrations Hub — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
+            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
+        <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
+        <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
+      </div>
+
+      <div class="mt-6 space-y-6 flex-1">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Content Calendar</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-400">7</span>
+            </a>
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="dna" class="w-4 h-4"></i>
+              <span>Brand DNA Studio</span>
+            </a>
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>Articles Manager</span>
+            </a>
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Social Media Studio</span>
+            </a>
+            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Google Business</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>Analytics & GEO</span>
+            </a>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Keywords & Clusters</span>
+            </a>
+            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span>Site Speed & CWV</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+              <i data-lucide="plug" class="w-4 h-4"></i>
+              <span>Integrations Hub</span>
+            </a>
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Billing & Credits</span>
+            </a>
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliate Earnings</span>
+            </a>
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Settings</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="truncate text-xs">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
+            <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
+          </div>
+          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP BAR -->
+    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      <div class="flex items-center gap-3">
+        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">CMS & Social Media Integrations Hub</h1>
+        <span class="text-xs text-slate-400">8 Channels Active</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+      
+      <!-- CMS PLATFORMS GRID -->
+      <div>
+        <div class="mb-4">
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">CMS & Webhook Publishing Targets</h3>
+          <p class="text-xs text-slate-400">Autonomous 1-click publishing whenever an article is scheduled</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          
+          <!-- Card 1: WordPress -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold">
+                <i data-lucide="file-text" class="w-5 h-5"></i>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                Connected
+              </span>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">WordPress VIP & REST</h4>
+              <p class="text-xs text-slate-400 mt-0.5">https://thehorizonsunlimited.com/wp-json/wp/v2</p>
+            </div>
+            <div class="pt-2 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 text-xs">
+              <span class="text-slate-400 text-[10px]">Synced 14m ago</span>
+              <button onclick="openConfigureModal('WordPress REST API', 'https://thehorizonsunlimited.com/wp-json/wp/v2')" class="text-indigo-500 font-bold hover:underline">
+                Configure &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Shopify Blogs -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                Connected
+              </span>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">Shopify Articles API</h4>
+              <p class="text-xs text-slate-400 mt-0.5">store.thehorizonsunlimited.com</p>
+            </div>
+            <div class="pt-2 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 text-xs">
+              <span class="text-slate-400 text-[10px]">Synced 2 hrs ago</span>
+              <button onclick="openConfigureModal('Shopify Storefront', 'https://horizons-store.myshopify.com/admin/api/2026-10')" class="text-indigo-500 font-bold hover:underline">
+                Configure &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Webflow CMS -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4 shadow-md opacity-80">
+            <div class="flex items-center justify-between">
+              <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center font-bold">
+                <i data-lucide="layout" class="w-5 h-5"></i>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/20 text-slate-400">
+                Available
+              </span>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">Webflow CMS Collections</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Publish articles directly to Webflow items</p>
+            </div>
+            <div class="pt-2 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 text-xs">
+              <span class="text-slate-400 text-[10px]">OAuth 2.0</span>
+              <button onclick="window.showToast('Redirecting to Webflow OAuth approval...', 'info')" class="px-3 py-1 rounded-lg bg-indigo-600 text-white font-bold text-xs">
+                Connect
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SOCIAL MEDIA CHANNELS GRID -->
+      <div>
+        <div class="mb-4">
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Social Media Autopilot Channels</h3>
+          <p class="text-xs text-slate-400">Automatic carousel decks, threads, and local business posts</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          
+          <!-- LinkedIn -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <i data-lucide="share-2" class="w-6 h-6 text-blue-500"></i>
+              <input type="checkbox" checked onchange="window.showToast('LinkedIn auto-publish toggled', 'info')" class="w-4 h-4 rounded text-indigo-600">
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white">LinkedIn</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Company Page + PDF Carousel</p>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-bold block">✓ Connected</span>
+          </div>
+
+          <!-- X / Twitter -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <i data-lucide="twitter" class="w-6 h-6 text-cyan-400"></i>
+              <input type="checkbox" checked onchange="window.showToast('X auto-publish toggled', 'info')" class="w-4 h-4 rounded text-indigo-600">
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white">X (Twitter)</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Thread Drip Engine</p>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-bold block">✓ Connected</span>
+          </div>
+
+          <!-- Google Business -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <i data-lucide="map-pin" class="w-6 h-6 text-amber-500"></i>
+              <input type="checkbox" checked onchange="window.showToast('Google Business Profile auto-sync toggled', 'info')" class="w-4 h-4 rounded text-indigo-600">
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white">Google Business</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Local 3-Pack Posts & Reviews</p>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-bold block">✓ Connected</span>
+          </div>
+
+          <!-- Facebook -->
+          <div class="p-5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <i data-lucide="facebook" class="w-6 h-6 text-indigo-500"></i>
+              <input type="checkbox" checked onchange="window.showToast('Facebook Page auto-publish toggled', 'info')" class="w-4 h-4 rounded text-indigo-600">
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white">Facebook</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Page Updates & Groups</p>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-bold block">✓ Connected</span>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- CONFIGURE MODAL -->
+  <div id="configureModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-lg rounded-2xl glass-card bg-white dark:bg-slate-900 p-6 z-10 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <h3 id="modalConfigTitle" class="font-bold text-sm">Configure Integration</h3>
+        <button data-modal-close class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Target Endpoint URL</label>
+          <input id="modalConfigEndpoint" type="text" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Application Token / API Key</label>
+          <input type="password" value="bte_live_sec_8921f009a28b" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Default Publishing Status</label>
+          <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <option>Publish Live Immediately</option>
+            <option>Save as CMS Draft</option>
+            <option>Pending Admin Review</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="window.showToast('Test Webhook Payload sent successfully (200 OK)!', 'success')" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+          Test Payload
+        </button>
+        <button onclick="window.showToast('Integration configuration saved!', 'success'); window.closeModal('configureModal');" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    function openConfigureModal(name, endpoint) {
+      document.getElementById('modalConfigTitle').textContent = `Configure ${name}`;
+      document.getElementById('modalConfigEndpoint').value = endpoint;
+      window.openModal('configureModal');
+    }
+  </script>
+</body>
+</html>

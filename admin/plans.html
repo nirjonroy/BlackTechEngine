@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription Plans Manager — BlackTechEngine Admin</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased">
+
+  <!-- FIXED LEFT ADMIN SIDEBAR -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-rose-500/25">
+            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-rose-500">Admin</span></div>
+            <div class="text-[9px] uppercase font-bold text-rose-400">Master Command</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-6 space-y-6 flex-1">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Platform Control</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Executive Command</span>
+            </a>
+            <a href="users.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>User & Workspaces</span>
+            </a>
+            <a href="ai-models.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>AI Models & Prompts</span>
+            </a>
+            <a href="plans.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-500/20">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Subscription Plans</span>
+            </a>
+            <a href="queues.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+              <i data-lucide="activity" class="w-4 h-4"></i>
+              <span>Autopilot Queue Logs</span>
+            </a>
+            <a href="affiliates.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-rose-500 transition-colors">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliates & Payouts</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Shortcuts</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="../user/calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/30">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>Switch to User View</span>
+            </a>
+            <a href="../index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-white">
+              <i data-lucide="globe" class="w-4 h-4"></i>
+              <span>Public Website</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="truncate text-xs">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Master Administrator</div>
+            <div class="text-[10px] text-rose-400 truncate">admin@blacktechengine.com</div>
+          </div>
+          <a href="../login.html" class="text-slate-400 hover:text-rose-500"><i data-lucide="log-out" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP BAR -->
+    <header class="h-16 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+        <h1 class="text-base font-extrabold text-slate-900 dark:text-white">Subscription Plans & Pricing Tiers</h1>
+        <span class="text-xs text-slate-400">3 Active Public Tiers</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+      
+      <!-- 3 PLAN EDIT CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Starter Plan -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-400 uppercase">Starter Tier</span>
+            <span class="text-2xl font-extrabold text-slate-900 dark:text-white">$49<span class="text-xs text-slate-400 font-normal">/mo</span></span>
+          </div>
+          <div class="text-xs text-slate-400 space-y-1">
+            <div>Subscribers: <strong class="text-slate-900 dark:text-white">218 workspaces</strong></div>
+            <div>MRR Generated: <strong class="text-emerald-500 font-mono">$10,682/mo</strong></div>
+            <div>Monthly Articles Limit: <strong class="text-slate-900 dark:text-white">10 articles</strong></div>
+            <div>Connected Websites: <strong class="text-slate-900 dark:text-white">1 website</strong></div>
+          </div>
+          <button onclick="openEditPlan('Starter Tier', 49, 10, 1)" class="w-full py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">
+            Edit Plan Parameters
+          </button>
+        </div>
+
+        <!-- Growth Plan -->
+        <div class="glass-card rounded-3xl p-6 border-2 border-indigo-500 bg-indigo-500/5 space-y-4 shadow-xl">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-500 uppercase">Growth (Flagship)</span>
+            <span class="text-2xl font-extrabold text-slate-900 dark:text-white">$99<span class="text-xs text-slate-400 font-normal">/mo</span></span>
+          </div>
+          <div class="text-xs text-slate-400 space-y-1">
+            <div>Subscribers: <strong class="text-slate-900 dark:text-white">534 workspaces</strong></div>
+            <div>MRR Generated: <strong class="text-emerald-500 font-mono">$52,866/mo</strong></div>
+            <div>Monthly Articles Limit: <strong class="text-slate-900 dark:text-white">30 articles</strong></div>
+            <div>Connected Websites: <strong class="text-slate-900 dark:text-white">3 websites</strong></div>
+          </div>
+          <button onclick="openEditPlan('Growth Tier', 99, 30, 3)" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md">
+            Edit Plan Parameters
+          </button>
+        </div>
+
+        <!-- Agency Plan -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-violet-400 uppercase">Agency Tier</span>
+            <span class="text-2xl font-extrabold text-slate-900 dark:text-white">$249<span class="text-xs text-slate-400 font-normal">/mo</span></span>
+          </div>
+          <div class="text-xs text-slate-400 space-y-1">
+            <div>Subscribers: <strong class="text-slate-900 dark:text-white">140 workspaces</strong></div>
+            <div>MRR Generated: <strong class="text-emerald-500 font-mono">$34,860/mo</strong></div>
+            <div>Monthly Articles Limit: <strong class="text-slate-900 dark:text-white">100 articles</strong></div>
+            <div>Connected Websites: <strong class="text-slate-900 dark:text-white">10 websites</strong></div>
+          </div>
+          <button onclick="openEditPlan('Agency Tier', 249, 100, 10)" class="w-full py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">
+            Edit Plan Parameters
+          </button>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- EDIT PLAN MODAL -->
+  <div id="editPlanModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-md rounded-2xl glass-card bg-white dark:bg-slate-900 p-6 z-10 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <h3 id="planModalTitle" class="font-bold text-sm">Edit Plan</h3>
+        <button data-modal-close class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Monthly Price ($)</label>
+          <input id="planPriceInput" type="number" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Monthly Article Credit Limit</label>
+          <input id="planArticlesInput" type="number" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Allowed Websites</label>
+          <input id="planSitesInput" type="number" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="window.showToast('Plan pricing and parameters updated in Stripe!', 'success'); window.closeModal('editPlanModal');" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs">
+          Save Changes
+        </button>
+        <button data-modal-close class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    function openEditPlan(name, price, articles, sites) {
+      document.getElementById('planModalTitle').textContent = `Edit ${name}`;
+      document.getElementById('planPriceInput').value = price;
+      document.getElementById('planArticlesInput').value = articles;
+      document.getElementById('planSitesInput').value = sites;
+      window.openModal('editPlanModal');
+    }
+  </script>
+</body>
+</html>

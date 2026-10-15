@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen antialiased flex flex-col justify-center">
+
+  <!-- THEME TOGGLE FLOATING TOP RIGHT -->
+  <div class="fixed top-6 right-6 z-50 flex items-center gap-3">
+    <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600 shadow-lg">
+      <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
+      <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
+    </button>
+  </div>
+
+  <div class="min-h-screen flex flex-col lg:flex-row">
+    
+    <!-- LEFT SIDE: LOGIN FORM & 1-CLICK DEMO BUTTONS -->
+    <div class="w-full lg:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16">
+      
+      <!-- Brand Logo -->
+      <div>
+        <a href="index.html" class="inline-flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+        </a>
+      </div>
+
+      <!-- Main Login Container -->
+      <div class="max-w-md w-full mx-auto my-10 space-y-6">
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Welcome back</h1>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Sign in to manage your autopilot SEO calendar and rankings</p>
+        </div>
+
+        <!-- 1-CLICK DEMO LOGIN BUTTONS BOX -->
+        <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-3">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+            <i data-lucide="zap" class="w-4 h-4"></i> Instant 1-Click Sandbox Portals
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <a href="user/calendar.html" class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs shadow-md shadow-indigo-500/20 hover:bg-indigo-500 transition-all text-center">
+              <i data-lucide="user" class="w-3.5 h-3.5"></i>
+              <span>User Demo</span>
+            </a>
+            <a href="admin/index.html" class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-violet-600 text-white font-semibold text-xs shadow-md shadow-violet-500/20 hover:bg-violet-500 transition-all text-center">
+              <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+              <span>Admin Demo</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="relative flex items-center justify-center">
+          <div class="border-t border-slate-200 dark:border-slate-800 w-full"></div>
+          <span class="bg-slate-50 dark:bg-[#0B0F19] px-3 text-xs text-slate-400 uppercase font-medium">Or continue with credentials</span>
+        </div>
+
+        <!-- Login Form -->
+        <form onsubmit="event.preventDefault(); window.location.href='user/calendar.html';" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
+            <div class="relative">
+              <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input 
+                type="email" 
+                required 
+                value="founder@thehorizonsunlimited.com" 
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+              >
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
+              <a href="#" class="text-xs text-indigo-500 hover:underline">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input 
+                type="password" 
+                required 
+                value="••••••••••••" 
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+              >
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <input id="remember" type="checkbox" checked class="w-4 h-4 rounded text-indigo-600 bg-slate-800 border-slate-700">
+            <label for="remember" class="ml-2 text-xs text-slate-500 dark:text-slate-400">Remember this device for 30 days</label>
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            <span>Sign In to Dashboard</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+        <p class="text-center text-xs text-slate-500">
+          Don't have an account? <a href="signup.html" class="text-indigo-500 font-semibold hover:underline">Sign up for 14-day free trial</a>
+        </p>
+      </div>
+
+      <!-- Copyright -->
+      <div class="text-xs text-slate-400 text-center lg:text-left">
+        &copy; 2026 BlackTechEngine, Inc.
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: VISUAL PREVIEW OF CONTENT CALENDAR & TESTIMONIAL -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-950 via-slate-900 to-[#0B0F19] p-12 flex-col justify-between relative overflow-hidden border-l border-slate-800">
+      <div class="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
+
+      <!-- Top Tagline -->
+      <div class="relative z-10 flex items-center justify-between">
+        <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-bold border border-indigo-500/30">
+          ✨ Live Workspace Active
+        </span>
+        <span class="text-xs text-slate-400 font-mono">Horizons Unlimited</span>
+      </div>
+
+      <!-- Floating Calendar Card Preview -->
+      <div class="relative z-10 my-auto p-6 rounded-3xl glass-card border border-indigo-500/30 shadow-2xl space-y-4 max-w-lg mx-auto">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 text-xs">
+          <span class="font-bold text-white flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i> Next Scheduled Post
+          </span>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[10px]">Today @ 3:00 PM</span>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-base text-white">Full Stack AI Engineering: 2026 Curriculum & Career Matrix</h4>
+          <p class="text-xs text-slate-300">Target Keyword: <span class="text-indigo-400 font-mono">how to become ai engineer</span> • Vol: 14.2K</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="p-2.5 rounded-xl bg-slate-800/80">
+            <div class="text-[10px] text-slate-400">SEO Health</div>
+            <div class="font-bold text-emerald-400 mt-0.5">98/100</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-slate-800/80">
+            <div class="text-[10px] text-slate-400">Word Count</div>
+            <div class="font-bold text-white mt-0.5">2,640 words</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-slate-800/80">
+            <div class="text-[10px] text-slate-400">Channels</div>
+            <div class="font-bold text-cyan-400 mt-0.5">WP + 4 Socials</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Testimonial Bottom -->
+      <div class="relative z-10 border-t border-slate-800/80 pt-6">
+        <p class="text-xs text-slate-300 italic">
+          "BlackTechEngine increased our organic website traffic by 340% within 90 days, completely on autopilot."
+        </p>
+        <div class="mt-3 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs">
+            HU
+          </div>
+          <div class="text-xs">
+            <div class="font-bold text-white">Alex Livingstone</div>
+            <div class="text-slate-400">Head of Growth, Horizons Unlimited</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

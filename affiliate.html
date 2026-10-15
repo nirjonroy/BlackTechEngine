@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affiliate Partner Program — 30% Recurring Lifetime Commission</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- NAVIGATION -->
+  <header class="sticky top-0 z-40 glass-nav transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight">BlackTech<span class="text-indigo-600 dark:text-indigo-400">Engine</span></span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <a href="index.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
+        <a href="index.html#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
+        <a href="pricing.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+        <a href="about.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
+        <a href="blog.html" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
+        <a href="affiliate.html" class="text-indigo-600 dark:text-indigo-400 font-semibold transition-colors">Affiliates</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-indigo-600">
+          <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>
+        </button>
+        <a href="login.html" class="hidden sm:inline-flex text-sm font-semibold px-4 py-2 hover:text-indigo-600">Sign In</a>
+        <a href="signup.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25">
+          Join Program
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="py-20 text-center relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-400 text-xs font-bold uppercase tracking-wider mb-6">
+        <i data-lucide="gift" class="w-4 h-4"></i> High-Converting SaaS Affiliate Partnership
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
+        Earn <span class="gradient-text">30% Recurring Commission</span> for Life
+      </h1>
+      <p class="mt-6 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Refer agencies, creators, and business owners to BlackTechEngine. Earn 30% of their subscription every single month they remain a customer. No limits, no caps.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="signup.html" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-sm shadow-xl shadow-indigo-500/25 hover:scale-105 transition-all">
+          Become an Affiliate Partner
+        </a>
+        <a href="user/affiliate-panel.html" class="px-6 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+          Affiliate Dashboard Demo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE COMMISSION CALCULATOR -->
+  <section class="py-14 max-w-4xl mx-auto px-4">
+    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-8">
+      <div class="text-center">
+        <h2 class="text-2xl font-extrabold">Interactive Earnings Calculator</h2>
+        <p class="text-xs text-slate-500 mt-1">Drag the slider to see your recurring passive income projection</p>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Referred Active Customers:</span>
+          <span class="px-4 py-1.5 rounded-xl bg-violet-600 text-white font-mono font-bold text-lg shadow-md shadow-violet-500/30">
+            <span id="referralsCount">25</span> Customers
+          </span>
+        </div>
+        <input 
+          id="affiliateSlider" 
+          type="range" 
+          min="5" 
+          max="200" 
+          value="25" 
+          step="5" 
+          class="w-full cursor-pointer"
+        >
+        <div class="flex justify-between text-[11px] text-slate-400 mt-2 font-mono">
+          <span>5 referrals</span>
+          <span>50 referrals</span>
+          <span>100 referrals</span>
+          <span>200 referrals</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="p-5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 text-center">
+          <div class="text-xs text-indigo-500 font-bold uppercase tracking-wider">Monthly Recurring Income</div>
+          <div id="monthlyEarnings" class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-2">$743</div>
+          <div class="text-[11px] text-slate-400 mt-1">Paid directly to your bank every 30 days</div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-800 text-center">
+          <div class="text-xs text-violet-500 font-bold uppercase tracking-wider">Yearly Passive Income</div>
+          <div id="yearlyEarnings" class="text-4xl font-extrabold text-violet-600 dark:text-violet-400 mt-2">$8,910</div>
+          <div class="text-[11px] text-slate-400 mt-1">Compound income while you sleep</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-STEP VISUAL HOW IT WORKS CARDS -->
+  <section class="py-20 max-w-6xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <h2 class="text-xs uppercase tracking-widest text-indigo-500 font-bold mb-2">Simplicity First</h2>
+      <h3 class="text-3xl font-extrabold">How the Affiliate Program Works</h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold text-xl">
+          1
+        </div>
+        <h4 class="text-lg font-bold">Get Your Tracking Link</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Sign up in 30 seconds. Access your affiliate dashboard with personalized tracking links, banner kits, and email templates.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-violet-500/10 text-violet-500 flex items-center justify-center font-bold text-xl">
+          2
+        </div>
+        <h4 class="text-lg font-bold">Promote to Your Audience</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Share your link with your newsletter readers, YouTube subscribers, Twitter/X followers, or marketing clients who need hands-off SEO.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold text-xl">
+          3
+        </div>
+        <h4 class="text-lg font-bold">Earn 30% Every Single Month</h4>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Receive automatic payouts via PayPal, Stripe, or Wise on the 1st of every month with our guaranteed 60-day cookie tracking window.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto bg-slate-100 dark:bg-[#080B12] border-t border-slate-200 dark:border-slate-800/80 py-10 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>&copy; 2026 BlackTechEngine, Inc. All rights reserved.</div>
+      <div class="flex gap-4">
+        <a href="index.html" class="hover:text-indigo-500">Home</a>
+        <a href="pricing.html" class="hover:text-indigo-500">Pricing</a>
+        <a href="affiliate.html" class="text-indigo-500 font-semibold">Affiliate</a>
+        <a href="login.html" class="hover:text-indigo-500">Sign In</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Content Calendar — BlackTechEngine</title>
+  
+  <script>
+    if (localStorage.getItem('bte_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#EEF2FF', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+            violet: { 500: '#8B5CF6', 600: '#7C3AED' },
+            cyan: { 400: '#22D3EE', 500: '#06B6D4' }
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen flex antialiased overflow-x-hidden">
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside class="w-64 bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 z-30 transition-colors">
+    <div class="p-5 flex flex-col h-full overflow-y-auto">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/25">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">BlackTech<span class="text-indigo-500">Engine</span></div>
+            <div class="text-[9px] uppercase font-bold text-slate-400">Workspace Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Website Switcher Dropdown -->
+      <div class="mt-4 relative">
+        <button data-dropdown-toggle="siteSwitcherMenu" class="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-xs hover:border-indigo-500 transition-colors text-left">
+          <div class="truncate pr-2">
+            <div class="font-bold text-slate-900 dark:text-white truncate">Horizons Unlimited</div>
+            <div class="text-[10px] text-slate-400 truncate">thehorizonsunlimited.com</div>
+          </div>
+          <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+        </button>
+
+        <div id="siteSwitcherMenu" class="dropdown-menu hidden absolute top-full left-0 right-0 mt-1 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl z-50 text-xs space-y-1">
+          <div class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-between">
+            <span>Horizons Unlimited</span>
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </div>
+          <a href="#" class="block p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+            CloudScale Labs (Dev)
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <div class="mt-6 space-y-6 flex-1">
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Autopilot Core</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="calendar.html" class="flex items-center justify-between px-3 py-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Content Calendar</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white">7</span>
+            </a>
+            <a href="brand-dna.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="dna" class="w-4 h-4"></i>
+              <span>Brand DNA Studio</span>
+            </a>
+            <a href="articles.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>Articles Manager</span>
+            </a>
+            <a href="social-media.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Social Media Studio</span>
+            </a>
+            <a href="google-business.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500 transition-colors">
+              <div class="flex items-center gap-3">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                <span>Google Business</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-500">New</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Search Insights</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="analytics.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>Analytics & GEO</span>
+            </a>
+            <a href="keywords.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Keywords & Clusters</span>
+            </a>
+            <a href="site-speed.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span>Site Speed & CWV</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold flex items-center justify-center">94</span>
+            </a>
+          </nav>
+        </div>
+
+        <div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">Management</div>
+          <nav class="space-y-1 text-xs font-semibold">
+            <a href="integrations.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="plug" class="w-4 h-4"></i>
+              <span>Integrations Hub</span>
+            </a>
+            <a href="billing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Billing & Credits</span>
+            </a>
+            <a href="affiliate-panel.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="gift" class="w-4 h-4"></i>
+              <span>Affiliate Earnings</span>
+            </a>
+            <a href="settings.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-indigo-500">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Settings</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- User Card -->
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/60 dark:bg-slate-800/40">
+          <div class="flex items-center gap-2.5 truncate">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-400 text-white font-bold text-xs flex items-center justify-center shrink-0">
+              AL
+            </div>
+            <div class="truncate text-xs">
+              <div class="font-bold text-slate-900 dark:text-white truncate">Alex Livingstone</div>
+              <div class="text-[10px] text-slate-400 truncate">Horizons Unlimited</div>
+            </div>
+          </div>
+          <a href="../login.html" title="Sign Out" class="p-1.5 text-slate-400 hover:text-rose-500">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- MAIN CALENDAR VIEWPORT -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- TOP TOOLBAR -->
+    <header class="h-20 bg-white/80 dark:bg-[#0B0F19]/80 glass-nav border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20">
+      
+      <!-- Month Navigation -->
+      <div class="flex items-center gap-4">
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>October 2026</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 font-bold">Autopilot Live</span>
+          </h1>
+          <p class="text-[11px] text-slate-400">Scheduled for Horizons Unlimited (thehorizonsunlimited.com)</p>
+        </div>
+
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800/80 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
+          <button class="p-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white" title="Previous Month">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          </button>
+          <button class="px-3 py-1 rounded-lg text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-white dark:bg-slate-900 shadow-sm">
+            Today
+          </button>
+          <button class="p-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white" title="Next Month">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters & Actions -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Content Type Filter Pills -->
+        <div class="hidden xl:flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs">
+          <button class="px-3 py-1 rounded-lg font-semibold bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm">
+            All Content
+          </button>
+          <button class="px-3 py-1 rounded-lg font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white">
+            Articles
+          </button>
+          <button class="px-3 py-1 rounded-lg font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white">
+            LinkedIn Carousels
+          </button>
+          <button class="px-3 py-1 rounded-lg font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white">
+            Google Business
+          </button>
+        </div>
+
+        <!-- Dark/Light Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-colors" title="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 theme-icon-sun"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-icon-moon hidden"></i>
+        </button>
+
+        <!-- New Article Modal Trigger -->
+        <button data-modal-target="newArticleModal" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 hover:scale-105 transition-all">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>+ New Article</span>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- CALENDAR BODY -->
+    <main class="p-6 space-y-4 max-w-full">
+      
+      <!-- Day-of-week Headers (Mon–Sun) -->
+      <div class="grid grid-cols-7 gap-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-slate-200 dark:border-slate-800">
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
+        <div>Saturday</div>
+        <div>Sunday</div>
+      </div>
+
+      <!-- 7-COLUMN MONTHLY GRID -->
+      <div class="grid grid-cols-7 gap-3">
+        
+        <!-- Day 1: Oct 12 (Published Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 12</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500" title="Published"></span>
+          </div>
+          <!-- Card Content -->
+          <div onclick="openCalendarDrawer({
+            title: 'Top 10 High-Paying Remote Tech Careers (2026 Salary Guide)',
+            status: 'Published',
+            keyword: 'remote tech careers 2026',
+            score: 98,
+            date: 'Oct 12, 2026 (Published)',
+            image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 cursor-pointer hover:border-emerald-500 transition-all flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 mb-1">
+                <i data-lucide="check-circle" class="w-3 h-3"></i> Published
+              </div>
+              <h4 class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2">
+                Top 10 High-Paying Remote Tech Careers (2026 Salary Guide)
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-emerald-500 font-bold">SEO: 98/100</span>
+              <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> 3 Posts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 2: Oct 13 (Published Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 13</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Breaking Into Tech: Non-Technical To Cloud Architect Case Study',
+            status: 'Published',
+            keyword: 'non-tech to cloud architect',
+            score: 94,
+            date: 'Oct 13, 2026 (Published)',
+            image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 cursor-pointer hover:border-emerald-500 transition-all flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 mb-1">
+                <i data-lucide="check-circle" class="w-3 h-3"></i> Published
+              </div>
+              <h4 class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2">
+                Breaking Into Tech: Non-Technical To Cloud Architect Case Study
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-emerald-500 font-bold">SEO: 94/100</span>
+              <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> 4 Posts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 3: Oct 14 (Published Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 14</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'The 2026 Generative Engine Optimization (GEO) Blueprint',
+            status: 'Published',
+            keyword: 'generative engine optimization',
+            score: 99,
+            date: 'Oct 14, 2026 (Published)',
+            image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 cursor-pointer hover:border-emerald-500 transition-all flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 mb-1">
+                <i data-lucide="check-circle" class="w-3 h-3"></i> Published
+              </div>
+              <h4 class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2">
+                The 2026 Generative Engine Optimization (GEO) Blueprint
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-emerald-500 font-bold">SEO: 99/100</span>
+              <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> 5 Posts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 4: Oct 15 (TODAY HIGHLIGHT + Scheduled Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border-2 border-indigo-500 glow-border flex flex-col justify-between relative shadow-xl">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-extrabold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+              <span>Today (Oct 15)</span>
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            </span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-600 text-white font-bold">Queued 3 PM</span>
+          </div>
+
+          <div onclick="openCalendarDrawer({
+            title: 'From Junior Dev to AI Engineer: The 2026 Skills & Salary Matrix',
+            status: 'Scheduled',
+            keyword: 'junior dev to ai engineer',
+            score: 97,
+            date: 'Today at 3:00 PM (Scheduled)',
+            image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-indigo-400/60 cursor-pointer hover:border-indigo-500 transition-all flex flex-col justify-between h-full shadow-md">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-sky-500 mb-1">
+                <i data-lucide="clock" class="w-3 h-3"></i> Auto-Publishing Today
+              </div>
+              <h4 class="text-xs font-bold text-slate-900 dark:text-white line-clamp-2">
+                From Junior Dev to AI Engineer: The 2026 Skills & Salary Matrix
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-indigo-500 font-bold">SEO: 97/100</span>
+              <span class="flex items-center gap-1 text-slate-400"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> LinkedIn + X</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 5: Oct 16 (Scheduled Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 16</span>
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Full Stack Cloud Architecture Roadmap: Certifications vs Portfolios',
+            status: 'Scheduled',
+            keyword: 'cloud architecture roadmap',
+            score: 95,
+            date: 'Oct 16, 2026 @ 10:00 AM (Scheduled)',
+            image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 cursor-pointer hover:border-sky-500 transition-all flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-sky-500 mb-1">
+                <i data-lucide="clock" class="w-3 h-3"></i> Scheduled
+              </div>
+              <h4 class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2">
+                Full Stack Cloud Architecture Roadmap: Certifications vs Portfolios
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-sky-500 font-bold">SEO: 95/100</span>
+              <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> WP Direct</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 6: Oct 17 (Auto-Fill Slot) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl border-2 border-dashed border-indigo-500/40 bg-indigo-500/5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-indigo-400">Oct 17</span>
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Autonomous Auto-Fill Slot: High Intent Tech Interview Keywords',
+            status: 'Auto-Fill',
+            keyword: 'ai system design interview questions',
+            score: 96,
+            date: 'Oct 17, 2026 (Auto-Fill)',
+            image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&auto=format&fit=crop&q=60'
+          })" class="p-3 rounded-xl border border-dashed border-indigo-500/50 bg-indigo-500/10 cursor-pointer hover:bg-indigo-500/20 transition-all flex flex-col items-center justify-center text-center h-full">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 mb-1 animate-pulse"></i>
+            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-300">✨ Auto-fills this day</span>
+            <span class="text-[10px] text-slate-400 mt-1">Target: AI Interview Prep</span>
+          </div>
+        </div>
+
+        <!-- Day 7: Oct 18 (Empty Day with Hover + Button) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group hover:border-indigo-500/60 transition-all">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 18</span>
+            <span class="text-[10px] text-slate-400">Rest day</span>
+          </div>
+          <div class="flex-1 flex items-center justify-center">
+            <button data-modal-target="newArticleModal" class="opacity-0 group-hover:opacity-100 transition-opacity p-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg text-xs font-bold flex items-center gap-1">
+              <i data-lucide="plus" class="w-4 h-4"></i> Schedule Post
+            </button>
+          </div>
+        </div>
+
+        <!-- Next Week Row (Days 8 to 14) -->
+        <!-- Day 8: Oct 19 (Scheduled Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 19</span>
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Top 5 Tech Bootcamps with Guaranteed Job Placement in 2026',
+            status: 'Scheduled',
+            keyword: 'tech bootcamps job guarantee',
+            score: 96,
+            date: 'Oct 19, 2026 (Scheduled)',
+            image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 cursor-pointer hover:border-sky-500 transition-all flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-sky-500 mb-1">
+                <i data-lucide="clock" class="w-3 h-3"></i> Scheduled
+              </div>
+              <h4 class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2">
+                Top 5 Tech Bootcamps with Guaranteed Job Placement in 2026
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-sky-500 font-bold">SEO: 96/100</span>
+              <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> LinkedIn Deck</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 9: Oct 20 (Auto-Fill Slot) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl border-2 border-dashed border-indigo-500/40 bg-indigo-500/5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-indigo-400">Oct 20</span>
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Autonomous Auto-Fill Slot: Machine Learning Ops Pipeline Guide',
+            status: 'Auto-Fill',
+            keyword: 'mlops pipeline best practices',
+            score: 95,
+            date: 'Oct 20, 2026 (Auto-Fill)',
+            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60'
+          })" class="p-3 rounded-xl border border-dashed border-indigo-500/50 bg-indigo-500/10 cursor-pointer hover:bg-indigo-500/20 transition-all flex flex-col items-center justify-center text-center h-full">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 mb-1 animate-pulse"></i>
+            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-300">✨ Auto-fills this day</span>
+            <span class="text-[10px] text-slate-400 mt-1">Target: MLOps Guide</span>
+          </div>
+        </div>
+
+        <!-- Day 10: Oct 21 (Scheduled Card) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 21</span>
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Cybersecurity Analyst vs DevOps Engineer: Which Career is Better?',
+            status: 'Scheduled',
+            keyword: 'cybersecurity vs devops salary',
+            score: 94,
+            date: 'Oct 21, 2026 (Scheduled)',
+            image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=500&auto=format&fit=crop&q=60'
+          })" class="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 cursor-pointer hover:border-sky-500 transition-all flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] font-bold text-sky-500 mb-1">
+                <i data-lucide="clock" class="w-3 h-3"></i> Scheduled
+              </div>
+              <h4 class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2">
+                Cybersecurity Analyst vs DevOps Engineer: Which Career is Better?
+              </h4>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+              <span class="font-mono text-sky-500 font-bold">SEO: 94/100</span>
+              <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-2.5 h-2.5"></i> 3 Posts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 11: Oct 22 (Empty Day) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group hover:border-indigo-500/60 transition-all">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 22</span>
+            <span class="text-[10px] text-slate-400">Open slot</span>
+          </div>
+          <div class="flex-1 flex items-center justify-center">
+            <button data-modal-target="newArticleModal" class="opacity-0 group-hover:opacity-100 transition-opacity p-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg text-xs font-bold flex items-center gap-1">
+              <i data-lucide="plus" class="w-4 h-4"></i> Schedule Post
+            </button>
+          </div>
+        </div>
+
+        <!-- Day 12: Oct 23 (Auto-Fill Slot) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl border-2 border-dashed border-indigo-500/40 bg-indigo-500/5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-indigo-400">Oct 23</span>
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
+          </div>
+          <div onclick="openCalendarDrawer({
+            title: 'Autonomous Auto-Fill Slot: Tech Interview Negotiation Scripts',
+            status: 'Auto-Fill',
+            keyword: 'software engineer salary negotiation scripts',
+            score: 97,
+            date: 'Oct 23, 2026 (Auto-Fill)',
+            image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=500&auto=format&fit=crop&q=60'
+          })" class="p-3 rounded-xl border border-dashed border-indigo-500/50 bg-indigo-500/10 cursor-pointer hover:bg-indigo-500/20 transition-all flex flex-col items-center justify-center text-center h-full">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 mb-1 animate-pulse"></i>
+            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-300">✨ Auto-fills this day</span>
+            <span class="text-[10px] text-slate-400 mt-1">Salary Negotiation</span>
+          </div>
+        </div>
+
+        <!-- Day 13: Oct 24 (Empty Day) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group hover:border-indigo-500/60 transition-all">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 24</span>
+            <span class="text-[10px] text-slate-400">Rest day</span>
+          </div>
+          <div class="flex-1 flex items-center justify-center">
+            <button data-modal-target="newArticleModal" class="opacity-0 group-hover:opacity-100 transition-opacity p-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg text-xs font-bold flex items-center gap-1">
+              <i data-lucide="plus" class="w-4 h-4"></i> Schedule Post
+            </button>
+          </div>
+        </div>
+
+        <!-- Day 14: Oct 25 (Empty Day) -->
+        <div class="calendar-cell min-h-[160px] p-2.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between group hover:border-indigo-500/60 transition-all">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-slate-400">Oct 25</span>
+            <span class="text-[10px] text-slate-400">Rest day</span>
+          </div>
+          <div class="flex-1 flex items-center justify-center">
+            <button data-modal-target="newArticleModal" class="opacity-0 group-hover:opacity-100 transition-opacity p-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg text-xs font-bold flex items-center gap-1">
+              <i data-lucide="plus" class="w-4 h-4"></i> Schedule Post
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- SLIDE-OVER ARTICLE PREVIEW DRAWER (RIGHT SIDE) -->
+  <div id="calendarDrawerBackdrop" onclick="closeCalendarDrawer()" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-40 hidden transition-opacity"></div>
+  
+  <aside id="calendarDrawer" class="slide-drawer fixed top-0 right-0 bottom-0 w-full sm:w-[480px] bg-white dark:bg-[#0F172A] border-l border-slate-200 dark:border-slate-800 z-50 transform translate-x-full shadow-2xl flex flex-col justify-between p-6 overflow-y-auto">
+    <div class="space-y-6">
+      
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <span id="drawerStatusBadge" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            Published
+          </span>
+          <span id="drawerPublishDate" class="ml-2 text-xs text-slate-400">Oct 14, 2026</span>
+        </div>
+        <button onclick="closeCalendarDrawer()" class="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Article Title -->
+      <h3 id="drawerArticleTitle" class="text-xl font-extrabold text-slate-900 dark:text-white leading-snug">
+        From Junior Dev to AI Engineer: The 2026 Skills & Salary Roadmap
+      </h3>
+
+      <!-- Article Thumbnail Preview -->
+      <div class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 h-44 bg-slate-900 relative">
+        <img id="drawerThumbnail" src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&auto=format&fit=crop&q=60" alt="Article Thumbnail" class="w-full h-full object-cover">
+        <div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-slate-900/80 text-white font-mono text-[10px] backdrop-blur-sm">
+          2,640 words
+        </div>
+      </div>
+
+      <!-- SEO Score & Target Keyword Grid -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          <div class="text-[10px] text-slate-400 font-bold uppercase">SEO Health Score</div>
+          <div id="drawerSeoScore" class="text-2xl font-extrabold text-emerald-500 mt-1">98/100</div>
+          <div class="text-[10px] text-emerald-400 mt-0.5">Optimal keyword density</div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Target Keyword</div>
+          <div id="drawerTargetKeyword" class="text-xs font-bold text-slate-900 dark:text-white mt-1 truncate">junior dev to ai engineer</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Vol: 14.2K • KD: 32%</div>
+        </div>
+      </div>
+
+      <!-- Connected Social Media Previews -->
+      <div class="space-y-3">
+        <div class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center justify-between">
+          <span>Connected Social Drips</span>
+          <span class="text-indigo-500 font-normal">Autopilot Active</span>
+        </div>
+
+        <!-- Social 1: LinkedIn -->
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1.5 text-xs">
+          <div class="flex items-center gap-2 text-blue-500 font-bold">
+            <i data-lucide="share-2" class="w-3.5 h-3.5"></i> LinkedIn PDF Carousel
+          </div>
+          <p class="text-[11px] text-slate-600 dark:text-slate-300 italic">
+            "7 Slides: The fastest path to transitioning from junior dev to AI engineer in 2026..."
+          </p>
+        </div>
+
+        <!-- Social 2: X Thread -->
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1.5 text-xs">
+          <div class="flex items-center gap-2 text-cyan-400 font-bold">
+            <i data-lucide="twitter" class="w-3.5 h-3.5"></i> X (Twitter) 6-Tweet Thread
+          </div>
+          <p class="text-[11px] text-slate-600 dark:text-slate-300 font-mono">
+            1/6 The AI engineering roadmap that landed our students $145K+ offers 🧵👇
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex gap-3">
+      <a href="articles.html" class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 text-center flex items-center justify-center gap-2">
+        <i data-lucide="edit-3" class="w-4 h-4"></i>
+        <span>Edit in Live SEO Editor</span>
+      </a>
+      <button onclick="window.showToast('Triggering immediate CMS Webhook Push!', 'success'); closeCalendarDrawer();" class="px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">
+        Publish Now
+      </button>
+    </div>
+  </aside>
+
+  <!-- + NEW ARTICLE POPUP MODAL -->
+  <div id="newArticleModal" class="modal-container fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="modal-backdrop fixed inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-xl rounded-3xl glass-card bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 z-10 space-y-6">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Create New Autopilot Article</h3>
+          <p class="text-xs text-slate-400">Generate high-converting content with Brand DNA calibration</p>
+        </div>
+        <button data-modal-close class="p-2 rounded-xl text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Mode Selector: Single vs Bulk -->
+      <div class="grid grid-cols-2 gap-3 p-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-xs font-bold">
+        <button class="py-2.5 rounded-lg bg-indigo-600 text-white shadow-sm">
+          Single Custom Article
+        </button>
+        <button onclick="window.showToast('Bulk CSV Upload modal ready!', 'info')" class="py-2.5 rounded-lg text-slate-400 hover:text-white">
+          Bulk CSV Topic Upload
+        </button>
+      </div>
+
+      <!-- Form Inputs -->
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Article Title / Main Keyword</label>
+          <input type="text" value="System Design Interview Essentials for 2026" placeholder="e.g. Best Full Stack Frameworks for SaaS" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 font-semibold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Target Publish Date</label>
+            <input type="date" value="2026-10-22" class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Target Length</label>
+            <select class="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+              <option>Deep-Dive Guide (2,500+ words)</option>
+              <option>Standard Article (1,500 words)</option>
+              <option>Comprehensive Pillar (4,000+ words)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Toggles: FAQ Schema, AI Images, YouTube Embed -->
+        <div class="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+          <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 cursor-pointer">
+            <span class="font-medium text-slate-800 dark:text-slate-200">Inject FAQ & Article JSON-LD Schema</span>
+            <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
+          </label>
+          <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 cursor-pointer">
+            <span class="font-medium text-slate-800 dark:text-slate-200">Generate Photorealistic AI Featured Image</span>
+            <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
+          </label>
+          <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 cursor-pointer">
+            <span class="font-medium text-slate-800 dark:text-slate-200">Auto-Embed Relevant Curated YouTube Video</span>
+            <input type="checkbox" checked class="w-4 h-4 rounded text-indigo-600">
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-2 flex gap-3">
+        <button onclick="window.showToast('Article synthesized and queued on the Calendar!', 'success'); window.closeModal('newArticleModal');" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/30">
+          Generate & Add to Calendar
+        </button>
+        <button data-modal-close class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
