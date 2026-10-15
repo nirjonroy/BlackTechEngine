@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\Admin\SiteSettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,7 +40,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/role-permission/role/{role}/edit', [RolePermissionController::class, 'editRole'])->name('admin.role-permission.role.edit');
     Route::post('/admin/role-permission/role/{role}/update', [RolePermissionController::class, 'updateRole'])->name('admin.role-permission.role.update');
     Route::get('/admin/role-permission/role/create', [RolePermissionController::class, 'createRole'])->name('admin.role-permission.role.create');
-Route::post('/admin/role-permission/role/store', [RolePermissionController::class, 'storeRole'])->name('admin.role-permission.role.store');
+    Route::post('/admin/role-permission/role/store', [RolePermissionController::class, 'storeRole'])->name('admin.role-permission.role.store');
+
+   
+Route::get('/admin/settings', [SiteSettingController::class, 'index'])->name('admin.settings.index');
+Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
     });
 
 require __DIR__.'/auth.php';
