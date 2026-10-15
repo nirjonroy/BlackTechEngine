@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\RolePermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,14 @@ Route::middleware('auth:admin')->group(function () {
     })->name('admin.dashboard');
     
     Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
-});
+
+    Route::get('/admin/role-permission', [RolePermissionController::class, 'index'])->name('admin.role-permission.index');
+    Route::get('/admin/role-permission/admin/create', [RolePermissionController::class, 'createAdmin'])->name('admin.role-permission.admin.create');
+    Route::post('/admin/role-permission/admin/store', [RolePermissionController::class, 'storeAdmin'])->name('admin.role-permission.admin.store');
+    Route::get('/admin/role-permission/role/{role}/edit', [RolePermissionController::class, 'editRole'])->name('admin.role-permission.role.edit');
+    Route::post('/admin/role-permission/role/{role}/update', [RolePermissionController::class, 'updateRole'])->name('admin.role-permission.role.update');
+    Route::get('/admin/role-permission/role/create', [RolePermissionController::class, 'createRole'])->name('admin.role-permission.role.create');
+Route::post('/admin/role-permission/role/store', [RolePermissionController::class, 'storeRole'])->name('admin.role-permission.role.store');
+    });
 
 require __DIR__.'/auth.php';

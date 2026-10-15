@@ -3,7 +3,7 @@
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="#">Users List</a>
     @can('manage roles', 'admin')
-    <a href="#">Roles & Permissions</a>
+    <a href="{{ route('admin.role-permission.index') }}">Roles & Permissions</a>
 @endcan
 
 @role('Super Admin', 'admin')
