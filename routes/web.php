@@ -11,10 +11,9 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\PricingPlanController;
 use App\Http\Controllers\Admin\PricingPageSettingController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
+use App\Http\Controllers\Frontend\HomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
