@@ -41,6 +41,11 @@ return [
         'route' => 'admin.pricing.index',
         'type'  => 'all',
     ],
+    [
+    'title' => 'Features Page Setup',
+    'route' => 'admin.feature_page.index',
+    'type'  => 'all',
+],
     // Permission based menu
     [
         'title' => 'Roles & Permissions',

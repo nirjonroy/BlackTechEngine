@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\PricingPlanController;
 use App\Http\Controllers\Admin\PricingPageSettingController;
+use App\Http\Controllers\Admin\FeaturePageSettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -74,6 +75,8 @@ Route::post('/admin/pricing-plans/{id}/update', [PricingPlanController::class, '
 Route::get('/admin/pricing-plans/{id}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
 Route::get('/admin/pricing-page-settings', [PricingPageSettingController::class, 'index'])->name('admin.pricing_page.index');
 Route::post('/admin/pricing-page-settings', [PricingPageSettingController::class, 'update'])->name('admin.pricing_page.update');
+Route::get('/admin/feature-page-settings', [FeaturePageSettingController::class, 'index'])->name('admin.feature_page.index');
+Route::post('/admin/feature-page-settings', [FeaturePageSettingController::class, 'update'])->name('admin.feature_page.update');
 });
 
 require __DIR__.'/auth.php';
