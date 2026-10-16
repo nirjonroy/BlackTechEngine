@@ -3,6 +3,7 @@
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="#">Users List</a>
     <a href="{{ route('admin.settings.index') }}">Site Settings</a>
+    <a href="{{ route('admin.pricing_page.index') }}">Pricing Page Setup</a>
     <a href="{{ route('admin.about.index') }}">About Page Edit</a>
     <a href="{{ route('admin.seo.index') }}">SEO Settings</a>
     <a href="{{ route('admin.blogs.index') }}">Blogs</a>

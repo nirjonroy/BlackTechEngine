@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\PricingPlanController;
+use App\Http\Controllers\Admin\PricingPageSettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -71,6 +72,8 @@ Route::post('/admin/pricing-plans/store', [PricingPlanController::class, 'store'
 Route::get('/admin/pricing-plans/{id}/edit', [PricingPlanController::class, 'edit'])->name('admin.pricing.edit');
 Route::post('/admin/pricing-plans/{id}/update', [PricingPlanController::class, 'update'])->name('admin.pricing.update');
 Route::get('/admin/pricing-plans/{id}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
+Route::get('/admin/pricing-page-settings', [PricingPageSettingController::class, 'index'])->name('admin.pricing_page.index');
+Route::post('/admin/pricing-page-settings', [PricingPageSettingController::class, 'update'])->name('admin.pricing_page.update');
 });
 
 require __DIR__.'/auth.php';
