@@ -1,19 +1,25 @@
 <div class="sidebar">
     <h3>Admin Panel</h3>
-    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-    <a href="#">Users List</a>
-    <a href="{{ route('admin.settings.index') }}">Site Settings</a>
-    <a href="{{ route('admin.pricing_page.index') }}">Pricing Page Setup</a>
-    <a href="{{ route('admin.about.index') }}">About Page Edit</a>
-    <a href="{{ route('admin.seo.index') }}">SEO Settings</a>
-    <a href="{{ route('admin.blogs.index') }}">Blogs</a>
-    <a href="{{ route('admin.pricing.index') }}">Pricing Plans</a>
-    @can('manage roles', 'admin')
-    <a href="{{ route('admin.role-permission.index') }}">Roles & Permissions</a>
-@endcan
+    
+    @foreach(config('sidebar') as $item)
+        @php 
+            // Route ache kina check kora, na thakle # boshabe
+            $url = Route::has($item['route']) ? route($item['route']) : $item['route']; 
+        @endphp
 
-@role('Super Admin', 'admin')
-    <a href="#">Settings</a>
-@endrole
-
+        @if($item['type'] === 'all')
+            <a href="{{ $url }}">{{ $item['title'] }}</a>
+            
+        @elseif($item['type'] === 'permission')
+            @can($item['key'], 'admin')
+                <a href="{{ $url }}">{{ $item['title'] }}</a>
+            @endcan
+            
+        @elseif($item['type'] === 'role')
+            @role($item['key'], 'admin')
+                <a href="{{ $url }}">{{ $item['title'] }}</a>
+            @endrole
+            
+        @endif
+    @endforeach
 </div>
