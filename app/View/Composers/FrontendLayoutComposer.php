@@ -20,6 +20,7 @@ class FrontendLayoutComposer
             $this->request->route()?->getName(),
             $viewData['seoFallbackTitle'] ?? null,
             $viewData['seoFallbackDescription'] ?? null,
+            $viewData['pageSeo'] ?? [],
         );
 
         $view->with([

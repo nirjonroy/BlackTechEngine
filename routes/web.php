@@ -11,12 +11,14 @@ use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', FrontendAboutPageController::class)->name('about');
+Route::get('/pricing', FrontendPricingPageController::class)->name('pricing');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

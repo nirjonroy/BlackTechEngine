@@ -32,6 +32,10 @@ body {
   min-height: 100vh;
 }
 
+[x-cloak] {
+  display: none !important;
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;

@@ -129,7 +129,7 @@ test('shared navigation renders accessible mobile controls and only valid routes
         ->assertSee('aria-label="Mobile navigation"', false)
         ->assertSee('href="'.route('home').'"', false)
         ->assertSee('href="'.route('about').'"', false)
+        ->assertSee('href="'.route('pricing').'"', false)
         ->assertDontSee('href="/features"', false)
-        ->assertDontSee('href="/pricing"', false)
         ->assertDontSee('href="/blog"', false);
 });

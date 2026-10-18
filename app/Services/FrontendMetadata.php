@@ -16,16 +16,24 @@ class FrontendMetadata
      *     analytics: array{provider: 'ga4'|'gtm', id: string}|null
      * }
      */
-    public function resolve(?string $routeName, ?string $fallbackTitle = null, ?string $fallbackDescription = null): array
-    {
+    public function resolve(
+        ?string $routeName,
+        ?string $fallbackTitle = null,
+        ?string $fallbackDescription = null,
+        array $pageSeo = [],
+    ): array {
         $siteSetting = SiteSetting::query()->first();
         $seoSetting = $this->seoSettingFor($routeName);
-        $title = $seoSetting?->meta_title
+        $title = ($pageSeo['meta_title'] ?? null)
+            ?: ($pageSeo['seo_title'] ?? null)
+            ?: $seoSetting?->meta_title
             ?: $seoSetting?->seo_title
             ?: $fallbackTitle
             ?: $siteSetting?->site_name
             ?: 'BlackTechEngine';
-        $description = $seoSetting?->meta_description
+        $description = ($pageSeo['meta_description'] ?? null)
+            ?: ($pageSeo['seo_description'] ?? null)
+            ?: $seoSetting?->meta_description
             ?: $seoSetting?->seo_description
             ?: $fallbackDescription;
 
@@ -34,12 +42,12 @@ class FrontendMetadata
             'seo' => [
                 'title' => $title,
                 'description' => $description,
-                'keywords' => $seoSetting?->keywords,
-                'author' => $seoSetting?->author,
-                'publisher' => $seoSetting?->publisher,
-                'copyright' => $seoSetting?->copyright,
-                'siteName' => $seoSetting?->site_name ?: $siteSetting?->site_name ?: 'BlackTechEngine',
-                'image' => $this->metaImageUrl($seoSetting?->meta_image),
+                'keywords' => ($pageSeo['keywords'] ?? null) ?: $seoSetting?->keywords,
+                'author' => ($pageSeo['author'] ?? null) ?: $seoSetting?->author,
+                'publisher' => ($pageSeo['publisher'] ?? null) ?: $seoSetting?->publisher,
+                'copyright' => ($pageSeo['copyright'] ?? null) ?: $seoSetting?->copyright,
+                'siteName' => ($pageSeo['site_name'] ?? null) ?: $seoSetting?->site_name ?: $siteSetting?->site_name ?: 'BlackTechEngine',
+                'image' => $this->metaImageUrl($pageSeo['meta_image'] ?? null) ?: $this->metaImageUrl($seoSetting?->meta_image),
                 'canonical' => url()->current(),
                 'favicon' => $siteSetting?->favicon ? asset('storage/'.$siteSetting->favicon) : null,
             ],
@@ -52,6 +60,7 @@ class FrontendMetadata
         $pageNames = match ($routeName) {
             'home' => ['home', 'homepage', 'home page'],
             'about' => ['about', 'about page', 'about geo', 'about us'],
+            'pricing' => ['pricing', 'pricing page', 'plans', 'plans and pricing'],
             default => [],
         };
         $globalNames = ['', 'default', 'global', 'site'];
