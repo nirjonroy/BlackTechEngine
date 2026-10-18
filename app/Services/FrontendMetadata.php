@@ -60,6 +60,7 @@ class FrontendMetadata
         $pageNames = match ($routeName) {
             'home' => ['home', 'homepage', 'home page'],
             'about' => ['about', 'about page', 'about geo', 'about us'],
+            'features' => ['features', 'features page', 'platform features', 'product features'],
             'pricing' => ['pricing', 'pricing page', 'plans', 'plans and pricing'],
             default => [],
         };
