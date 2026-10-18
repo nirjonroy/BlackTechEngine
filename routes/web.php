@@ -1,17 +1,18 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutPageController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\FeaturePageSettingController;
+use App\Http\Controllers\Admin\PricingPageSettingController;
+use App\Http\Controllers\Admin\PricingPlanController;
+use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\Admin\SeoSettingController;
+use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\RolePermissionController;
-use App\Http\Controllers\Admin\SiteSettingController;
-use App\Http\Controllers\Admin\AboutPageController;
-use App\Http\Controllers\Admin\SeoSettingController;
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\PricingPlanController;
-use App\Http\Controllers\Admin\PricingPageSettingController;
-use App\Http\Controllers\Admin\FeaturePageSettingController;
-use App\Http\Controllers\Frontend\HomeController;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -35,47 +36,72 @@ Route::middleware('guest:admin')->group(function () {
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard'); // Create this view later
-    })->name('admin.dashboard');
-    
+    })->middleware(PermissionMiddleware::using('view dashboard', 'admin'))->name('admin.dashboard');
+
     Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-    Route::get('/admin/role-permission', [RolePermissionController::class, 'index'])->name('admin.role-permission.index');
-    Route::get('/admin/role-permission/admin/create', [RolePermissionController::class, 'createAdmin'])->name('admin.role-permission.admin.create');
-    Route::post('/admin/role-permission/admin/store', [RolePermissionController::class, 'storeAdmin'])->name('admin.role-permission.admin.store');
-    Route::get('/admin/role-permission/role/{role}/edit', [RolePermissionController::class, 'editRole'])->name('admin.role-permission.role.edit');
-    Route::post('/admin/role-permission/role/{role}/update', [RolePermissionController::class, 'updateRole'])->name('admin.role-permission.role.update');
-    Route::get('/admin/role-permission/role/create', [RolePermissionController::class, 'createRole'])->name('admin.role-permission.role.create');
-    Route::post('/admin/role-permission/role/store', [RolePermissionController::class, 'storeRole'])->name('admin.role-permission.role.store');
+    Route::get('/admin/role-permission', [RolePermissionController::class, 'index'])
+        ->middleware(PermissionMiddleware::using('manage roles|create admin|edit admin|delete admin', 'admin'))
+        ->name('admin.role-permission.index');
 
-   
-Route::get('/admin/settings', [SiteSettingController::class, 'index'])->name('admin.settings.index');
-Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
-Route::get('/admin/about-page', [AboutPageController::class, 'index'])->name('admin.about.index');
-Route::post('/admin/about-page', [AboutPageController::class, 'update'])->name('admin.about.update');
-Route::get('/admin/seo-settings', [SeoSettingController::class, 'index'])->name('admin.seo.index');
-Route::get('/admin/seo-settings/create', [SeoSettingController::class, 'create'])->name('admin.seo.create');
-Route::post('/admin/seo-settings/store', [SeoSettingController::class, 'store'])->name('admin.seo.store');
-Route::get('/admin/seo-settings/{id}/edit', [SeoSettingController::class, 'edit'])->name('admin.seo.edit');
-Route::post('/admin/seo-settings/{id}/update', [SeoSettingController::class, 'update'])->name('admin.seo.update');
-Route::get('/admin/seo-settings/{id}/delete', [SeoSettingController::class, 'destroy'])->name('admin.seo.destroy');
+    Route::middleware(PermissionMiddleware::using('create admin', 'admin'))->group(function () {
+        Route::get('/admin/role-permission/admin/create', [RolePermissionController::class, 'createAdmin'])->name('admin.role-permission.admin.create');
+        Route::post('/admin/role-permission/admin/store', [RolePermissionController::class, 'storeAdmin'])->name('admin.role-permission.admin.store');
+    });
 
-Route::get('/admin/blogs', [BlogController::class, 'index'])->name('admin.blogs.index');
-Route::get('/admin/blogs/create', [BlogController::class, 'create'])->name('admin.blogs.create');
-Route::post('/admin/blogs/store', [BlogController::class, 'store'])->name('admin.blogs.store');
-Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
-Route::post('/admin/blogs/{id}/update', [BlogController::class, 'update'])->name('admin.blogs.update');
-Route::get('/admin/blogs/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+    Route::middleware(PermissionMiddleware::using('manage roles', 'admin'))->group(function () {
+        Route::get('/admin/role-permission/role/{role}/edit', [RolePermissionController::class, 'editRole'])->name('admin.role-permission.role.edit');
+        Route::post('/admin/role-permission/role/{role}/update', [RolePermissionController::class, 'updateRole'])->name('admin.role-permission.role.update');
+        Route::get('/admin/role-permission/role/create', [RolePermissionController::class, 'createRole'])->name('admin.role-permission.role.create');
+        Route::post('/admin/role-permission/role/store', [RolePermissionController::class, 'storeRole'])->name('admin.role-permission.role.store');
+    });
 
-Route::get('/admin/pricing-plans', [PricingPlanController::class, 'index'])->name('admin.pricing.index');
-Route::get('/admin/pricing-plans/create', [PricingPlanController::class, 'create'])->name('admin.pricing.create');
-Route::post('/admin/pricing-plans/store', [PricingPlanController::class, 'store'])->name('admin.pricing.store');
-Route::get('/admin/pricing-plans/{id}/edit', [PricingPlanController::class, 'edit'])->name('admin.pricing.edit');
-Route::post('/admin/pricing-plans/{id}/update', [PricingPlanController::class, 'update'])->name('admin.pricing.update');
-Route::get('/admin/pricing-plans/{id}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
-Route::get('/admin/pricing-page-settings', [PricingPageSettingController::class, 'index'])->name('admin.pricing_page.index');
-Route::post('/admin/pricing-page-settings', [PricingPageSettingController::class, 'update'])->name('admin.pricing_page.update');
-Route::get('/admin/feature-page-settings', [FeaturePageSettingController::class, 'index'])->name('admin.feature_page.index');
-Route::post('/admin/feature-page-settings', [FeaturePageSettingController::class, 'update'])->name('admin.feature_page.update');
+    Route::middleware(PermissionMiddleware::using('manage site settings', 'admin'))->group(function () {
+        Route::get('/admin/settings', [SiteSettingController::class, 'index'])->name('admin.settings.index');
+        Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage about page', 'admin'))->group(function () {
+        Route::get('/admin/about-page', [AboutPageController::class, 'index'])->name('admin.about.index');
+        Route::post('/admin/about-page', [AboutPageController::class, 'update'])->name('admin.about.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage seo settings', 'admin'))->group(function () {
+        Route::get('/admin/seo-settings', [SeoSettingController::class, 'index'])->name('admin.seo.index');
+        Route::get('/admin/seo-settings/create', [SeoSettingController::class, 'create'])->name('admin.seo.create');
+        Route::post('/admin/seo-settings/store', [SeoSettingController::class, 'store'])->name('admin.seo.store');
+        Route::get('/admin/seo-settings/{id}/edit', [SeoSettingController::class, 'edit'])->name('admin.seo.edit');
+        Route::post('/admin/seo-settings/{id}/update', [SeoSettingController::class, 'update'])->name('admin.seo.update');
+        Route::get('/admin/seo-settings/{id}/delete', [SeoSettingController::class, 'destroy'])->name('admin.seo.destroy');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage blogs', 'admin'))->group(function () {
+        Route::get('/admin/blogs', [BlogController::class, 'index'])->name('admin.blogs.index');
+        Route::get('/admin/blogs/create', [BlogController::class, 'create'])->name('admin.blogs.create');
+        Route::post('/admin/blogs/store', [BlogController::class, 'store'])->name('admin.blogs.store');
+        Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
+        Route::post('/admin/blogs/{id}/update', [BlogController::class, 'update'])->name('admin.blogs.update');
+        Route::get('/admin/blogs/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage pricing plans', 'admin'))->group(function () {
+        Route::get('/admin/pricing-plans', [PricingPlanController::class, 'index'])->name('admin.pricing.index');
+        Route::get('/admin/pricing-plans/create', [PricingPlanController::class, 'create'])->name('admin.pricing.create');
+        Route::post('/admin/pricing-plans/store', [PricingPlanController::class, 'store'])->name('admin.pricing.store');
+        Route::get('/admin/pricing-plans/{id}/edit', [PricingPlanController::class, 'edit'])->name('admin.pricing.edit');
+        Route::post('/admin/pricing-plans/{id}/update', [PricingPlanController::class, 'update'])->name('admin.pricing.update');
+        Route::get('/admin/pricing-plans/{id}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage pricing page settings', 'admin'))->group(function () {
+        Route::get('/admin/pricing-page-settings', [PricingPageSettingController::class, 'index'])->name('admin.pricing_page.index');
+        Route::post('/admin/pricing-page-settings', [PricingPageSettingController::class, 'update'])->name('admin.pricing_page.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage feature page settings', 'admin'))->group(function () {
+        Route::get('/admin/feature-page-settings', [FeaturePageSettingController::class, 'index'])->name('admin.feature_page.index');
+        Route::post('/admin/feature-page-settings', [FeaturePageSettingController::class, 'update'])->name('admin.feature_page.update');
+    });
 });
 
 require __DIR__.'/auth.php';

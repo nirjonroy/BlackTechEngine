@@ -2,43 +2,63 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use App\Models\Admin;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-       
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        
         $permissions = [
             'view dashboard',
             'create admin',
             'edit admin',
             'delete admin',
-            'manage roles'
+            'manage roles',
+            'manage site settings',
+            'manage about page',
+            'manage seo settings',
+            'manage blogs',
+            'manage pricing plans',
+            'manage pricing page settings',
+            'manage feature page settings',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission, 'guard_name' => 'admin']);
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'admin',
+            ]);
         }
 
-        
-        $superAdminRole = Role::create(['name' => 'Super Admin', 'guard_name' => 'admin']);
-        $editorRole = Role::create(['name' => 'Editor', 'guard_name' => 'admin']);
+        $superAdminRole = Role::firstOrCreate([
+            'name' => 'Super Admin',
+            'guard_name' => 'admin',
+        ]);
+        $superAdminRoleWasCreated = $superAdminRole->wasRecentlyCreated;
 
-       
-        $superAdminRole->givePermissionTo(Permission::all());
-        
-       
-        $editorRole->givePermissionTo(['view dashboard', 'create admin', 'edit admin']);
+        $editorRole = Role::firstOrCreate([
+            'name' => 'Editor',
+            'guard_name' => 'admin',
+        ]);
+
+        if ($superAdminRoleWasCreated) {
+            $superAdminRole->givePermissionTo(
+                Permission::where('guard_name', 'admin')->get(),
+            );
+        }
+
+        if ($editorRole->wasRecentlyCreated) {
+            $editorRole->givePermissionTo(['view dashboard', 'create admin', 'edit admin']);
+        }
 
         $admin = Admin::where('email', 'admin24@gmail.com')->first();
-        if ($admin) {
+        if ($admin && $superAdminRoleWasCreated) {
             $admin->assignRole($superAdminRole);
         }
     }
