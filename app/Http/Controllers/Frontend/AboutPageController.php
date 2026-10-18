@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\AboutPage;
-use App\Models\SeoSetting;
-use App\Models\SiteSetting;
 use Illuminate\View\View;
 
 class AboutPageController extends Controller
@@ -15,14 +13,11 @@ class AboutPageController extends Controller
         $about = AboutPage::query()
             ->with(['stats', 'comparisons', 'architectures', 'coreValues'])
             ->first();
-        $seoSetting = SeoSetting::query()
-            ->whereIn('page_name', ['About', 'About Page', 'About GEO', 'about', 'about page', 'about geo'])
-            ->first();
 
         return view('frontend.about', [
             'about' => $about,
-            'seoSetting' => $seoSetting,
-            'siteSetting' => SiteSetting::query()->first(),
+            'seoFallbackTitle' => $about?->hero_title ?: 'About BlackTechEngine',
+            'seoFallbackDescription' => $about?->hero_description,
             'primaryCtaUrl' => $this->safeHttpUrl($about?->cta_btn1_link),
             'secondaryCtaUrl' => $this->safeHttpUrl($about?->cta_btn2_link),
         ]);

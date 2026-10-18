@@ -29,22 +29,23 @@
             @endif
         </div>
 
-        <div class="flex items-center gap-3 pt-2">
-          <!-- Dynamic Facebook Link -->
-          @if(isset($siteSetting->facebook_url))
-              <a href="{{ $siteSetting->facebook_url }}" target="_blank" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-          @endif
-          <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-          <a href="#" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
-        </div>
+        @if(filled($siteSetting?->facebook_url))
+          <div class="flex items-center gap-3 pt-2">
+            <a href="{{ $siteSetting->facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+          </div>
+        @endif
       </div>
 
       <!-- Product Links -->
       <div class="space-y-3 text-xs">
         <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider font-heading">Product</h4>
         <ul class="space-y-2.5 font-medium">
-          <li><a href="{{ url('/features') }}" class="hover:text-indigo-500 transition-colors">All Features</a></li>
-          <li><a href="{{ url('/pricing') }}" class="hover:text-indigo-500 transition-colors">Pricing & Plans</a></li>
+          @if(Route::has('features'))
+            <li><a href="{{ route('features') }}" class="hover:text-indigo-500 transition-colors">All Features</a></li>
+          @endif
+          @if(Route::has('pricing'))
+            <li><a href="{{ route('pricing') }}" class="hover:text-indigo-500 transition-colors">Pricing & Plans</a></li>
+          @endif
         </ul>
       </div>
 
@@ -53,7 +54,9 @@
         <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider font-heading">Resources</h4>
         <ul class="space-y-2.5 font-medium">
           <li><a href="{{ route('about') }}" class="hover:text-indigo-500 transition-colors">About GEO Architecture</a></li>
-          <li><a href="{{ url('/blog') }}" class="hover:text-indigo-500 transition-colors">Research Blog</a></li>
+          @if(Route::has('blog.index'))
+            <li><a href="{{ route('blog.index') }}" class="hover:text-indigo-500 transition-colors">Research Blog</a></li>
+          @endif
         </ul>
       </div>
 

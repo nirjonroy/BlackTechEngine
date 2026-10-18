@@ -1,12 +1,6 @@
 @extends('frontend.app')
 
 @php
-    $pageTitle = $seoSetting?->meta_title ?: $seoSetting?->seo_title ?: ($about?->hero_title ?: 'About BlackTechEngine');
-    $metaDescription = $seoSetting?->meta_description ?: $seoSetting?->seo_description ?: $about?->hero_description;
-    $siteName = $seoSetting?->site_name ?: ($siteSetting?->site_name ?: 'BlackTechEngine');
-    $metaImage = $seoSetting?->meta_image
-        ? (\Illuminate\Support\Str::startsWith($seoSetting->meta_image, ['http://', 'https://']) ? $seoSetting->meta_image : asset('storage/'.$seoSetting->meta_image))
-        : null;
     $statColors = [
         'text-indigo-600 dark:text-indigo-400',
         'text-violet-600 dark:text-violet-400',
@@ -20,42 +14,6 @@
         'bg-cyan-500/10 text-cyan-500',
     ];
 @endphp
-
-@section('title', $pageTitle)
-
-@section('seos')
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="title" content="{{ $pageTitle }}">
-    @if(filled($metaDescription))
-        <meta name="description" content="{{ $metaDescription }}">
-    @endif
-    @if(filled($seoSetting?->keywords))
-        <meta name="keywords" content="{{ $seoSetting->keywords }}">
-    @endif
-    @if(filled($seoSetting?->author))
-        <meta name="author" content="{{ $seoSetting->author }}">
-    @endif
-    <link rel="canonical" href="{{ route('about') }}">
-    <meta property="og:title" content="{{ $pageTitle }}">
-    @if(filled($metaDescription))
-        <meta property="og:description" content="{{ $metaDescription }}">
-    @endif
-    <meta property="og:url" content="{{ route('about') }}">
-    <meta property="og:site_name" content="{{ $siteName }}">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:type" content="website">
-    @if($metaImage)
-        <meta property="og:image" content="{{ $metaImage }}">
-    @endif
-    <meta name="twitter:card" content="{{ $metaImage ? 'summary_large_image' : 'summary' }}">
-    <meta name="twitter:title" content="{{ $pageTitle }}">
-    @if(filled($metaDescription))
-        <meta name="twitter:description" content="{{ $metaDescription }}">
-    @endif
-    @if($metaImage)
-        <meta name="twitter:image" content="{{ $metaImage }}">
-    @endif
-@endsection
 
 @section('content')
     <section class="relative pt-20 pb-20 overflow-hidden">

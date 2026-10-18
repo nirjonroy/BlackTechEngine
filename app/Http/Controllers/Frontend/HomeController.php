@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\SiteSetting;
+use App\Models\AboutPage;
 use App\Models\FeaturePageSetting;
-use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        // Fetch existing data from your current tables
-        $siteSetting = SiteSetting::first();
         $featureSetting = FeaturePageSetting::first();
-        
-        // Fetch stats from about_stats table (assuming you have this from About Page setup)
-        $aboutStats = DB::table('about_stats')->take(4)->get();
+        $aboutStats = AboutPage::query()->with('stats')->first()?->stats->take(4) ?? collect();
 
-        return view('frontend.home', compact('siteSetting', 'featureSetting', 'aboutStats'));
+        return view('frontend.home', [
+            'featureSetting' => $featureSetting,
+            'aboutStats' => $aboutStats,
+            'seoFallbackDescription' => 'Autonomous SEO and generative engine optimization for modern growth teams.',
+        ]);
     }
 }

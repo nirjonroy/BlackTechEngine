@@ -3,10 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Admin;
-use App\Models\SiteSetting;
+use App\View\Composers\FrontendLayoutComposer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,9 +32,6 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('Super Admin', 'admin') ? true : null;
         });
 
-        if (Schema::hasTable('site_settings')) {
-            $siteSetting = SiteSetting::first();
-            View::share('siteSetting', $siteSetting);
-        }
+        View::composer('frontend.app', FrontendLayoutComposer::class);
     }
 }

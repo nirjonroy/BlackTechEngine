@@ -153,8 +153,25 @@ function setupMobileNav() {
   const btn = document.getElementById('mobileMenuBtn');
   const menu = document.getElementById('mobileMenu');
   if (btn && menu) {
+    const closeMenu = () => {
+      menu.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open navigation menu');
+    };
+
     btn.addEventListener('click', () => {
       menu.classList.toggle('hidden');
+      const isOpen = !menu.classList.contains('hidden');
+      btn.setAttribute('aria-expanded', String(isOpen));
+      btn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    });
+
+    menu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !menu.classList.contains('hidden')) {
+        closeMenu();
+        btn.focus();
+      }
     });
   }
 
