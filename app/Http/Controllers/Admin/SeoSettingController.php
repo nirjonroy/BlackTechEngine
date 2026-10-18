@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\SaveSeoSettingRequest;
 use App\Models\SeoSetting;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SeoSettingController extends Controller
@@ -22,10 +22,10 @@ class SeoSettingController extends Controller
         return view('admin.seo_settings.create');
     }
 
-    public function store(Request $request)
+    public function store(SaveSeoSettingRequest $request): RedirectResponse
     {
         $seo = new SeoSetting;
-        $seo->fill($request->except(['_token', 'meta_image']));
+        $seo->fill($request->safe()->except('meta_image'));
 
         if ($request->hasFile('meta_image')) {
             $seo->meta_image = $request->file('meta_image')->store('seo', 'public');
@@ -36,26 +36,28 @@ class SeoSettingController extends Controller
         return redirect()->route('admin.seo.index')->with('success', 'SEO Setting created successfully!');
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $seo = SeoSetting::findOrFail($id);
 
         return view('admin.seo_settings.edit', compact('seo'));
     }
 
-    public function update(Request $request, $id)
+    public function update(SaveSeoSettingRequest $request, string $id): RedirectResponse
     {
         $seo = SeoSetting::findOrFail($id);
-        $seo->fill($request->except(['_token', 'meta_image']));
+        $previousMetaImage = $seo->meta_image;
+        $seo->fill($request->safe()->except('meta_image'));
 
         if ($request->hasFile('meta_image')) {
-            if ($seo->meta_image) {
-                Storage::disk('public')->delete($seo->meta_image);
-            }
             $seo->meta_image = $request->file('meta_image')->store('seo', 'public');
         }
 
         $seo->save();
+
+        if ($request->hasFile('meta_image')) {
+            $this->deleteStoredImage($previousMetaImage);
+        }
 
         return redirect()->route('admin.seo.index')->with('success', 'SEO Setting updated successfully!');
     }
@@ -65,11 +67,15 @@ class SeoSettingController extends Controller
         $metaImage = $seo->meta_image;
 
         $seo->delete();
-
-        if ($metaImage) {
-            Storage::disk('public')->delete($metaImage);
-        }
+        $this->deleteStoredImage($metaImage);
 
         return redirect()->route('admin.seo.index')->with('success', 'SEO Setting deleted successfully!');
+    }
+
+    private function deleteStoredImage(?string $path): void
+    {
+        if ($path && str_starts_with($path, 'seo/') && ! str_contains($path, '..')) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

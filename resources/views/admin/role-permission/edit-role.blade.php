@@ -9,6 +9,7 @@
             <div class="content">
                 <div class="card">
                     <h3>Edit Permissions for: {{ $role->name }}</h3>
+                    @include('admin.partials.validation-errors')
                     <form action="{{ route('admin.role-permission.role.update', $role->id) }}" method="POST">
                         @csrf
                         <p>Role Name: <input type="text" name="name" value="{{ $role->name }}" required></p>

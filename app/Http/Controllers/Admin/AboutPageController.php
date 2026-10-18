@@ -3,73 +3,58 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\UpdateAboutPageRequest;
 use App\Models\AboutPage;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class AboutPageController extends Controller
 {
     public function index()
     {
-        // Prothom record ti nibe, na thakle empty instance toiri korbe
-        $about = AboutPage::with(['stats', 'comparisons', 'architectures', 'coreValues'])->first() ?? new AboutPage();
+        $about = AboutPage::with(['stats', 'comparisons', 'architectures', 'coreValues'])->first() ?? new AboutPage;
+
         return view('admin.about.index', compact('about'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateAboutPageRequest $request): RedirectResponse
     {
-        $about = AboutPage::first() ?? new AboutPage();
+        $validated = $request->validated();
 
-        // Main table er data update
-        $about->fill($request->only([
-            'hero_badge', 'hero_title', 'hero_description',
-            'comparison_title', 'comparison_description',
-            'architecture_badge', 'architecture_title', 'architecture_description',
-            'core_values_title', 'core_values_description',
-            'cta_title', 'cta_description', 'cta_btn1_text', 'cta_btn1_link', 'cta_btn2_text', 'cta_btn2_link'
-        ]));
-        $about->save();
+        DB::transaction(function () use ($validated): void {
+            $about = AboutPage::first() ?? new AboutPage;
+            $about->fill(Arr::except($validated, ['stats', 'comparisons', 'architectures', 'core_values']));
+            $about->save();
 
-        // Related data update korar process (Purano gulo delete kore notun gulo insert kora)
-        
-        // 1. Stats Update
-        $about->stats()->delete();
-        if ($request->has('stats')) {
-            foreach ($request->stats as $index => $stat) {
-                if (!empty($stat['value'])) {
-                    $about->stats()->create(array_merge($stat, ['order_by' => $index]));
+            $about->stats()->delete();
+            foreach ($validated['stats'] ?? [] as $index => $stat) {
+                if (! empty($stat['value'])) {
+                    $about->stats()->create([...$stat, 'order_by' => $index]);
                 }
             }
-        }
 
-        // 2. Comparisons Update
-        $about->comparisons()->delete();
-        if ($request->has('comparisons')) {
-            foreach ($request->comparisons as $index => $comp) {
-                if (!empty($comp['capability'])) {
-                    $about->comparisons()->create(array_merge($comp, ['order_by' => $index]));
+            $about->comparisons()->delete();
+            foreach ($validated['comparisons'] ?? [] as $index => $comparison) {
+                if (! empty($comparison['capability'])) {
+                    $about->comparisons()->create([...$comparison, 'order_by' => $index]);
                 }
             }
-        }
 
-        // 3. Architectures Update
-        $about->architectures()->delete();
-        if ($request->has('architectures')) {
-            foreach ($request->architectures as $index => $arch) {
-                if (!empty($arch['title'])) {
-                    $about->architectures()->create(array_merge($arch, ['order_by' => $index]));
+            $about->architectures()->delete();
+            foreach ($validated['architectures'] ?? [] as $index => $architecture) {
+                if (! empty($architecture['title'])) {
+                    $about->architectures()->create([...$architecture, 'order_by' => $index]);
                 }
             }
-        }
 
-        // 4. Core Values Update
-        $about->coreValues()->delete();
-        if ($request->has('core_values')) {
-            foreach ($request->core_values as $index => $cv) {
-                if (!empty($cv['title'])) {
-                    $about->coreValues()->create(array_merge($cv, ['order_by' => $index]));
+            $about->coreValues()->delete();
+            foreach ($validated['core_values'] ?? [] as $index => $coreValue) {
+                if (! empty($coreValue['title'])) {
+                    $about->coreValues()->create([...$coreValue, 'order_by' => $index]);
                 }
             }
-        }
+        });
 
         return back()->with('success', 'About Page settings updated successfully!');
     }

@@ -9,6 +9,7 @@
             <div class="content">
                 <div class="card">
                     <h3>Add New Role</h3>
+                    @include('admin.partials.validation-errors')
                     <form action="{{ route('admin.role-permission.role.store') }}" method="POST">
                         @csrf
                         <p>Role Name: <input type="text" name="name" required></p>

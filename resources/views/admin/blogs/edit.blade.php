@@ -12,6 +12,7 @@
             <div class="content">
                 <div class="card">
                     <h3>Edit Blog</h3>
+                    @include('admin.partials.validation-errors')
                     <form action="{{ route('admin.blogs.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-grid">

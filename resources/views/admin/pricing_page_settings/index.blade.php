@@ -19,6 +19,7 @@
             <div class="content">
                 <div class="card">
                     <h3>Pricing Page Settings (Global)</h3>
+                    @include('admin.partials.validation-errors')
                     @if(session('success'))
                         <div style="color: green; margin-bottom: 15px; font-weight: bold;">{{ session('success') }}</div>
                     @endif

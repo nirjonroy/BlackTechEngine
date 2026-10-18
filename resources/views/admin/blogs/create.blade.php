@@ -12,6 +12,7 @@
             <div class="content">
                 <div class="card">
                     <h3>Create New Blog</h3>
+                    @include('admin.partials.validation-errors')
                     <form action="{{ route('admin.blogs.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-grid">

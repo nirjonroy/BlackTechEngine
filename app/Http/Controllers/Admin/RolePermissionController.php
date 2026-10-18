@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreAdminRequest;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -43,18 +45,10 @@ class RolePermissionController extends Controller
         return view('admin.role-permission.create-admin', compact('roles'));
     }
 
-    public function storeAdmin(Request $request): RedirectResponse
+    public function storeAdmin(StoreAdminRequest $request): RedirectResponse
     {
         $authenticatedAdmin = $this->authenticatedAdmin($request);
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email',
-            'password' => 'required|min:6',
-            'role' => [
-                'required',
-                Rule::exists('roles', 'name')->where('guard_name', 'admin'),
-            ],
-        ]);
+        $validated = $request->validated();
 
         if ($validated['role'] === self::SUPER_ADMIN_ROLE && ! $this->isSuperAdmin($authenticatedAdmin)) {
             abort(403);
@@ -87,15 +81,9 @@ class RolePermissionController extends Controller
         return view('admin.role-permission.create-role');
     }
 
-    public function storeRole(Request $request): RedirectResponse
+    public function storeRole(StoreRoleRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                Rule::unique('roles', 'name')->where('guard_name', 'admin'),
-            ],
-        ]);
+        $validated = $request->validated();
 
         if (strcasecmp(trim($validated['name']), self::SUPER_ADMIN_ROLE) === 0) {
             abort(403);
@@ -106,25 +94,11 @@ class RolePermissionController extends Controller
         return redirect()->route('admin.role-permission.index')->with('success', 'Role created successfully.');
     }
 
-    public function updateRole(Request $request, Role $role): RedirectResponse
+    public function updateRole(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
         $authenticatedAdmin = $this->authenticatedAdmin($request);
         $this->ensureRoleCanBeManaged($role, $authenticatedAdmin);
-
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                Rule::unique('roles', 'name')
-                    ->where('guard_name', 'admin')
-                    ->ignore($role->id),
-            ],
-            'permissions' => ['nullable', 'array'],
-            'permissions.*' => [
-                'string',
-                Rule::exists('permissions', 'name')->where('guard_name', 'admin'),
-            ],
-        ]);
+        $validated = $request->validated();
 
         $requestedRoleName = trim($validated['name']);
         if ($role->name === self::SUPER_ADMIN_ROLE && $requestedRoleName !== self::SUPER_ADMIN_ROLE) {
