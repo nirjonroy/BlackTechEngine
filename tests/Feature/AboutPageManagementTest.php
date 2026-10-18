@@ -184,6 +184,28 @@ test('omitted child collections survive unrelated about page updates', function 
         ->and($coreValue->fresh())->not->toBeNull();
 });
 
+test('submitted child IDs cannot update records belonging to another about page', function () {
+    $about = AboutPage::create(['hero_title' => 'Managed page']);
+    $managedStat = $about->stats()->create(['value' => '100%', 'label' => 'Managed stat', 'order_by' => 0]);
+    $otherAbout = AboutPage::create(['hero_title' => 'Other page']);
+    $otherStat = $otherAbout->stats()->create(['value' => '50%', 'label' => 'Other stat', 'order_by' => 0]);
+    $admin = createAboutPageAdmin();
+
+    $this->actingAs($admin, 'admin')
+        ->post(route('admin.about.update'), [
+            'stats_submitted' => '1',
+            'stats' => [[
+                'id' => $otherStat->id,
+                'value' => 'Compromised',
+                'label' => 'Cross-parent update',
+            ]],
+        ])
+        ->assertNotFound();
+
+    expect($managedStat->refresh()->value)->toBe('100%')
+        ->and($otherStat->refresh()->value)->toBe('50%');
+});
+
 test('invalid about input preserves all saved parent and child data', function () {
     $about = AboutPage::create(['hero_title' => 'Original title', 'cta_btn1_link' => 'https://example.com/original']);
     $coreValue = $about->coreValues()->create([

@@ -21,9 +21,9 @@
 
     <!-- Desktop Links -->
     <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
-      <a href="{{ url('/') }}" class="text-indigo-600 dark:text-indigo-400 font-bold">Home</a>
+      <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors' }}">Home</a>
       <a href="{{ url('/features') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
-      <a href="{{ url('/about') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About GEO</a>
+      <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors' }}">About GEO</a>
       <a href="{{ url('/pricing') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
       <a href="{{ url('/blog') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
     </nav>

@@ -9,12 +9,14 @@ use App\Http\Controllers\Admin\PricingPlanController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', FrontendAboutPageController::class)->name('about');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

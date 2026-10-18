@@ -52,7 +52,7 @@
       <div class="space-y-3 text-xs">
         <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider font-heading">Resources</h4>
         <ul class="space-y-2.5 font-medium">
-          <li><a href="{{ url('/about') }}" class="hover:text-indigo-500 transition-colors">About GEO Architecture</a></li>
+          <li><a href="{{ route('about') }}" class="hover:text-indigo-500 transition-colors">About GEO Architecture</a></li>
           <li><a href="{{ url('/blog') }}" class="hover:text-indigo-500 transition-colors">Research Blog</a></li>
         </ul>
       </div>
