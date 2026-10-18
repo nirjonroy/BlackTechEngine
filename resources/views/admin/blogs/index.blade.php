@@ -24,7 +24,11 @@
                             <td>{{ $blog->category }}</td>
                             <td>
                                 <a href="{{ route('admin.blogs.edit', $blog->id) }}" style="color:#28a745; margin-right:10px;">Edit</a>
-                                <a href="{{ route('admin.blogs.destroy', $blog->id) }}" style="color:#dc3545;" onclick="return confirm('Delete?')">Delete</a>
+                                <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this blog?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="color:#dc3545; background:none; border:none; padding:0; cursor:pointer;">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\Blog;
+use App\Models\PricingPlan;
+use App\Models\SeoSetting;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Gate;
@@ -47,6 +50,9 @@ function createAuthorizationAdmin(): Admin
 test('every sensitive admin endpoint rejects an admin without permission', function () {
     $admin = createAuthorizationAdmin();
     $role = Role::create(['name' => 'Content Manager', 'guard_name' => 'admin']);
+    $blog = Blog::create(['title' => 'Protected blog', 'slug' => 'protected-blog']);
+    $seo = SeoSetting::create(['page_name' => 'Protected SEO']);
+    $plan = PricingPlan::create(['name' => 'Protected plan']);
 
     $endpoints = [
         ['GET', route('admin.dashboard')],
@@ -66,19 +72,19 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
         ['POST', route('admin.seo.store')],
         ['GET', route('admin.seo.edit', 999)],
         ['POST', route('admin.seo.update', 999)],
-        ['GET', route('admin.seo.destroy', 999)],
+        ['DELETE', route('admin.seo.destroy', $seo)],
         ['GET', route('admin.blogs.index')],
         ['GET', route('admin.blogs.create')],
         ['POST', route('admin.blogs.store')],
         ['GET', route('admin.blogs.edit', 999)],
         ['POST', route('admin.blogs.update', 999)],
-        ['GET', route('admin.blogs.destroy', 999)],
+        ['DELETE', route('admin.blogs.destroy', $blog)],
         ['GET', route('admin.pricing.index')],
         ['GET', route('admin.pricing.create')],
         ['POST', route('admin.pricing.store')],
         ['GET', route('admin.pricing.edit', 999)],
         ['POST', route('admin.pricing.update', 999)],
-        ['GET', route('admin.pricing.destroy', 999)],
+        ['DELETE', route('admin.pricing.destroy', $plan)],
         ['GET', route('admin.pricing_page.index')],
         ['POST', route('admin.pricing_page.update')],
         ['GET', route('admin.feature_page.index')],

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\SeoSetting;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SeoSettingController extends Controller
@@ -12,6 +13,7 @@ class SeoSettingController extends Controller
     public function index()
     {
         $seos = SeoSetting::all();
+
         return view('admin.seo_settings.index', compact('seos'));
     }
 
@@ -22,7 +24,7 @@ class SeoSettingController extends Controller
 
     public function store(Request $request)
     {
-        $seo = new SeoSetting();
+        $seo = new SeoSetting;
         $seo->fill($request->except(['_token', 'meta_image']));
 
         if ($request->hasFile('meta_image')) {
@@ -30,12 +32,14 @@ class SeoSettingController extends Controller
         }
 
         $seo->save();
+
         return redirect()->route('admin.seo.index')->with('success', 'SEO Setting created successfully!');
     }
 
     public function edit($id)
     {
         $seo = SeoSetting::findOrFail($id);
+
         return view('admin.seo_settings.edit', compact('seo'));
     }
 
@@ -52,16 +56,20 @@ class SeoSettingController extends Controller
         }
 
         $seo->save();
+
         return redirect()->route('admin.seo.index')->with('success', 'SEO Setting updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy(SeoSetting $seo): RedirectResponse
     {
-        $seo = SeoSetting::findOrFail($id);
-        if ($seo->meta_image) {
-            Storage::disk('public')->delete($seo->meta_image);
-        }
+        $metaImage = $seo->meta_image;
+
         $seo->delete();
+
+        if ($metaImage) {
+            Storage::disk('public')->delete($metaImage);
+        }
+
         return redirect()->route('admin.seo.index')->with('success', 'SEO Setting deleted successfully!');
     }
 }

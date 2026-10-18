@@ -34,7 +34,11 @@
                             </td>
                             <td>
                                 <a href="{{ route('admin.seo.edit', $seo->id) }}" style="color:#28a745; margin-right:10px;">Edit</a>
-                                <a href="{{ route('admin.seo.destroy', $seo->id) }}" style="color:#dc3545;" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+                                <form action="{{ route('admin.seo.destroy', $seo->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this SEO setting?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="color:#dc3545; background:none; border:none; padding:0; cursor:pointer;">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

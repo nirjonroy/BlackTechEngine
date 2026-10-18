@@ -24,7 +24,11 @@
                             <td>{{ $plan->is_popular ? 'Yes' : 'No' }}</td>
                             <td>
                                 <a href="{{ route('admin.pricing.edit', $plan->id) }}" style="color:#28a745; margin-right:10px;">Edit</a>
-                                <a href="{{ route('admin.pricing.destroy', $plan->id) }}" style="color:#dc3545;" onclick="return confirm('Delete?')">Delete</a>
+                                <form action="{{ route('admin.pricing.destroy', $plan->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this pricing plan?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="color:#dc3545; background:none; border:none; padding:0; cursor:pointer;">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

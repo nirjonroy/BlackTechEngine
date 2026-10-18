@@ -72,7 +72,7 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('/admin/seo-settings/store', [SeoSettingController::class, 'store'])->name('admin.seo.store');
         Route::get('/admin/seo-settings/{id}/edit', [SeoSettingController::class, 'edit'])->name('admin.seo.edit');
         Route::post('/admin/seo-settings/{id}/update', [SeoSettingController::class, 'update'])->name('admin.seo.update');
-        Route::get('/admin/seo-settings/{id}/delete', [SeoSettingController::class, 'destroy'])->name('admin.seo.destroy');
+        Route::delete('/admin/seo-settings/{seo}/delete', [SeoSettingController::class, 'destroy'])->name('admin.seo.destroy');
     });
 
     Route::middleware(PermissionMiddleware::using('manage blogs', 'admin'))->group(function () {
@@ -81,7 +81,7 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('/admin/blogs/store', [BlogController::class, 'store'])->name('admin.blogs.store');
         Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
         Route::post('/admin/blogs/{id}/update', [BlogController::class, 'update'])->name('admin.blogs.update');
-        Route::get('/admin/blogs/{id}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+        Route::delete('/admin/blogs/{blog}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
     });
 
     Route::middleware(PermissionMiddleware::using('manage pricing plans', 'admin'))->group(function () {
@@ -90,7 +90,7 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('/admin/pricing-plans/store', [PricingPlanController::class, 'store'])->name('admin.pricing.store');
         Route::get('/admin/pricing-plans/{id}/edit', [PricingPlanController::class, 'edit'])->name('admin.pricing.edit');
         Route::post('/admin/pricing-plans/{id}/update', [PricingPlanController::class, 'update'])->name('admin.pricing.update');
-        Route::get('/admin/pricing-plans/{id}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
+        Route::delete('/admin/pricing-plans/{plan}/delete', [PricingPlanController::class, 'destroy'])->name('admin.pricing.destroy');
     });
 
     Route::middleware(PermissionMiddleware::using('manage pricing page settings', 'admin'))->group(function () {
