@@ -13,9 +13,9 @@
                 {{ $setting?->hero_title_normal ?: 'Engineered for the Entire Content Lifecycle' }}
                 <span class="gradient-text-primary">{{ $setting?->hero_title_highlighted ?: 'The 6 Pillars' }}</span>
             </h1>
-            @if(filled($setting?->hero_description))
-                <p class="mx-auto mt-6 max-w-3xl text-lg font-normal leading-relaxed text-slate-600 dark:text-slate-300 sm:text-xl">{{ $setting->hero_description }}</p>
-            @endif
+            <p class="mx-auto mt-6 max-w-3xl text-lg font-normal leading-relaxed text-slate-600 dark:text-slate-300 sm:text-xl">
+                {{ $setting?->hero_description ?: 'Discover how autonomous workflows support the content lifecycle, from brand voice guidance and answer-engine structure to publishing, social distribution, local visibility, and opportunity discovery.' }}
+            </p>
         </div>
     </section>
 
@@ -34,16 +34,45 @@
                         <h2 class="font-heading text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">{{ $feature['title'] }}</h2>
                         <p class="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">{{ $feature['description'] }}</p>
 
-                        <div class="mt-8 space-y-4">
-                            <div class="flex items-start gap-3.5">
-                                <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"><i data-lucide="check" class="h-4 w-4"></i></div>
-                                <div><h3 class="text-sm font-bold text-slate-900 dark:text-white">Configurable workflow</h3><p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Designed to fit approved content operations without exposing unverified performance claims.</p></div>
-                            </div>
-                            <div class="flex items-start gap-3.5">
-                                <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400"><i data-lucide="shield-check" class="h-4 w-4"></i></div>
-                                <div><h3 class="text-sm font-bold text-slate-900 dark:text-white">Human-controlled publishing</h3><p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Keep review and approval decisions within your team’s operating process.</p></div>
-                            </div>
-                        </div>
+                        @switch($index)
+                            @case(0)
+                                <div class="mt-8 space-y-4">
+                                    @foreach([
+                                        ['sliders', 'Tone & Personality Calibration', 'Tune formality, enthusiasm, analytical depth, and humor against approved brand guidance.'],
+                                        ['shield-check', 'Banned Words Filter', 'Exclude phrases and expressions that do not belong in your organization’s voice.'],
+                                        ['link-2', 'Internal Linking Knowledge Graph', 'Connect relevant topics to approved pages and resources with contextual anchor suggestions.'],
+                                    ] as [$icon, $title, $description])
+                                        <div class="flex items-start gap-3.5">
+                                            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"><i data-lucide="{{ $icon }}" class="h-4 w-4"></i></div>
+                                            <div><h3 class="text-sm font-bold text-slate-900 dark:text-white">{{ $title }}</h3><p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $description }}</p></div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @break
+                            @case(1)
+                                <ul class="mt-6 space-y-3.5 text-sm text-slate-700 dark:text-slate-300">
+                                    @foreach([
+                                        ['Information-Gain Structure', 'Organize original insights and supporting context for answer-engine retrieval.'],
+                                        ['Syntactic Direct Answers', 'Shape concise question-and-answer passages for people and retrieval systems.'],
+                                        ['Schema & Entity Graphs', 'Connect entities and page relationships with structured semantic context.'],
+                                    ] as [$title, $description])
+                                        <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-emerald-500"></i><span><strong>{{ $title }}:</strong> {{ $description }}</span></li>
+                                    @endforeach
+                                </ul>
+                                @break
+                            @case(2)
+                                <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div class="bte-surface rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><div class="font-heading text-xl font-black text-indigo-500">Rolling Queue</div><div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Organize research, drafting, review, and publication in one visible workflow.</div></div>
+                                    <div class="bte-surface rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><div class="font-heading text-xl font-black text-emerald-500">Approval Controls</div><div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Keep editorial decisions with your team before content reaches a connected CMS.</div></div>
+                                </div>
+                                @break
+                            @default
+                                <div class="mt-6 flex flex-wrap gap-2">
+                                    @foreach(['Format Repurposing', 'Hashtag Clustering', 'Schedule Planning', 'Drip Delays'] as $capability)
+                                        <span class="rounded-lg bg-slate-200 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">{{ $capability }}</span>
+                                    @endforeach
+                                </div>
+                        @endswitch
                     </div>
 
                     <div @class(['lg:order-1' => $index % 2 === 1])>
@@ -85,7 +114,7 @@
                                 <div class="bte-card rounded-3xl border border-slate-200 p-6 dark:border-slate-800 sm:p-8">
                                     <div class="mb-4 flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-wider text-indigo-500">One approved article, multiple formats</span><span class="rounded bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold text-indigo-500">Illustrative</span></div>
                                     <div class="grid grid-cols-2 gap-3 text-xs">
-                                        @foreach([['linkedin', 'LinkedIn'], ['twitter', 'X Thread'], ['facebook', 'Facebook'], ['instagram', 'Instagram']] as [$icon, $channel])
+                                        @foreach([['share-2', 'LinkedIn'], ['messages-square', 'X Thread'], ['megaphone', 'Facebook'], ['image', 'Instagram']] as [$icon, $channel])
                                             <div class="rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900"><div class="mb-2 flex items-center gap-2 font-bold text-indigo-500"><i data-lucide="{{ $icon }}" class="h-4 w-4"></i>{{ $channel }}</div><p class="text-[11px] text-slate-500 dark:text-slate-400">Channel-specific copy prepared for review and scheduling.</p></div>
                                         @endforeach
                                     </div>
@@ -101,9 +130,23 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="mx-auto mb-16 max-w-3xl text-center"><h2 id="additional-features-heading" class="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">Local Visibility & Continuous Opportunity Discovery</h2><p class="mt-3 text-base text-slate-600 dark:text-slate-300">Additional pillars for location-focused organizations, agencies, and growth teams.</p></div>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-                @foreach($features->slice(4) as $index => $feature)
+                @foreach($features->slice(4)->values() as $index => $feature)
                     <article class="bte-card flex flex-col justify-between rounded-3xl border border-slate-200 p-8 dark:border-slate-800">
-                        <div><div class="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-500"><i data-lucide="{{ $feature['icon'] }}" class="h-6 w-6"></i></div><div class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-500">Feature {{ str_pad((string) ($index + 5), 2, '0', STR_PAD_LEFT) }}</div><h3 class="mb-3 font-heading text-2xl font-bold">{{ $feature['title'] }}</h3><p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{{ $feature['description'] }}</p></div>
+                        <div>
+                            <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-500"><i data-lucide="{{ $feature['icon'] }}" class="h-6 w-6"></i></div>
+                            <div class="mb-1 text-xs font-bold uppercase tracking-wider text-indigo-500">Feature {{ str_pad((string) ($index + 5), 2, '0', STR_PAD_LEFT) }}</div>
+                            <h3 class="mb-3 font-heading text-2xl font-bold">{{ $feature['title'] }}</h3>
+                            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{{ $feature['description'] }}</p>
+                            @if($index < 2)
+                                <ul class="mt-6 space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                                    @foreach($index === 0
+                                        ? ['Google Business publishing workflows', 'Review response drafting with tone guidance', 'Local citation consistency checks']
+                                        : ['Competitor topic monitoring', 'Search-intent opportunity clustering', 'Seasonal topic planning'] as $capability)
+                                        <li class="flex items-center gap-2"><i data-lucide="check" class="h-4 w-4 shrink-0 text-emerald-400"></i>{{ $capability }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
                         <div class="mt-8 flex items-center gap-2 border-t border-slate-200 pt-4 text-xs font-bold text-indigo-500 dark:border-slate-800"><span>Platform capability</span><i data-lucide="arrow-right" class="h-4 w-4"></i></div>
                     </article>
                 @endforeach

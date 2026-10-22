@@ -97,6 +97,21 @@ test('feature content is escaped and invalid icon names safely fall back', funct
         ->assertDontSee('javascript:', false);
 });
 
+test('unknown well-formed Lucide icon names safely fall back', function () {
+    FeaturePageSetting::create([
+        'features_json' => [[
+            'icon' => 'not-a-real-lucide-icon',
+            'title' => 'Configured Feature',
+            'description' => 'Configured description.',
+        ]],
+    ]);
+
+    $this->get(route('features'))
+        ->assertOk()
+        ->assertSee('data-lucide="dna"', false)
+        ->assertDontSee('data-lucide="not-a-real-lucide-icon"', false);
+});
+
 test('a central features SEO record fills fields absent from feature settings', function () {
     FeaturePageSetting::create(['hero_title_normal' => 'Feature Hero']);
     SeoSetting::create([

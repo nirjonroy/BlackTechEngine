@@ -9,6 +9,47 @@ use Illuminate\View\View;
 
 class FeaturesPageController extends Controller
 {
+    /** @var list<string> */
+    private const FEATURE_ICONS = [
+        'activity',
+        'badge-check',
+        'bar-chart-3',
+        'brain-circuit',
+        'calendar',
+        'calendar-check',
+        'calendar-days',
+        'chart-no-axes-combined',
+        'check',
+        'check-circle-2',
+        'circle-gauge',
+        'cpu',
+        'database',
+        'dna',
+        'file-check-2',
+        'file-text',
+        'globe-2',
+        'layers',
+        'lightbulb',
+        'link-2',
+        'map-pin',
+        'megaphone',
+        'messages-square',
+        'network',
+        'radar',
+        'rocket',
+        'search',
+        'search-check',
+        'share-2',
+        'shield',
+        'shield-check',
+        'sliders',
+        'sparkles',
+        'target',
+        'wand-sparkles',
+        'workflow',
+        'zap',
+    ];
+
     public function __invoke(): View
     {
         $setting = FeaturePageSetting::query()->first();
@@ -123,7 +164,7 @@ class FeaturesPageController extends Controller
 
     private function safeLucideIcon(mixed $icon, string $fallback = 'sparkles'): string
     {
-        return is_string($icon) && preg_match('/^[a-z0-9-]+$/', $icon) === 1
+        return is_string($icon) && in_array($icon, self::FEATURE_ICONS, true)
             ? $icon
             : $fallback;
     }
