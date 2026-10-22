@@ -417,52 +417,14 @@ window.closeCalendarDrawer = function () {
   document.body.style.overflow = '';
 };
 
-// Website Scanner
+// Legacy scanner hooks intentionally do not generate results without a backend.
 function initWebsiteScanner() {
   const form = document.getElementById('websiteScannerForm');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = document.getElementById('scannerUrlInput');
-    const url = input ? input.value.trim() : 'thehorizonsunlimited.com';
-
-    window.openModal('scannerResultModal');
-
-    const label = document.getElementById('scannedUrlLabel');
-    if (label) label.textContent = url;
-
-    const pBar = document.getElementById('scanProgressBar');
-    const loadingView = document.getElementById('scanLoadingView');
-    const completedView = document.getElementById('scanCompletedView');
-
-    if (loadingView) loadingView.classList.remove('hidden');
-    if (completedView) completedView.classList.add('hidden');
-    if (pBar) pBar.style.width = '20%';
-
-    setTimeout(() => {
-      const s1 = document.getElementById('scanStep1');
-      if (s1) s1.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold">✓</span> <span class="text-emerald-500 font-semibold">Sitemap & 34 URL entities crawled</span>`;
-      if (pBar) pBar.style.width = '55%';
-    }, 800);
-
-    setTimeout(() => {
-      const s2 = document.getElementById('scanStep2');
-      if (s2) s2.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold">✓</span> <span class="text-emerald-500 font-semibold">Brand Voice: Authoritative & Inspiring</span>`;
-      if (pBar) pBar.style.width = '85%';
-    }, 1600);
-
-    setTimeout(() => {
-      const s3 = document.getElementById('scanStep3');
-      if (s3) s3.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold">✓</span> <span class="text-emerald-500 font-semibold">Found 45 High-Intent Keyword Opportunities</span>`;
-      if (pBar) pBar.style.width = '100%';
-
-      setTimeout(() => {
-        if (loadingView) loadingView.classList.add('hidden');
-        if (completedView) completedView.classList.remove('hidden');
-        if (window.lucide) window.lucide.createIcons();
-      }, 400);
-    }, 2400);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    window.showToast('The website scanner backend is not connected yet.', 'info');
   });
 }
 

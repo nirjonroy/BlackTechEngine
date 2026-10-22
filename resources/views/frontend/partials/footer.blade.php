@@ -29,9 +29,9 @@
             @endif
         </div>
 
-        @if(filled($siteSetting?->facebook_url))
+        @if(filled($siteFacebookUrl))
           <div class="flex items-center gap-3 pt-2">
-            <a href="{{ $siteSetting->facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+            <a href="{{ $siteFacebookUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:text-indigo-500 transition-colors"><i data-lucide="share-2" class="w-4 h-4"></i></a>
           </div>
         @endif
       </div>

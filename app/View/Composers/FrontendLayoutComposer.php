@@ -25,8 +25,20 @@ class FrontendLayoutComposer
 
         $view->with([
             'siteSetting' => $resolved['siteSetting'],
+            'siteFacebookUrl' => $this->safeHttpUrl($resolved['siteSetting']?->facebook_url),
             'frontendSeo' => $resolved['seo'],
             'frontendAnalytics' => $resolved['analytics'],
         ]);
+    }
+
+    private function safeHttpUrl(?string $url): ?string
+    {
+        if (! filter_var($url, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        return in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ['http', 'https'], true)
+            ? $url
+            : null;
     }
 }
