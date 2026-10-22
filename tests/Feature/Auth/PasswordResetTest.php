@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Notification;
 test('reset password link screen can be rendered', function () {
     $response = $this->get('/forgot-password');
 
-    $response->assertStatus(200);
+    $response
+        ->assertOk()
+        ->assertSee('action="'.route('password.email').'"', false)
+        ->assertSee('name="_token"', false)
+        ->assertSee('name="email"', false);
 });
 
 test('reset password link can be requested', function () {
