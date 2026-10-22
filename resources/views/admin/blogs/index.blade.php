@@ -15,6 +15,7 @@
                             <th>Image</th>
                             <th>Title</th>
                             <th>Category</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                         @foreach($blogs as $blog)
@@ -22,6 +23,15 @@
                             <td>@if($blog->image) <img src="{{ asset('storage/'.$blog->image) }}" height="40"> @endif</td>
                             <td>{{ $blog->title }}</td>
                             <td>{{ $blog->category }}</td>
+                            <td>
+                                @if(!$blog->published_at)
+                                    Draft
+                                @elseif($blog->published_at->isFuture())
+                                    Scheduled for {{ $blog->published_at->format('M j, Y g:i A') }}
+                                @else
+                                    Published {{ $blog->published_at->format('M j, Y g:i A') }}
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('admin.blogs.edit', $blog->id) }}" style="color:#28a745; margin-right:10px;">Edit</a>
                                 <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this blog?')">

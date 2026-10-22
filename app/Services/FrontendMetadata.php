@@ -48,7 +48,9 @@ class FrontendMetadata
                 'copyright' => ($pageSeo['copyright'] ?? null) ?: $seoSetting?->copyright,
                 'siteName' => ($pageSeo['site_name'] ?? null) ?: $seoSetting?->site_name ?: $siteSetting?->site_name ?: 'BlackTechEngine',
                 'image' => $this->metaImageUrl($pageSeo['meta_image'] ?? null) ?: $this->metaImageUrl($seoSetting?->meta_image),
-                'canonical' => url()->current(),
+                'canonical' => $this->canonicalUrl($pageSeo['canonical'] ?? null),
+                'type' => ($pageSeo['type'] ?? null) === 'article' ? 'article' : 'website',
+                'publishedTime' => $pageSeo['published_time'] ?? null,
                 'favicon' => $siteSetting?->favicon ? asset('storage/'.$siteSetting->favicon) : null,
             ],
             'analytics' => $this->analyticsConfiguration(),
@@ -62,6 +64,7 @@ class FrontendMetadata
             'about' => ['about', 'about page', 'about geo', 'about us'],
             'features' => ['features', 'features page', 'platform features', 'product features'],
             'pricing' => ['pricing', 'pricing page', 'plans', 'plans and pricing'],
+            'blog.index', 'blog.show' => ['blog', 'blog page', 'research blog', 'insights'],
             default => [],
         };
         $globalNames = ['', 'default', 'global', 'site'];
@@ -93,7 +96,26 @@ class FrontendMetadata
             return null;
         }
 
-        return asset('storage/'.ltrim($image, '/'));
+        $localPath = ltrim($image, '/');
+
+        if (preg_match('/\A[a-zA-Z0-9_\/ .-]+\z/', $localPath) !== 1) {
+            return null;
+        }
+
+        return asset('storage/'.$localPath);
+    }
+
+    private function canonicalUrl(?string $url): string
+    {
+        if (filled($url) && filter_var($url, FILTER_VALIDATE_URL)) {
+            $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+
+            if (in_array($scheme, ['http', 'https'], true)) {
+                return $url;
+            }
+        }
+
+        return url()->current();
     }
 
     /**

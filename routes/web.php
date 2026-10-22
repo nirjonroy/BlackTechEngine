@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
+use App\Http\Controllers\Frontend\BlogController as FrontendBlogController;
 use App\Http\Controllers\Frontend\FeaturesPageController as FrontendFeaturesPageController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageController;
@@ -21,6 +22,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', FrontendAboutPageController::class)->name('about');
 Route::get('/features', FrontendFeaturesPageController::class)->name('features');
 Route::get('/pricing', FrontendPricingPageController::class)->name('pricing');
+Route::get('/blog', [FrontendBlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [FrontendBlogController::class, 'show'])->name('blog.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

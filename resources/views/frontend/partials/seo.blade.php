@@ -28,7 +28,10 @@
 <meta property="og:url" content="{{ $frontendSeo['canonical'] }}">
 <meta property="og:site_name" content="{{ $frontendSeo['siteName'] }}">
 <meta property="og:locale" content="en_US">
-<meta property="og:type" content="website">
+<meta property="og:type" content="{{ $frontendSeo['type'] }}">
+@if($frontendSeo['type'] === 'article' && filled($frontendSeo['publishedTime']))
+    <meta property="article:published_time" content="{{ $frontendSeo['publishedTime'] }}">
+@endif
 @if(filled($frontendSeo['image']))
     <meta property="og:image" content="{{ $frontendSeo['image'] }}">
     <meta property="og:image:width" content="1200">

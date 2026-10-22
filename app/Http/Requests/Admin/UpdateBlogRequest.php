@@ -42,6 +42,7 @@ class UpdateBlogRequest extends AdminFormRequest
             'copyright' => ['nullable', 'string', 'max:255'],
             'site_name' => ['nullable', 'string', 'max:255'],
             'keywords' => ['nullable', 'string', 'max:5000'],
+            'published_at' => ['nullable', 'date'],
         ];
     }
 }

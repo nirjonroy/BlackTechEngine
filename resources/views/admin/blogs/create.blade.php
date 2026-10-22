@@ -30,6 +30,11 @@
                                 <div class="input-group"><label>Category</label><input type="text" name="category"></div>
                                 <div class="input-group"><label>Content</label><textarea name="content" rows="10"></textarea></div>
                                 <div class="input-group"><label>Main Blog Image</label><input type="file" name="image"></div>
+                                <div class="input-group">
+                                    <label>Publish At</label>
+                                    <input type="datetime-local" name="published_at" value="{{ old('published_at') }}">
+                                    <small>Leave blank to save as a draft. A future date schedules publication.</small>
+                                </div>
                             </div>
                             
                             <!-- Right: SEO Data -->
@@ -47,7 +52,7 @@
                                 <div class="input-group"><label>Meta Image</label><input type="file" name="meta_image"></div>
                             </div>
                         </div>
-                        <button type="submit" style="padding:10px 20px;background:#28a745;color:white;border:none;cursor:pointer; margin-top:20px;">Publish Blog</button>
+                        <button type="submit" style="padding:10px 20px;background:#28a745;color:white;border:none;cursor:pointer; margin-top:20px;">Save Blog</button>
                     </form>
                 </div>
             </div>

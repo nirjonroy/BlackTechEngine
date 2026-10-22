@@ -34,6 +34,11 @@
                                 <div class="input-group"><label>Main Blog Image</label><input type="file" name="image">
                                     @if($blog->image) <img src="{{ asset('storage/'.$blog->image) }}" height="50" style="margin-top:10px;"> @endif
                                 </div>
+                                <div class="input-group">
+                                    <label>Publish At</label>
+                                    <input type="datetime-local" name="published_at" value="{{ old('published_at', $blog->published_at?->format('Y-m-d\TH:i')) }}">
+                                    <small>Leave blank to keep this post as a draft. A future date schedules publication.</small>
+                                </div>
                             </div>
                             
                             <!-- Right: SEO Data -->
@@ -53,7 +58,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" style="padding:10px 20px;background:#17a2b8;color:white;border:none;cursor:pointer; margin-top:20px;">Update Blog</button>
+                        <button type="submit" style="padding:10px 20px;background:#17a2b8;color:white;border:none;cursor:pointer; margin-top:20px;">Save Blog</button>
                     </form>
                 </div>
             </div>
