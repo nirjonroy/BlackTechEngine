@@ -46,18 +46,25 @@
         <div class="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <div class="animate-float mb-8 inline-flex items-center gap-2.5 rounded-full border border-indigo-500/25 bg-indigo-500/10 px-5 py-2 text-xs font-bold uppercase tracking-wider text-indigo-600 motion-reduce:animate-none dark:text-indigo-400 sm:text-sm">
                 <span class="flex h-2.5 w-2.5 animate-pulse rounded-full bg-cyan-400 motion-reduce:animate-none"></span>
-                <span>GEO 3.0 Workflows for Modern Search</span>
+                <span>{{ $homepageSetting?->hero_badge ?: 'GEO 3.0 Workflows for Modern Search' }}</span>
             </div>
 
             <h1 class="mx-auto max-w-5xl font-heading text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
-                Put Your SEO & Social Content on <span class="gradient-text-primary">Autopilot</span>
+                {{ $homepageSetting?->hero_title ?: 'Put Your SEO & Social Content on' }} <span class="gradient-text-primary">{{ $homepageSetting?->hero_highlighted_title ?: 'Autopilot' }}</span>
             </h1>
 
             <p class="mx-auto mt-6 max-w-3xl text-lg font-normal leading-relaxed text-slate-600 dark:text-slate-300 sm:text-xl">
-                BlackTechEngine brings brand guidance, topic discovery, content preparation, publishing workflows, and omnichannel distribution into one platform.
+                {{ $homepageSetting?->hero_description ?: 'BlackTechEngine brings brand guidance, topic discovery, content preparation, publishing workflows, and omnichannel distribution into one platform.' }}
             </p>
 
-            <div class="mx-auto mt-12 max-w-2xl">
+            <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <a href="{{ $primaryCtaUrl }}" class="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-transform hover:scale-[1.02] motion-reduce:transform-none sm:w-auto">{{ $homepageSetting?->primary_cta_label ?: 'Create Account' }}</a>
+                <a href="{{ $secondaryCtaUrl }}" class="w-full rounded-xl border border-slate-300 bg-white/70 px-7 py-3.5 text-sm font-bold text-slate-800 transition-colors hover:border-indigo-500 dark:border-slate-700 dark:bg-slate-900/70 dark:text-white sm:w-auto">{{ $homepageSetting?->secondary_cta_label ?: 'Check My Website' }}</a>
+            </div>
+
+            <div id="website-scanner" class="mx-auto mt-12 max-w-2xl scroll-mt-24">
+                <h2 class="font-heading text-2xl font-extrabold sm:text-3xl">{{ $homepageSetting?->scanner_heading ?: 'Check Your Website Readiness' }}</h2>
+                <p class="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">{{ $homepageSetting?->scanner_description ?: 'Validate a public website address and review what is required before a real scanner can analyze it.' }}</p>
                 <form class="bte-card glow-indigo flex flex-col items-center gap-3 rounded-2xl p-2.5 sm:flex-row sm:p-3" novalidate @submit.prevent="openScannerNotice">
                     <div class="flex w-full flex-1 items-center gap-3 px-3 py-1">
                         <i data-lucide="globe-2" class="h-6 w-6 shrink-0 text-indigo-500"></i>
@@ -76,7 +83,7 @@
                     </div>
                     <button type="submit" class="flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none sm:w-auto">
                         <i data-lucide="scan-search" class="h-5 w-5"></i>
-                        <span>Check My Website</span>
+                        <span>{{ $homepageSetting?->scanner_button_label ?: 'Check My Website' }}</span>
                     </button>
                 </form>
                 <p id="scannerError" x-cloak x-show="scannerError" x-text="scannerError" class="mt-3 text-sm font-semibold text-rose-500" role="alert"></p>
@@ -107,7 +114,8 @@
 
     <section class="overflow-hidden border-y border-slate-200 bg-slate-100/60 py-10 dark:border-slate-800/80 dark:bg-[#0E1526]/70" aria-labelledby="integration-heading">
         <div class="mx-auto mb-3 max-w-7xl px-4 text-center">
-            <h2 id="integration-heading" class="text-xs font-bold uppercase tracking-widest text-slate-400">Publishing and distribution workflow destinations</h2>
+            <h2 id="integration-heading" class="text-xs font-bold uppercase tracking-widest text-slate-400">{{ $homepageSetting?->integrations_heading ?: 'Publishing and distribution workflow destinations' }}</h2>
+            <p class="mx-auto mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400">{{ $homepageSetting?->integrations_description ?: 'Prepare approved content for the channels and CMS destinations your team already uses.' }}</p>
         </div>
         <div class="relative w-full overflow-hidden">
             <div class="animate-marquee flex items-center gap-16 py-2 motion-reduce:animate-none motion-reduce:justify-center motion-reduce:flex-wrap">
@@ -132,9 +140,9 @@
 
     <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="homepage-features-heading">
         <div class="mx-auto mb-16 max-w-3xl text-center">
-            <span class="mb-2 block text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">{{ $featureSetting?->hero_badge ?: 'Autonomous Capabilities' }}</span>
-            <h2 id="homepage-features-heading" class="font-heading text-3xl font-extrabold tracking-tight sm:text-5xl">The 6 Pillars of BlackTechEngine</h2>
-            <p class="mt-4 text-base text-slate-600 dark:text-slate-300">A connected workflow for search research, content operations, publishing, and distribution.</p>
+            <span class="mb-2 block text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">{{ $homepageSetting?->features_badge ?: 'Autonomous Capabilities' }}</span>
+            <h2 id="homepage-features-heading" class="font-heading text-3xl font-extrabold tracking-tight sm:text-5xl">{{ $homepageSetting?->features_heading ?: 'The 6 Pillars of BlackTechEngine' }}</h2>
+            <p class="mt-4 text-base text-slate-600 dark:text-slate-300">{{ $homepageSetting?->features_description ?: 'A connected workflow for search research, content operations, publishing, and distribution.' }}</p>
         </div>
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -157,9 +165,9 @@
     <section class="border-y border-slate-200 bg-slate-100/50 py-20 dark:border-slate-800 dark:bg-[#0E1526]/50" aria-labelledby="homepage-calculator-heading">
         <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <span class="mb-2 block text-xs font-bold uppercase tracking-widest text-indigo-500">Transparent Cost Estimate</span>
-                <h2 id="homepage-calculator-heading" class="font-heading text-3xl font-extrabold sm:text-4xl">{{ $featureSetting?->calc_title ?: 'Estimate External Content Production Cost' }}</h2>
-                <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ $featureSetting?->calc_description ?: 'Use your own article volume and external cost assumptions. This calculator does not claim platform savings or performance returns.' }}</p>
+                <span class="mb-2 block text-xs font-bold uppercase tracking-widest text-indigo-500">{{ $homepageSetting?->calculator_badge ?: 'Transparent Cost Estimate' }}</span>
+                <h2 id="homepage-calculator-heading" class="font-heading text-3xl font-extrabold sm:text-4xl">{{ $homepageSetting?->calculator_heading ?: 'Estimate External Content Production Cost' }}</h2>
+                <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ $homepageSetting?->calculator_description ?: 'Use your own article volume and external cost assumptions. This calculator does not claim platform savings or performance returns.' }}</p>
             </div>
 
             <div class="bte-card space-y-8 rounded-3xl border border-slate-200 p-6 shadow-2xl dark:border-slate-800 sm:p-10">
@@ -188,8 +196,8 @@
                     <div class="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-5"><div class="text-xs font-bold uppercase text-violet-500">Published Platform Pricing</div><div class="mt-1 text-2xl font-extrabold text-violet-500">{{ $startingMonthlyPrice !== null ? 'From $'.number_format((float) $startingMonthlyPrice, 2).'/mo' : 'View current plans' }}</div></div>
                 </div>
 
-                <p class="text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">External cost estimates equal article count × the cost you select. Plan capacity is not stored in the current schema, so no BlackTechEngine savings percentage is calculated.</p>
-                <div class="text-center"><a href="{{ route('pricing') }}" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-indigo-500/25 transition-all hover:scale-105 motion-reduce:transform-none">View Current Plans <i data-lucide="arrow-right" class="h-4 w-4"></i></a></div>
+                <p class="text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $homepageSetting?->calculator_note ?: 'External cost estimates equal article count × the cost you select. Plan capacity is not stored in the current schema, so no BlackTechEngine savings percentage is calculated.' }}</p>
+                <div class="text-center"><a href="{{ $calculatorCtaUrl }}" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-indigo-500/25 transition-all hover:scale-105 motion-reduce:transform-none">{{ $homepageSetting?->calculator_cta_label ?: 'View Current Plans' }} <i data-lucide="arrow-right" class="h-4 w-4"></i></a></div>
             </div>
         </div>
     </section>
@@ -217,8 +225,8 @@
 
     <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div class="flex flex-col items-center justify-between gap-8 rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 p-8 text-white shadow-2xl sm:p-14 md:flex-row">
-            <div class="max-w-xl"><h2 class="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">Ready to Build a More Consistent Content Workflow?</h2><p class="mt-3 text-sm leading-relaxed text-indigo-100 sm:text-base">Explore current plans and platform capabilities without unsupported performance promises.</p></div>
-            <div class="flex w-full flex-col gap-3.5 sm:flex-row md:w-auto"><a href="{{ route('register') }}" class="rounded-xl bg-white px-8 py-4 text-center text-sm font-bold text-indigo-600 shadow-lg transition-all hover:bg-slate-100">Create Account</a><a href="{{ route('pricing') }}" class="rounded-xl border border-white/30 bg-indigo-900/40 px-8 py-4 text-center text-sm font-semibold text-white transition-all hover:bg-indigo-900/60">View Pricing</a></div>
+            <div class="max-w-xl"><h2 class="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">{{ $homepageSetting?->final_cta_heading ?: 'Ready to Build a More Consistent Content Workflow?' }}</h2><p class="mt-3 text-sm leading-relaxed text-indigo-100 sm:text-base">{{ $homepageSetting?->final_cta_description ?: 'Explore current plans and platform capabilities without unsupported performance promises.' }}</p></div>
+            <div class="flex w-full flex-col gap-3.5 sm:flex-row md:w-auto"><a href="{{ $finalPrimaryCtaUrl }}" class="rounded-xl bg-white px-8 py-4 text-center text-sm font-bold text-indigo-600 shadow-lg transition-all hover:bg-slate-100">{{ $homepageSetting?->final_primary_cta_label ?: 'Create Account' }}</a><a href="{{ $finalSecondaryCtaUrl }}" class="rounded-xl border border-white/30 bg-indigo-900/40 px-8 py-4 text-center text-sm font-semibold text-white transition-all hover:bg-indigo-900/60">{{ $homepageSetting?->final_secondary_cta_label ?: 'View Pricing' }}</a></div>
         </div>
     </section>
 

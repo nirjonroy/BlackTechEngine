@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
+use App\Http\Controllers\Admin\HomepageSettingController;
 use App\Http\Controllers\Admin\PricingPageSettingController;
 use App\Http\Controllers\Admin\PricingPlanController;
 use App\Http\Controllers\Admin\RolePermissionController;
@@ -70,6 +71,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::middleware(PermissionMiddleware::using('manage site settings', 'admin'))->group(function () {
         Route::get('/admin/settings', [SiteSettingController::class, 'index'])->name('admin.settings.index');
         Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage homepage settings', 'admin'))->group(function () {
+        Route::get('/admin/homepage-settings', [HomepageSettingController::class, 'index'])->name('admin.homepage.index');
+        Route::post('/admin/homepage-settings', [HomepageSettingController::class, 'update'])->name('admin.homepage.update');
     });
 
     Route::middleware(PermissionMiddleware::using('manage about page', 'admin'))->group(function () {

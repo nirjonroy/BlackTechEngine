@@ -21,6 +21,7 @@ class RolePermissionSeeder extends Seeder
             'delete admin',
             'manage roles',
             'manage site settings',
+            'manage homepage settings',
             'manage about page',
             'manage seo settings',
             'manage blogs',

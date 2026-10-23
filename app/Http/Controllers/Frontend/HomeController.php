@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\AboutPage;
 use App\Models\FeaturePageSetting;
+use App\Models\HomepageSetting;
 use App\Models\PricingPlan;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -29,6 +30,7 @@ class HomeController extends Controller
     public function index(): View
     {
         $featureSetting = FeaturePageSetting::query()->first();
+        $homepageSetting = HomepageSetting::query()->first();
         $aboutStats = AboutPage::query()
             ->with('stats')
             ->first()
@@ -37,6 +39,12 @@ class HomeController extends Controller
 
         return view('frontend.home', [
             'featureSetting' => $featureSetting,
+            'homepageSetting' => $homepageSetting,
+            'primaryCtaUrl' => $this->destinationUrl($homepageSetting?->primary_cta_destination, 'register'),
+            'secondaryCtaUrl' => $this->destinationUrl($homepageSetting?->secondary_cta_destination, 'scanner'),
+            'calculatorCtaUrl' => $this->destinationUrl($homepageSetting?->calculator_cta_destination, 'pricing'),
+            'finalPrimaryCtaUrl' => $this->destinationUrl($homepageSetting?->final_primary_cta_destination, 'register'),
+            'finalSecondaryCtaUrl' => $this->destinationUrl($homepageSetting?->final_secondary_cta_destination, 'pricing'),
             'homepageFeatures' => $this->features($featureSetting?->features_json),
             'testimonials' => $this->testimonials($featureSetting?->testimonials_json),
             'aboutStats' => $aboutStats,
@@ -111,5 +119,16 @@ class HomeController extends Controller
     private function nonEmptyString(mixed $value): ?string
     {
         return is_string($value) && filled(trim($value)) ? $value : null;
+    }
+
+    private function destinationUrl(?string $destination, string $fallback): string
+    {
+        $destination = array_key_exists((string) $destination, HomepageSetting::DESTINATION_OPTIONS)
+            ? $destination
+            : $fallback;
+
+        return $destination === 'scanner'
+            ? route('home').'#website-scanner'
+            : route($destination);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Models\AboutPage;
 use App\Models\FeaturePageSetting;
+use App\Models\HomepageSetting;
 use App\Models\PricingPlan;
 use App\Models\SiteSetting;
 
@@ -9,7 +10,7 @@ test('the public homepage renders every reference section without fabricated res
     $response = $this->get(route('home'));
 
     $response->assertOk()
-        ->assertSee('Put Your SEO & Social Content on', false)
+        ->assertSee('Put Your SEO & Social Content on')
         ->assertSee('Publishing and distribution workflow destinations')
         ->assertSee('The 6 Pillars of BlackTechEngine')
         ->assertSee('Estimate External Content Production Cost')
@@ -39,14 +40,17 @@ test('the homepage renders configured features statistics testimonials and calcu
             ['icon' => 'calendar', 'title' => 'First Feature', 'description' => 'First feature description.'],
             ['icon' => 'dna', 'title' => 'Second Feature', 'description' => 'Second feature description.'],
         ],
-        'calc_title' => 'Configured Cost Calculator',
-        'calc_description' => 'Configured calculator explanation.',
         'testimonial_badge' => 'Verified Stories',
         'testimonial_title' => 'Configured Testimonials',
         'testimonials_json' => [
             ['quote' => 'First review.', 'author_initials' => 'FR', 'author_name' => 'First Reviewer', 'author_role' => 'Founder'],
             ['quote' => 'Second review.', 'author_initials' => 'SR', 'author_name' => 'Second Reviewer', 'author_role' => 'Editor'],
         ],
+    ]);
+    HomepageSetting::create([
+        'features_badge' => 'Configured Capabilities',
+        'calculator_heading' => 'Configured Cost Calculator',
+        'calculator_description' => 'Configured calculator explanation.',
     ]);
     PricingPlan::create([
         'name' => 'Starter',
@@ -71,8 +75,12 @@ test('the homepage renders configured features statistics testimonials and calcu
 
 test('the homepage escapes configured content and rejects unsupported icons and external schemes', function () {
     $script = '<script>alert("homepage")</script>';
-    FeaturePageSetting::create([
+    HomepageSetting::create([
         'hero_badge' => $script,
+        'primary_cta_destination' => 'javascript:alert(1)',
+        'calculator_cta_destination' => 'https://malicious.example',
+    ]);
+    FeaturePageSetting::create([
         'features_json' => [[
             'icon' => 'not-a-real-icon',
             'title' => $script,

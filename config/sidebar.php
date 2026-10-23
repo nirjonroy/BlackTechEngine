@@ -4,60 +4,66 @@ return [
     [
         'title' => 'Dashboard',
         'route' => 'admin.dashboard',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
         'title' => 'Users List',
         'route' => '#',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
         'title' => 'Site Settings',
         'route' => 'admin.settings.index',
-        'type'  => 'all',
+        'type' => 'all',
+    ],
+    [
+        'title' => 'Homepage Setup',
+        'route' => 'admin.homepage.index',
+        'type' => 'permission',
+        'key' => 'manage homepage settings',
     ],
     [
         'title' => 'Pricing Page Setup',
         'route' => 'admin.pricing_page.index',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
         'title' => 'About Page Edit',
         'route' => 'admin.about.index',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
         'title' => 'SEO Settings',
         'route' => 'admin.seo.index',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
         'title' => 'Blogs',
         'route' => 'admin.blogs.index',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
         'title' => 'Pricing Plans',
         'route' => 'admin.pricing.index',
-        'type'  => 'all',
+        'type' => 'all',
     ],
     [
-    'title' => 'Features Page Setup',
-    'route' => 'admin.feature_page.index',
-    'type'  => 'all',
-],
+        'title' => 'Features Page Setup',
+        'route' => 'admin.feature_page.index',
+        'type' => 'all',
+    ],
     // Permission based menu
     [
         'title' => 'Roles & Permissions',
         'route' => 'admin.role-permission.index',
-        'type'  => 'permission',
-        'key'   => 'manage roles', // Je permission check korbe
+        'type' => 'permission',
+        'key' => 'manage roles', // Je permission check korbe
     ],
     // Role based menu
     [
         'title' => 'Settings',
-        'route' => '#', 
-        'type'  => 'role',
-        'key'   => 'Super Admin', // Je role check korbe
+        'route' => '#',
+        'type' => 'role',
+        'key' => 'Super Admin', // Je role check korbe
     ],
 ];
