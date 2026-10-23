@@ -22,6 +22,7 @@ class RolePermissionSeeder extends Seeder
             'manage roles',
             'manage site settings',
             'manage homepage settings',
+            'manage affiliate page settings',
             'manage about page',
             'manage seo settings',
             'manage blogs',

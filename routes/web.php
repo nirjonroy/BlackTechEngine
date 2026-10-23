@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AboutPageController;
+use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
@@ -76,6 +77,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::middleware(PermissionMiddleware::using('manage homepage settings', 'admin'))->group(function () {
         Route::get('/admin/homepage-settings', [HomepageSettingController::class, 'index'])->name('admin.homepage.index');
         Route::post('/admin/homepage-settings', [HomepageSettingController::class, 'update'])->name('admin.homepage.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage affiliate page settings', 'admin'))->group(function () {
+        Route::get('/admin/affiliate-page-settings', [AffiliatePageSettingController::class, 'index'])->name('admin.affiliate_page.index');
+        Route::post('/admin/affiliate-page-settings', [AffiliatePageSettingController::class, 'update'])->name('admin.affiliate_page.update');
     });
 
     Route::middleware(PermissionMiddleware::using('manage about page', 'admin'))->group(function () {

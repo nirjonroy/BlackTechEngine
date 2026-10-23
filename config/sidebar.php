@@ -23,6 +23,12 @@ return [
         'key' => 'manage homepage settings',
     ],
     [
+        'title' => 'Affiliate Page Setup',
+        'route' => 'admin.affiliate_page.index',
+        'type' => 'permission',
+        'key' => 'manage affiliate page settings',
+    ],
+    [
         'title' => 'Pricing Page Setup',
         'route' => 'admin.pricing_page.index',
         'type' => 'all',
