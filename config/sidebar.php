@@ -29,6 +29,12 @@ return [
         'key' => 'manage affiliate page settings',
     ],
     [
+        'title' => 'Header & Footer Setup',
+        'route' => 'admin.frontend_navigation.index',
+        'type' => 'permission',
+        'key' => 'manage frontend navigation',
+    ],
+    [
         'title' => 'Pricing Page Setup',
         'route' => 'admin.pricing_page.index',
         'type' => 'all',

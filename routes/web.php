@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
+use App\Http\Controllers\Admin\FrontendNavigationController;
 use App\Http\Controllers\Admin\HomepageSettingController;
 use App\Http\Controllers\Admin\PricingPageSettingController;
 use App\Http\Controllers\Admin\PricingPlanController;
@@ -82,6 +83,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::middleware(PermissionMiddleware::using('manage affiliate page settings', 'admin'))->group(function () {
         Route::get('/admin/affiliate-page-settings', [AffiliatePageSettingController::class, 'index'])->name('admin.affiliate_page.index');
         Route::post('/admin/affiliate-page-settings', [AffiliatePageSettingController::class, 'update'])->name('admin.affiliate_page.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage frontend navigation', 'admin'))->group(function () {
+        Route::get('/admin/frontend-navigation', [FrontendNavigationController::class, 'index'])->name('admin.frontend_navigation.index');
+        Route::post('/admin/frontend-navigation', [FrontendNavigationController::class, 'update'])->name('admin.frontend_navigation.update');
     });
 
     Route::middleware(PermissionMiddleware::using('manage about page', 'admin'))->group(function () {

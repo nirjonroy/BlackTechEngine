@@ -3,6 +3,7 @@
 namespace App\View\Composers;
 
 use App\Services\FrontendMetadata;
+use App\Services\FrontendNavigation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -10,6 +11,7 @@ class FrontendLayoutComposer
 {
     public function __construct(
         private readonly FrontendMetadata $metadata,
+        private readonly FrontendNavigation $navigation,
         private readonly Request $request,
     ) {}
 
@@ -25,20 +27,12 @@ class FrontendLayoutComposer
 
         $view->with([
             'siteSetting' => $resolved['siteSetting'],
-            'siteFacebookUrl' => $this->safeHttpUrl($resolved['siteSetting']?->facebook_url),
             'frontendSeo' => $resolved['seo'],
             'frontendAnalytics' => $resolved['analytics'],
+            'frontendNavigation' => $this->navigation->resolve(
+                $resolved['siteSetting'],
+                $this->request->route()?->getName(),
+            ),
         ]);
-    }
-
-    private function safeHttpUrl(?string $url): ?string
-    {
-        if (! filter_var($url, FILTER_VALIDATE_URL)) {
-            return null;
-        }
-
-        return in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ['http', 'https'], true)
-            ? $url
-            : null;
     }
 }
