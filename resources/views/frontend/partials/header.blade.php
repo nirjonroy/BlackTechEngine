@@ -32,6 +32,12 @@
       @if(Route::has('blog.index'))
         <a href="{{ route('blog.index') }}" class="{{ request()->routeIs('blog.*') ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors' }}">Blog</a>
       @endif
+      @if(Route::has('affiliate'))
+        <a href="{{ route('affiliate') }}" class="{{ request()->routeIs('affiliate') ? 'flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400' : 'flex items-center gap-1.5 transition-colors hover:text-indigo-600 dark:hover:text-indigo-400' }}">
+          <span>Affiliates</span>
+          <span class="rounded-full border border-violet-500/30 bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold text-violet-600 dark:text-violet-400">Planned</span>
+        </a>
+      @endif
     </nav>
 
     <!-- Right Utility Actions -->
@@ -66,6 +72,9 @@
     @endif
     @if(Route::has('blog.index'))
       <a href="{{ route('blog.index') }}" class="block py-2 text-sm {{ request()->routeIs('blog.*') ? 'font-bold text-indigo-600 dark:text-indigo-400' : 'font-semibold text-slate-700 dark:text-slate-300' }}">Blog</a>
+    @endif
+    @if(Route::has('affiliate'))
+      <a href="{{ route('affiliate') }}" class="block py-2 text-sm {{ request()->routeIs('affiliate') ? 'font-bold text-indigo-600 dark:text-indigo-400' : 'font-semibold text-slate-700 dark:text-slate-300' }}">Affiliate Program <span class="text-[10px] uppercase tracking-wider text-violet-500">Planned</span></a>
     @endif
     <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-3">
       <a href="{{ route('login') }}" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Sign In</a>

@@ -64,6 +64,7 @@ class FrontendMetadata
             'about' => ['about', 'about page', 'about geo', 'about us'],
             'features' => ['features', 'features page', 'platform features', 'product features'],
             'pricing' => ['pricing', 'pricing page', 'plans', 'plans and pricing'],
+            'affiliate' => ['affiliate', 'affiliate page', 'affiliate program', 'partner program'],
             'blog.index', 'blog.show' => ['blog', 'blog page', 'research blog', 'insights'],
             default => [],
         };

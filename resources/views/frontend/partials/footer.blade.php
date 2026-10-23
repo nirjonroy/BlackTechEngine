@@ -57,6 +57,9 @@
           @if(Route::has('blog.index'))
             <li><a href="{{ route('blog.index') }}" class="hover:text-indigo-500 transition-colors">Research Blog</a></li>
           @endif
+          @if(Route::has('affiliate'))
+            <li><a href="{{ route('affiliate') }}" class="hover:text-indigo-500 transition-colors">Affiliate Program Status</a></li>
+          @endif
         </ul>
       </div>
 

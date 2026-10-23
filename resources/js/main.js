@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupMobileNav();
   setupAccordions();
   initSavingsCalculator();
-  initAffiliateCalculator();
   initPricingToggle();
   initDynamicCalendar();
   initWebsiteScanner();
@@ -267,30 +266,6 @@ function initSavingsCalculator() {
     if (bteDisplay) bteDisplay.textContent = `$${bteCost.toLocaleString()}`;
     if (savingsDisplay) savingsDisplay.textContent = `$${saved.toLocaleString()}`;
     if (hoursDisplay) hoursDisplay.textContent = `${hours} hrs`;
-  }
-
-  slider.addEventListener('input', calculate);
-  calculate();
-}
-
-// Affiliate Calculator
-function initAffiliateCalculator() {
-  const slider = document.getElementById('affiliateSlider');
-  if (!slider) return;
-
-  const referralsCount = document.getElementById('referralsCount');
-  const monthlyDisplay = document.getElementById('monthlyEarnings');
-  const yearlyDisplay = document.getElementById('yearlyEarnings');
-
-  function calculate() {
-    const referrals = parseInt(slider.value, 10);
-    const avgMonthlyCommission = 99 * 0.30; // $29.70 per active customer
-    const monthlyTotal = Math.round(referrals * avgMonthlyCommission);
-    const yearlyTotal = monthlyTotal * 12;
-
-    if (referralsCount) referralsCount.textContent = referrals;
-    if (monthlyDisplay) monthlyDisplay.textContent = `$${monthlyTotal.toLocaleString()}`;
-    if (yearlyDisplay) yearlyDisplay.textContent = `$${yearlyTotal.toLocaleString()}`;
   }
 
   slider.addEventListener('input', calculate);
