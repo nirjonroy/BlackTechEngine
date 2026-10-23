@@ -25,6 +25,7 @@ const ADMIN_PERMISSIONS = [
     'manage about page',
     'manage seo settings',
     'manage blogs',
+    'manage blog page settings',
     'manage pricing plans',
     'manage pricing page settings',
     'manage feature page settings',
@@ -88,6 +89,8 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
         ['GET', route('admin.blogs.edit', $blog)],
         ['POST', route('admin.blogs.update', $blog)],
         ['DELETE', route('admin.blogs.destroy', $blog)],
+        ['GET', route('admin.blog_page.index')],
+        ['POST', route('admin.blog_page.update')],
         ['GET', route('admin.pricing.index')],
         ['GET', route('admin.pricing.create')],
         ['POST', route('admin.pricing.store')],
@@ -131,6 +134,7 @@ test('an authorized admin can access only the permitted module', function (strin
     'about page' => ['manage about page', 'admin.about.index'],
     'SEO settings' => ['manage seo settings', 'admin.seo.index'],
     'blogs' => ['manage blogs', 'admin.blogs.index'],
+    'blog page' => ['manage blog page settings', 'admin.blog_page.index'],
     'pricing plans' => ['manage pricing plans', 'admin.pricing.index'],
     'pricing page' => ['manage pricing page settings', 'admin.pricing_page.index'],
     'feature page' => ['manage feature page settings', 'admin.feature_page.index'],
@@ -153,6 +157,7 @@ test('a super admin can access every protected admin module without direct permi
         'admin.about.index',
         'admin.seo.index',
         'admin.blogs.index',
+        'admin.blog_page.index',
         'admin.pricing.index',
         'admin.pricing_page.index',
         'admin.feature_page.index',
@@ -268,11 +273,13 @@ test('a role manager cannot rename another role to super admin', function () {
 test('the permission seeder is idempotent and preserves existing editor assignments', function () {
     $editorRole = Role::create(['name' => 'Editor', 'guard_name' => 'admin']);
     $editorRole->givePermissionTo('view dashboard');
+    Permission::where('name', 'manage blog page settings')->where('guard_name', 'admin')->delete();
 
     $this->seed(RolePermissionSeeder::class);
     $this->seed(RolePermissionSeeder::class);
 
     expect(Permission::where('guard_name', 'admin')->count())->toBe(count(ADMIN_PERMISSIONS))
+        ->and(Permission::where('name', 'manage blog page settings')->where('guard_name', 'admin')->exists())->toBeTrue()
         ->and(Role::where('name', 'Editor')->where('guard_name', 'admin')->count())->toBe(1)
         ->and(Role::where('name', 'Super Admin')->where('guard_name', 'admin')->count())->toBe(1)
         ->and($editorRole->fresh()->permissions->pluck('name')->all())->toBe(['view dashboard']);

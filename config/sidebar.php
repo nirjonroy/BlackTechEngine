@@ -55,6 +55,12 @@ return [
         'type' => 'all',
     ],
     [
+        'title' => 'Blog Page Setup',
+        'route' => 'admin.blog_page.index',
+        'type' => 'permission',
+        'key' => 'manage blog page settings',
+    ],
+    [
         'title' => 'Pricing Plans',
         'route' => 'admin.pricing.index',
         'type' => 'all',

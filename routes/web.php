@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BlogPageSettingController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
 use App\Http\Controllers\Admin\FrontendNavigationController;
 use App\Http\Controllers\Admin\HomepageSettingController;
@@ -111,6 +112,11 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
         Route::post('/admin/blogs/{id}/update', [BlogController::class, 'update'])->name('admin.blogs.update');
         Route::delete('/admin/blogs/{blog}/delete', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage blog page settings', 'admin'))->group(function () {
+        Route::get('/admin/blog-page-settings', [BlogPageSettingController::class, 'index'])->name('admin.blog_page.index');
+        Route::post('/admin/blog-page-settings', [BlogPageSettingController::class, 'update'])->name('admin.blog_page.update');
     });
 
     Route::middleware(PermissionMiddleware::using('manage pricing plans', 'admin'))->group(function () {

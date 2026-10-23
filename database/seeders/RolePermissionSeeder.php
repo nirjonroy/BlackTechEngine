@@ -27,6 +27,7 @@ class RolePermissionSeeder extends Seeder
             'manage about page',
             'manage seo settings',
             'manage blogs',
+            'manage blog page settings',
             'manage pricing plans',
             'manage pricing page settings',
             'manage feature page settings',
