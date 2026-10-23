@@ -317,7 +317,8 @@ test('pricing and feature page settings accept valid nested data', function () {
     ])->assertSessionHasNoErrors();
 
     expect(PricingPageSetting::firstOrFail()->faqs)->toHaveCount(1)
-        ->and(FeaturePageSetting::firstOrFail()->features_json)->toHaveCount(1);
+        ->and(FeaturePageSetting::firstOrFail()->features_json)->toHaveCount(6)
+        ->and(FeaturePageSetting::firstOrFail()->features_json[0]['title'])->toBe('Secure');
 });
 
 test('admin creation validates email password and admin guard role', function () {

@@ -13,8 +13,11 @@ class FeaturePageSetting extends Model
         'hero_title_highlighted',
         'hero_description',
         'features_json',
+        'additional_features_heading',
+        'additional_features_description',
         'calc_title',
         'calc_description',
+        'calc_disclaimer',
         'testimonial_badge',
         'testimonial_title',
         'testimonials_json',
@@ -28,10 +31,22 @@ class FeaturePageSetting extends Model
         'copyright',
         'site_name',
         'keywords',
+        'final_cta_heading',
+        'final_cta_description',
+        'final_primary_cta_label',
+        'final_primary_cta_destination',
+        'final_secondary_cta_label',
+        'final_secondary_cta_destination',
     ];
 
-    protected $casts = [
-        'features_json' => 'array',
-        'testimonials_json' => 'array',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'features_json' => 'array',
+            'testimonials_json' => 'array',
+        ];
+    }
 }

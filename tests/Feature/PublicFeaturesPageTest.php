@@ -130,3 +130,37 @@ test('existing public about and pricing pages remain available', function () {
     $this->get(route('about'))->assertOk();
     $this->get(route('pricing'))->assertOk();
 });
+
+test('feature identities retain their layouts when stored out of order', function () {
+    FeaturePageSetting::create([
+        'features_json' => [
+            ['id' => 'geo', 'icon' => 'cpu', 'title' => 'GEO stays second', 'description' => 'GEO copy.', 'preview_heading' => 'GEO visual'],
+            ['id' => 'brand_dna', 'icon' => 'dna', 'title' => 'Brand stays first', 'description' => 'Brand copy.', 'preview_heading' => 'Brand visual'],
+        ],
+        'final_primary_cta_label' => 'Compare plans',
+        'final_primary_cta_destination' => 'pricing',
+        'final_secondary_cta_label' => 'About the platform',
+        'final_secondary_cta_destination' => 'about',
+    ]);
+
+    $this->get(route('features'))
+        ->assertOk()
+        ->assertSeeInOrder(['Brand stays first', 'Brand visual', 'GEO stays second', 'GEO visual'])
+        ->assertSee('href="'.route('pricing').'"', false)
+        ->assertSee('Compare plans')
+        ->assertSee('href="'.route('about').'"', false);
+});
+
+test('invalid stored CTA destinations fall back to safe named routes', function () {
+    FeaturePageSetting::create([
+        'final_primary_cta_destination' => 'javascript:alert(1)',
+        'final_secondary_cta_destination' => 'https://example.com',
+    ]);
+
+    $this->get(route('features'))
+        ->assertOk()
+        ->assertSee('href="'.route('register').'"', false)
+        ->assertSee('href="'.route('pricing').'"', false)
+        ->assertDontSee('javascript:', false)
+        ->assertDontSee('https://example.com', false);
+});
