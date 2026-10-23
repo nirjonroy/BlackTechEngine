@@ -5,26 +5,37 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\PricingPageSetting;
 use App\Models\PricingPlan;
+use App\Services\PricingPresentation;
 use Illuminate\View\View;
 
 class PricingPageController extends Controller
 {
-    public function __invoke(): View
+    public function __invoke(PricingPresentation $presentation): View
     {
+        $setting = PricingPageSetting::query()->first();
+        $currencyCode = $presentation->currencyCode($setting?->currency_code);
         $plans = PricingPlan::query()
             ->with('features')
-            ->orderBy('monthly_price')
-            ->orderBy('id')
+            ->publiclyVisible()
+            ->inDisplayOrder()
             ->get();
-        $setting = PricingPageSetting::query()->first();
 
         return view('frontend.pricing', [
             'plans' => $plans,
             'setting' => $setting,
             'planCtaUrls' => $plans->mapWithKeys(fn (PricingPlan $plan): array => [
-                $plan->getKey() => $this->safeHttpUrl($plan->button_link),
+                $plan->getKey() => $presentation->destinationUrl($plan->button_link),
             ]),
-            'heroBadgeIcon' => $this->safeLucideIcon($setting?->hero_badge_icon),
+            'formattedPlanPrices' => $plans->mapWithKeys(fn (PricingPlan $plan): array => [
+                $plan->getKey() => [
+                    'monthly' => $presentation->format($plan->monthly_price, $currencyCode),
+                    'annual' => $presentation->format($plan->annual_price, $currencyCode),
+                ],
+            ]),
+            'currencyCode' => $currencyCode,
+            'heroBadgeIcon' => $presentation->safeIcon($setting?->hero_badge_icon),
+            'finalPrimaryCtaUrl' => $presentation->destinationUrl($setting?->final_primary_cta_destination, 'register'),
+            'finalSecondaryCtaUrl' => $presentation->destinationUrl($setting?->final_secondary_cta_destination, 'features'),
             'seoFallbackTitle' => $setting?->hero_title_normal ?: 'Pricing | BlackTechEngine',
             'seoFallbackDescription' => $setting?->hero_description,
             'pageSeo' => $setting?->only([
@@ -40,23 +51,5 @@ class PricingPageController extends Controller
                 'keywords',
             ]) ?? [],
         ]);
-    }
-
-    private function safeHttpUrl(?string $url): ?string
-    {
-        if (! filter_var($url, FILTER_VALIDATE_URL)) {
-            return null;
-        }
-
-        return in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ['http', 'https'], true)
-            ? $url
-            : null;
-    }
-
-    private function safeLucideIcon(?string $icon): string
-    {
-        return is_string($icon) && preg_match('/^[a-z0-9-]+$/', $icon) === 1
-            ? $icon
-            : 'tag';
     }
 }

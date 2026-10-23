@@ -11,4 +11,15 @@ class PricingPlanFeature extends Model
         'is_included',
         'order_by',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_included' => 'boolean',
+            'order_by' => 'integer',
+        ];
+    }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SavePricingPlanRequest;
+use App\Models\PricingPageSetting;
 use App\Models\PricingPlan;
+use App\Services\PricingPresentation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -12,36 +14,54 @@ use Illuminate\Support\Facades\Storage;
 
 class PricingPlanController extends Controller
 {
-    public function index()
+    public function index(PricingPresentation $presentation)
     {
-        $plans = PricingPlan::orderBy('monthly_price', 'asc')->get();
+        $plans = PricingPlan::query()->inDisplayOrder()->get();
+        $currencyCode = $presentation->currencyCode(PricingPageSetting::query()->value('currency_code'));
 
-        return view('admin.pricing.index', compact('plans'));
+        return view('admin.pricing.index', [
+            'plans' => $plans,
+            'currencyCode' => $currencyCode,
+            'formattedPlanPrices' => $plans->mapWithKeys(fn (PricingPlan $plan): array => [
+                $plan->getKey() => [
+                    'monthly' => $presentation->format($plan->monthly_price, $currencyCode),
+                    'annual' => $presentation->format($plan->annual_price, $currencyCode),
+                ],
+            ]),
+        ]);
     }
 
     public function create()
     {
-        return view('admin.pricing.create');
+        return view('admin.pricing.create', [
+            'plan' => new PricingPlan,
+            'destinationOptions' => PricingPresentation::DESTINATION_OPTIONS,
+        ]);
     }
 
     public function store(SavePricingPlanRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $features = $validated['features'] ?? [];
-        $planData = Arr::except($validated, ['features', 'meta_image']);
+        $replaceFeatures = $request->has('features') || $request->boolean('features_present');
+        $planData = Arr::except($validated, ['features', 'features_present', 'meta_image']);
 
         if ($request->hasFile('meta_image')) {
             $planData['meta_image'] = $request->file('meta_image')->store('seo', 'public');
         }
 
-        DB::transaction(function () use ($planData, $features): void {
+        DB::transaction(function () use ($planData, $features, $replaceFeatures): void {
             $plan = PricingPlan::create($planData);
+
+            if (! $replaceFeatures) {
+                return;
+            }
 
             foreach ($features as $index => $feature) {
                 $plan->features()->create([
                     'name' => $feature['name'],
                     'is_included' => $feature['is_included'],
-                    'order_by' => $index,
+                    'order_by' => $feature['order_by'] ?? $index,
                 ]);
             }
         });
@@ -54,7 +74,10 @@ class PricingPlanController extends Controller
         $plan = PricingPlan::findOrFail($id);
         $plan->load('features');
 
-        return view('admin.pricing.edit', compact('plan'));
+        return view('admin.pricing.edit', [
+            'plan' => $plan,
+            'destinationOptions' => PricingPresentation::DESTINATION_OPTIONS,
+        ]);
     }
 
     public function update(SavePricingPlanRequest $request, string $id): RedirectResponse
@@ -62,22 +85,28 @@ class PricingPlanController extends Controller
         $plan = PricingPlan::findOrFail($id);
         $validated = $request->validated();
         $features = $validated['features'] ?? [];
-        $planData = Arr::except($validated, ['features', 'meta_image']);
+        $replaceFeatures = $request->has('features') || $request->boolean('features_present');
+        $planData = Arr::except($validated, ['features', 'features_present', 'meta_image']);
         $previousMetaImage = $plan->meta_image;
 
         if ($request->hasFile('meta_image')) {
             $planData['meta_image'] = $request->file('meta_image')->store('seo', 'public');
         }
 
-        DB::transaction(function () use ($plan, $planData, $features): void {
+        DB::transaction(function () use ($plan, $planData, $features, $replaceFeatures): void {
             $plan->update($planData);
+
+            if (! $replaceFeatures) {
+                return;
+            }
+
             $plan->features()->delete();
 
             foreach ($features as $index => $feature) {
                 $plan->features()->create([
                     'name' => $feature['name'],
                     'is_included' => $feature['is_included'],
-                    'order_by' => $index,
+                    'order_by' => $feature['order_by'] ?? $index,
                 ]);
             }
         });

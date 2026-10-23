@@ -35,7 +35,7 @@ test('the public pricing page renders settings plans ordered features FAQs and p
         'monthly_price' => 199,
         'annual_price' => 1990,
         'button_text' => 'Contact Sales',
-        'button_link' => 'https://example.com/contact',
+        'button_link' => 'login',
     ]);
     $earlierPlan = PricingPlan::create([
         'name' => 'Growth',
@@ -46,7 +46,7 @@ test('the public pricing page renders settings plans ordered features FAQs and p
         'annual_price' => 999,
         'is_popular' => true,
         'button_text' => 'Start Growth',
-        'button_link' => 'https://example.com/start',
+        'button_link' => 'register',
     ]);
     $earlierPlan->features()->create(['name' => 'Second feature', 'is_included' => false, 'order_by' => 20]);
     $earlierPlan->features()->create(['name' => 'First feature', 'is_included' => true, 'order_by' => 10]);
@@ -64,7 +64,7 @@ test('the public pricing page renders settings plans ordered features FAQs and p
         ->assertSee('$99.00')
         ->assertSee('$999.00')
         ->assertSee('Most Popular')
-        ->assertSee('href="https://example.com/start"', false)
+        ->assertSee('href="'.route('register').'"', false)
         ->assertSee('Pricing Questions')
         ->assertSee('Can I change plans?')
         ->assertSee('Yes, contact the team for current options.')

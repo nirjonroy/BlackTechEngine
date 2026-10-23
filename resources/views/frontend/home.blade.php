@@ -7,12 +7,13 @@
         scannerUrl: '',
         scannerError: '',
         articles: 15,
-        costPerArticle: 150,
+        costPerArticle: {{ Js::from($calculatorDefaultCost) }},
         money(value) {
             return new Intl.NumberFormat('en-US', {
                 style: 'currency',
-                currency: 'USD',
-                maximumFractionDigits: 0,
+                currency: {{ Js::from($pricingCurrencyCode) }},
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
             }).format(value);
         },
         openScannerNotice() {
@@ -185,15 +186,15 @@
                             <label for="homepageArticleCost" class="text-sm font-bold text-slate-800 dark:text-slate-200">Your external cost per article</label>
                             <span class="rounded-xl bg-violet-600 px-4 py-1.5 font-mono text-sm font-bold text-white shadow-md" x-text="money(costPerArticle)"></span>
                         </div>
-                        <input id="homepageArticleCost" x-model.number="costPerArticle" type="range" min="50" max="400" value="150" step="25" class="w-full cursor-pointer accent-violet-600">
-                        <div class="mt-2 flex justify-between font-mono text-xs text-slate-400"><span>$50</span><span>$150</span><span>$275</span><span>$400</span></div>
+                        <input id="homepageArticleCost" x-model.number="costPerArticle" type="range" min="50" max="400" step="25" class="w-full cursor-pointer accent-violet-600">
+                        <div class="mt-2 flex justify-between font-mono text-xs text-slate-400"><span x-text="money(50)"></span><span x-text="money(150)"></span><span x-text="money(275)"></span><span x-text="money(400)"></span></div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 border-t border-slate-200 pt-6 text-center dark:border-slate-800 sm:grid-cols-3">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/60"><div class="text-xs font-semibold text-slate-400">Estimated Monthly External Cost</div><div class="mt-1 text-2xl font-extrabold text-slate-700 dark:text-slate-200" x-text="money(articles * costPerArticle)"></div></div>
                     <div class="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-5"><div class="text-xs font-bold uppercase text-indigo-500">Estimated Annual External Cost</div><div class="mt-1 text-2xl font-extrabold text-indigo-500" x-text="money(articles * costPerArticle * 12)"></div></div>
-                    <div class="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-5"><div class="text-xs font-bold uppercase text-violet-500">Published Platform Pricing</div><div class="mt-1 text-2xl font-extrabold text-violet-500">{{ $startingMonthlyPrice !== null ? 'From $'.number_format((float) $startingMonthlyPrice, 2).'/mo' : 'View current plans' }}</div></div>
+                    <div class="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-5"><div class="text-xs font-bold uppercase text-violet-500">Published Platform Pricing</div><div class="mt-1 text-2xl font-extrabold text-violet-500">{{ $formattedStartingMonthlyPrice !== null ? 'From '.$formattedStartingMonthlyPrice.'/mo' : 'View current plans' }}</div></div>
                 </div>
 
                 <p class="text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $homepageSetting?->calculator_note ?: 'External cost estimates equal article count × the cost you select. Plan capacity is not stored in the current schema, so no BlackTechEngine savings percentage is calculated.' }}</p>

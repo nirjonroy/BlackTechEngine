@@ -3,100 +3,61 @@
 <head>
     @include('admin.partials.head')
     <style>
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
-        .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .section-title { border-bottom: 2px solid #17a2b8; padding-bottom: 5px; margin-bottom: 15px; font-size: 18px; font-weight: bold; }
-        .faq-item { background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; }
+        .input-group{margin-bottom:15px}.input-group label{display:block;font-weight:700;margin-bottom:5px;color:#333}.input-group input,.input-group textarea,.input-group select{width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box}.form-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:20px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.section-title{border-bottom:2px solid #17a2b8;padding-bottom:5px;margin:28px 0 15px;font-size:18px;font-weight:700;color:#17a2b8}.faq-item{background:#fff;padding:15px;border:1px solid #ddd;border-radius:4px;margin-bottom:10px}.remove-btn{background:#dc3545;color:#fff;border:0;padding:7px 10px;border-radius:3px;cursor:pointer}.add-btn{padding:8px 15px;background:#17a2b8;color:#fff;border:0;border-radius:4px;cursor:pointer}.hint{font-size:12px;color:#666;margin-top:-8px}@media(max-width:900px){.form-grid,.field-grid{grid-template-columns:1fr}}
     </style>
 </head>
-<body>
-    <div class="wrapper">
-        @include('admin.partials.sidebar')
-        <div class="main-content">
-            @include('admin.partials.header')
-            <div class="content">
-                <div class="card">
-                    <h3>Pricing Page Settings (Global)</h3>
-                    @include('admin.partials.validation-errors')
-                    @if(session('success'))
-                        <div style="color: green; margin-bottom: 15px; font-weight: bold;">{{ session('success') }}</div>
-                    @endif
+<body><div class="wrapper">@include('admin.partials.sidebar')<div class="main-content">@include('admin.partials.header')<div class="content"><div class="card">
+    <h3>Pricing Page Settings (Global)</h3>
+    @include('admin.partials.validation-errors')
+    @if(session('success'))<div style="color:green;margin-bottom:15px;font-weight:bold">{{ session('success') }}</div>@endif
+    <form action="{{ route('admin.pricing_page.update') }}" method="POST" enctype="multipart/form-data">@csrf
+        <div class="form-grid">
+            <div style="background:#fafafa;padding:15px;border-radius:5px;border:1px solid #eee">
+                <div class="section-title" style="margin-top:0">Hero Section</div>
+                <div class="input-group"><label for="hero_badge_icon">Badge Icon</label><select id="hero_badge_icon" name="hero_badge_icon"><option value="">Tag (default)</option>@foreach($iconOptions as $value => $label)<option value="{{ $value }}" @selected(old('hero_badge_icon', $setting->hero_badge_icon) === $value)>{{ $label }}</option>@endforeach</select></div>
+                <div class="input-group"><label for="hero_badge_text">Badge Text</label><input id="hero_badge_text" name="hero_badge_text" value="{{ old('hero_badge_text', $setting->hero_badge_text) }}"></div>
+                <div class="field-grid"><div class="input-group"><label for="hero_title_normal">Title</label><input id="hero_title_normal" name="hero_title_normal" value="{{ old('hero_title_normal', $setting->hero_title_normal) }}"></div><div class="input-group"><label for="hero_title_highlighted">Highlighted Title</label><input id="hero_title_highlighted" name="hero_title_highlighted" value="{{ old('hero_title_highlighted', $setting->hero_title_highlighted) }}"></div></div>
+                <div class="input-group"><label for="hero_description">Description</label><textarea id="hero_description" name="hero_description" rows="3">{{ old('hero_description', $setting->hero_description) }}</textarea></div>
 
-                    <form action="{{ route('admin.pricing_page.update') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-grid">
-                            <!-- Left Column: Content Settings -->
-                            <div style="background:#fafafa; padding:15px; border-radius:5px; border:1px solid #eee;">
-                                <div class="section-title">Hero Section</div>
-                                <div class="input-group"><label>Badge Icon (e.g. tag)</label><input type="text" name="hero_badge_icon" value="{{ $setting->hero_badge_icon }}"></div>
-                                <div class="input-group"><label>Badge Text</label><input type="text" name="hero_badge_text" value="{{ $setting->hero_badge_text }}"></div>
-                                <div class="input-group"><label>Title (Normal Part)</label><input type="text" name="hero_title_normal" value="{{ $setting->hero_title_normal }}"></div>
-                                <div class="input-group"><label>Title (Highlighted Part)</label><input type="text" name="hero_title_highlighted" value="{{ $setting->hero_title_highlighted }}"></div>
-                                <div class="input-group"><label>Description</label><textarea name="hero_description" rows="3">{{ $setting->hero_description }}</textarea></div>
+                <div class="section-title">Currency & Billing</div>
+                <div class="input-group"><label for="currency_code">Page Currency</label><select id="currency_code" name="currency_code" required>@foreach($currencyOptions as $value => $label)<option value="{{ $value }}" @selected(old('currency_code', $setting->currency_code ?: 'USD') === $value)>{{ $label }}</option>@endforeach</select></div>
+                <p class="hint">One ISO 4217 currency applies to all stored plan amounts. No conversion is performed.</p>
+                <div class="input-group"><label for="plans_heading">Plans Heading (screen-reader heading)</label><input id="plans_heading" name="plans_heading" value="{{ old('plans_heading', $setting->plans_heading) }}"></div>
+                <div class="field-grid"><div class="input-group"><label for="billing_monthly_label">Monthly Toggle Label</label><input id="billing_monthly_label" name="billing_monthly_label" value="{{ old('billing_monthly_label', $setting->billing_monthly_label) }}"></div><div class="input-group"><label for="billing_annual_label">Annual Toggle Label</label><input id="billing_annual_label" name="billing_annual_label" value="{{ old('billing_annual_label', $setting->billing_annual_label) }}"></div><div class="input-group"><label for="monthly_period_label">Monthly Period Label</label><input id="monthly_period_label" name="monthly_period_label" value="{{ old('monthly_period_label', $setting->monthly_period_label) }}" placeholder="/ month"></div><div class="input-group"><label for="annual_period_label">Annual Period Label</label><input id="annual_period_label" name="annual_period_label" value="{{ old('annual_period_label', $setting->annual_period_label) }}" placeholder="/ year"></div></div>
+                <div class="input-group"><label for="annual_billing_description">Annual Billing Explanation</label><textarea id="annual_billing_description" name="annual_billing_description">{{ old('annual_billing_description', $setting->annual_billing_description) }}</textarea></div>
+                <div class="field-grid"><div class="input-group"><label for="empty_state_title">No Plans Title</label><input id="empty_state_title" name="empty_state_title" value="{{ old('empty_state_title', $setting->empty_state_title) }}"></div><div class="input-group"><label for="unavailable_plan_label">Unavailable Plan Label</label><input id="unavailable_plan_label" name="unavailable_plan_label" value="{{ old('unavailable_plan_label', $setting->unavailable_plan_label) }}"></div></div>
+                <div class="input-group"><label for="empty_state_description">No Plans Description</label><textarea id="empty_state_description" name="empty_state_description">{{ old('empty_state_description', $setting->empty_state_description) }}</textarea></div>
 
-                                <div class="section-title" style="margin-top:20px;">Calculator Section</div>
-                                <div class="input-group"><label>Title</label><input type="text" name="calc_title" value="{{ $setting->calc_title }}"></div>
-                                <div class="input-group"><label>Description</label><textarea name="calc_description" rows="2">{{ $setting->calc_description }}</textarea></div>
+                <div class="section-title">Calculator Section</div>
+                <div class="input-group"><label for="calc_title">Title</label><input id="calc_title" name="calc_title" value="{{ old('calc_title', $setting->calc_title) }}"></div><div class="input-group"><label for="calc_description">Description</label><textarea id="calc_description" name="calc_description">{{ old('calc_description', $setting->calc_description) }}</textarea></div>
+                <div class="field-grid"><div class="input-group"><label for="calc_articles_label">Article Input Label</label><input id="calc_articles_label" name="calc_articles_label" value="{{ old('calc_articles_label', $setting->calc_articles_label) }}"></div><div class="input-group"><label for="calc_articles_unit">Article Unit</label><input id="calc_articles_unit" name="calc_articles_unit" value="{{ old('calc_articles_unit', $setting->calc_articles_unit) }}" placeholder="Articles"></div><div class="input-group"><label for="calc_default_articles">Default Article Count</label><input id="calc_default_articles" type="number" min="4" max="60" name="calc_default_articles" value="{{ old('calc_default_articles', $setting->calc_default_articles ?? 16) }}" required></div><div class="input-group"><label for="calc_cost_label">Cost Input Label</label><input id="calc_cost_label" name="calc_cost_label" value="{{ old('calc_cost_label', $setting->calc_cost_label) }}"></div><div class="input-group"><label for="calc_default_cost_per_article">Default External Cost</label><input id="calc_default_cost_per_article" type="number" min="50" max="400" step="0.01" name="calc_default_cost_per_article" value="{{ old('calc_default_cost_per_article', $setting->calc_default_cost_per_article ?? '150.00') }}" required></div><div class="input-group"><label for="calc_monthly_result_label">Monthly Result Label</label><input id="calc_monthly_result_label" name="calc_monthly_result_label" value="{{ old('calc_monthly_result_label', $setting->calc_monthly_result_label) }}"></div><div class="input-group"><label for="calc_annual_result_label">Annual Result Label</label><input id="calc_annual_result_label" name="calc_annual_result_label" value="{{ old('calc_annual_result_label', $setting->calc_annual_result_label) }}"></div></div>
+                <div class="input-group"><label for="calc_disclaimer">Calculator Disclaimer</label><textarea id="calc_disclaimer" name="calc_disclaimer">{{ old('calc_disclaimer', $setting->calc_disclaimer) }}</textarea></div>
 
-                                <div class="section-title" style="margin-top:20px;">FAQ Section</div>
-                                <div class="input-group"><label>Title</label><input type="text" name="faq_title" value="{{ $setting->faq_title }}"></div>
-                                <div class="input-group"><label>Description</label><textarea name="faq_description" rows="2">{{ $setting->faq_description }}</textarea></div>
-                                
-                                <label style="font-weight:bold;">FAQs</label>
-                                <div id="faq-container">
-                                    @if($setting->faqs)
-                                        @foreach($setting->faqs as $index =>$faq)
-                                        <div class="faq-item">
-                                            <div class="input-group"><input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq['question'] }}" placeholder="Question"></div>
-                                            <div class="input-group"><textarea name="faqs[{{ $index }}][answer]" rows="3" placeholder="Answer">{{ $faq['answer'] }}</textarea></div>
-                                            <button type="button" onclick="this.parentElement.remove()" style="background:#dc3545; color:white; border:none; padding:5px 10px;">Remove</button>
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <button type="button" onclick="addFAQ()" style="padding:8px 15px; background:#17a2b8; color:white; border:none; margin-top:10px;">+ Add New FAQ</button>
-                            </div>
+                <div class="section-title">FAQ Section</div>
+                <div class="input-group"><label for="faq_title">Title</label><input id="faq_title" name="faq_title" value="{{ old('faq_title', $setting->faq_title) }}"></div><div class="input-group"><label for="faq_description">Description</label><textarea id="faq_description" name="faq_description">{{ old('faq_description', $setting->faq_description) }}</textarea></div><div class="input-group"><label for="faq_empty_state">Empty-state Message</label><input id="faq_empty_state" name="faq_empty_state" value="{{ old('faq_empty_state', $setting->faq_empty_state) }}"></div>
+                <div id="faq-container">@foreach(old('faqs', $setting->faqs ?? []) as $index => $faq)<div class="faq-item"><div class="input-group"><label>Question</label><input name="faqs[{{ $index }}][question]" value="{{ $faq['question'] ?? '' }}"></div><div class="input-group"><label>Answer</label><textarea name="faqs[{{ $index }}][answer]" rows="3">{{ $faq['answer'] ?? '' }}</textarea></div><button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button></div>@endforeach</div><button type="button" class="add-btn" onclick="addPricingFaq()">+ Add FAQ</button>
 
-                            <!-- Right Column: SEO Settings -->
-                            <div style="background:#fafafa; padding:15px; border-radius:5px; border:1px solid #eee;">
-                                <div class="section-title">SEO Data</div>
-                                <div class="input-group"><label>SEO Title</label><input type="text" name="seo_title" value="{{ $setting->seo_title }}"></div>
-                                <div class="input-group"><label>Meta Title</label><input type="text" name="meta_title" value="{{ $setting->meta_title }}"></div>
-                                <div class="input-group"><label>Site Name</label><input type="text" name="site_name" value="{{ $setting->site_name }}"></div>
-                                <div class="input-group"><label>Author</label><input type="text" name="author" value="{{ $setting->author }}"></div>
-                                <div class="input-group"><label>Publisher</label><input type="text" name="publisher" value="{{ $setting->publisher }}"></div>
-                                <div class="input-group"><label>SEO Description</label><textarea name="seo_description" rows="3">{{ $setting->seo_description }}</textarea></div>
-                                <div class="input-group"><label>Meta Description</label><textarea name="meta_description" rows="3">{{ $setting->meta_description }}</textarea></div>
-                                <div class="input-group"><label>Keywords</label><textarea name="keywords" rows="2">{{ $setting->keywords }}</textarea></div>
-                                <div class="input-group"><label>Meta Image</label><input type="file" name="meta_image">
-                                    @if(isset($setting->meta_image))
-                                        <div style="margin-top: 10px;"><img src="{{ asset('storage/'.$setting->meta_image) }}" height="60"></div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" style="padding: 12px 25px; background: #28a745; color: white; border: none; font-size: 16px; margin-top: 15px; width: 100%;">Save Global Pricing Settings</button>
-                    </form>
-                </div>
+                <div class="section-title">Final Call to Action</div>
+                <div class="input-group"><label for="final_cta_heading">Heading</label><input id="final_cta_heading" name="final_cta_heading" value="{{ old('final_cta_heading', $setting->final_cta_heading) }}"></div><div class="input-group"><label for="final_cta_description">Description</label><textarea id="final_cta_description" name="final_cta_description">{{ old('final_cta_description', $setting->final_cta_description) }}</textarea></div>
+                <div class="field-grid"><div class="input-group"><label for="final_primary_cta_label">Primary Label</label><input id="final_primary_cta_label" name="final_primary_cta_label" value="{{ old('final_primary_cta_label', $setting->final_primary_cta_label) }}"></div><div class="input-group"><label for="final_primary_cta_destination">Primary Destination</label><select id="final_primary_cta_destination" name="final_primary_cta_destination"><option value="">Create account (default)</option>@foreach($destinationOptions as $value => $label)<option value="{{ $value }}" @selected(old('final_primary_cta_destination', $setting->final_primary_cta_destination) === $value)>{{ $label }}</option>@endforeach</select></div><div class="input-group"><label for="final_secondary_cta_label">Secondary Label</label><input id="final_secondary_cta_label" name="final_secondary_cta_label" value="{{ old('final_secondary_cta_label', $setting->final_secondary_cta_label) }}"></div><div class="input-group"><label for="final_secondary_cta_destination">Secondary Destination</label><select id="final_secondary_cta_destination" name="final_secondary_cta_destination"><option value="">Features (default)</option>@foreach($destinationOptions as $value => $label)<option value="{{ $value }}" @selected(old('final_secondary_cta_destination', $setting->final_secondary_cta_destination) === $value)>{{ $label }}</option>@endforeach</select></div></div>
             </div>
-            @include('admin.partials.footer')
+
+            <div style="background:#fafafa;padding:15px;border-radius:5px;border:1px solid #eee">
+                <div class="section-title" style="margin-top:0">SEO Data</div>
+                @foreach(['seo_title' => 'SEO Title','meta_title' => 'Meta Title','site_name' => 'Site Name','author' => 'Author','publisher' => 'Publisher','copyright' => 'Copyright'] as $field => $label)<div class="input-group"><label for="{{ $field }}">{{ $label }}</label><input id="{{ $field }}" name="{{ $field }}" value="{{ old($field, $setting->{$field}) }}"></div>@endforeach
+                @foreach(['seo_description' => 'SEO Description','meta_description' => 'Meta Description','keywords' => 'Keywords'] as $field => $label)<div class="input-group"><label for="{{ $field }}">{{ $label }}</label><textarea id="{{ $field }}" name="{{ $field }}" rows="3">{{ old($field, $setting->{$field}) }}</textarea></div>@endforeach
+                <div class="input-group"><label for="meta_image">Meta Image</label><input id="meta_image" type="file" name="meta_image" accept="image/jpeg,image/png,image/webp">@if($setting->meta_image)<div style="margin-top:10px"><img src="{{ asset('storage/'.$setting->meta_image) }}" alt="Current meta image" height="60"></div>@endif</div>
+            </div>
         </div>
-    </div>
-    
-    <script>
-        let faqCount = {{ $setting->faqs ? count($setting->faqs) : 0 }};
-        function addFAQ() {
-            let html = `
-            <div class="faq-item">
-                <div class="input-group"><input type="text" name="faqs[${faqCount}][question]" placeholder="Question"></div>
-                <div class="input-group"><textarea name="faqs[${faqCount}][answer]" rows="3" placeholder="Answer"></textarea></div>
-                <button type="button" onclick="this.parentElement.remove()" style="background:#dc3545; color:white; border:none; padding:5px 10px;">Remove</button>
-            </div>`;
-            document.getElementById('faq-container').insertAdjacentHTML('beforeend', html);
-            faqCount++;
-        }
-    </script>
+        <button type="submit" style="padding:12px 25px;background:#28a745;color:#fff;border:0;font-size:16px;margin-top:15px;width:100%;border-radius:4px">Save Global Pricing Settings</button>
+    </form>
+</div></div>@include('admin.partials.footer')</div></div>
+<script>
+    let pricingFaqCount = {{ count(old('faqs', $setting->faqs ?? [])) }};
+    function addPricingFaq() {
+        const index = pricingFaqCount++;
+        document.getElementById('faq-container').insertAdjacentHTML('beforeend', `<div class="faq-item"><div class="input-group"><label>Question</label><input name="faqs[${index}][question]"></div><div class="input-group"><label>Answer</label><textarea name="faqs[${index}][answer]" rows="3"></textarea></div><button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button></div>`);
+    }
+</script>
 </body>
 </html>

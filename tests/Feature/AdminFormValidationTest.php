@@ -263,7 +263,7 @@ test('pricing plans persist valid features atomically', function () {
             'name' => 'Secure plan',
             'monthly_price' => '19.99',
             'annual_price' => '199.99',
-            'button_link' => 'https://example.com/subscribe',
+            'button_link' => 'register',
             'features' => [
                 ['name' => 'Included', 'is_included' => 'on'],
                 ['name' => 'Excluded'],

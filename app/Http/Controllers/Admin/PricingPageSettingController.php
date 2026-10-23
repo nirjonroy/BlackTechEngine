@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdatePricingPageSettingRequest;
 use App\Models\PricingPageSetting;
+use App\Services\PricingPresentation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +15,12 @@ class PricingPageSettingController extends Controller
     {
         $setting = PricingPageSetting::first() ?? new PricingPageSetting;
 
-        return view('admin.pricing_page_settings.index', compact('setting'));
+        return view('admin.pricing_page_settings.index', [
+            'setting' => $setting,
+            'currencyOptions' => PricingPresentation::CURRENCY_OPTIONS,
+            'destinationOptions' => PricingPresentation::DESTINATION_OPTIONS,
+            'iconOptions' => PricingPresentation::ICON_OPTIONS,
+        ]);
     }
 
     public function update(UpdatePricingPageSettingRequest $request): RedirectResponse

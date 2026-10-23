@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\AboutPage;
 use App\Models\FeaturePageSetting;
 use App\Models\HomepageSetting;
+use App\Models\PricingPageSetting;
 use App\Models\PricingPlan;
+use App\Services\PricingPresentation;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
@@ -27,10 +29,17 @@ class HomeController extends Controller
         'sparkles',
     ];
 
-    public function index(): View
+    public function index(PricingPresentation $pricingPresentation): View
     {
         $featureSetting = FeaturePageSetting::query()->first();
         $homepageSetting = HomepageSetting::query()->first();
+        $pricingSetting = PricingPageSetting::query()->first();
+        $pricingCurrencyCode = $pricingPresentation->currencyCode($pricingSetting?->currency_code);
+        $startingMonthlyPrice = PricingPlan::query()
+            ->publiclyVisible()
+            ->where('monthly_price', '>', 0)
+            ->orderBy('monthly_price')
+            ->value('monthly_price');
         $aboutStats = AboutPage::query()
             ->with('stats')
             ->first()
@@ -48,10 +57,11 @@ class HomeController extends Controller
             'homepageFeatures' => $this->features($featureSetting?->features_json),
             'testimonials' => $this->testimonials($featureSetting?->testimonials_json),
             'aboutStats' => $aboutStats,
-            'startingMonthlyPrice' => PricingPlan::query()
-                ->where('monthly_price', '>', 0)
-                ->orderBy('monthly_price')
-                ->value('monthly_price'),
+            'formattedStartingMonthlyPrice' => $startingMonthlyPrice !== null
+                ? $pricingPresentation->format($startingMonthlyPrice, $pricingCurrencyCode)
+                : null,
+            'pricingCurrencyCode' => $pricingCurrencyCode,
+            'calculatorDefaultCost' => (float) ($pricingSetting?->calc_default_cost_per_article ?? 150),
             'seoFallbackDescription' => 'Autonomous SEO and generative engine optimization for modern growth teams.',
         ]);
     }
