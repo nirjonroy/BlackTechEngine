@@ -273,14 +273,34 @@ test('a role manager cannot rename another role to super admin', function () {
 test('the permission seeder is idempotent and preserves existing editor assignments', function () {
     $editorRole = Role::create(['name' => 'Editor', 'guard_name' => 'admin']);
     $editorRole->givePermissionTo('view dashboard');
+    $customPermission = Permission::create(['name' => 'review audit logs', 'guard_name' => 'admin']);
+    $contentManagerRole = Role::create(['name' => 'Content Manager', 'guard_name' => 'admin']);
+    $contentManagerRole->givePermissionTo($customPermission);
+    $superAdminRole = Role::create(['name' => 'Super Admin', 'guard_name' => 'admin']);
+    $superAdminRole->givePermissionTo(['view dashboard', $customPermission]);
     Permission::where('name', 'manage blog page settings')->where('guard_name', 'admin')->delete();
 
     $this->seed(RolePermissionSeeder::class);
     $this->seed(RolePermissionSeeder::class);
 
-    expect(Permission::where('guard_name', 'admin')->count())->toBe(count(ADMIN_PERMISSIONS))
+    expect(Permission::where('guard_name', 'admin')->count())->toBe(count(ADMIN_PERMISSIONS) + 1)
         ->and(Permission::where('name', 'manage blog page settings')->where('guard_name', 'admin')->exists())->toBeTrue()
         ->and(Role::where('name', 'Editor')->where('guard_name', 'admin')->count())->toBe(1)
         ->and(Role::where('name', 'Super Admin')->where('guard_name', 'admin')->count())->toBe(1)
-        ->and($editorRole->fresh()->permissions->pluck('name')->all())->toBe(['view dashboard']);
+        ->and($editorRole->fresh()->permissions->pluck('name')->all())->toBe(['view dashboard'])
+        ->and($contentManagerRole->fresh()->permissions->pluck('name')->all())->toBe(['review audit logs'])
+        ->and($superAdminRole->fresh()->hasAllPermissions(ADMIN_PERMISSIONS))->toBeTrue()
+        ->and($superAdminRole->fresh()->hasPermissionTo($customPermission))->toBeTrue();
+});
+
+test('the permission seeder does not assign super admin to an existing account', function () {
+    $admin = Admin::create([
+        'name' => 'Existing Admin',
+        'email' => 'admin24@gmail.com',
+        'password' => Hash::make('password'),
+    ]);
+
+    $this->seed(RolePermissionSeeder::class);
+
+    expect($admin->fresh()->hasRole('Super Admin', 'admin'))->toBeFalse();
 });

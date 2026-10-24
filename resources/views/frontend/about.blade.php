@@ -26,7 +26,7 @@
                     <span>{{ $about->hero_badge }}</span>
                 </div>
             @endif
-            <h1 class="font-heading text-4xl sm:text-6xl font-black tracking-tight max-w-4xl mx-auto leading-tight">
+            <h1 class="mx-auto max-w-4xl break-words font-heading text-4xl font-black leading-tight tracking-tight sm:text-6xl">
                 {{ $about?->hero_title ?: 'About BlackTechEngine' }}
             </h1>
             @if(filled($about?->hero_description))

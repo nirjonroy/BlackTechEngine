@@ -14,7 +14,7 @@ class UpdateSiteSettingRequest extends AdminFormRequest
             'email' => ['nullable', 'email:rfc', 'max:255'],
             'mobile' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:2000'],
-            'facebook_url' => ['nullable', 'url:http,https', 'max:2048'],
+            'facebook_url' => ['nullable', 'url:http,https', 'max:255'],
             'logo_dark' => $this->imageRules(),
             'logo_light' => $this->imageRules(),
             'favicon' => $this->faviconRules(),

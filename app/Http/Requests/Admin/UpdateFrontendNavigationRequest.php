@@ -33,7 +33,7 @@ class UpdateFrontendNavigationRequest extends AdminFormRequest
             'footer_columns.*.links.*.order' => ['required', 'integer', 'between:0,1000'],
             'footer_columns.*.links.*.is_visible' => ['required', 'boolean'],
             'footer_copyright' => ['nullable', 'string', 'max:500'],
-            'facebook_url' => ['nullable', 'url:http,https', 'max:2048'],
+            'facebook_url' => ['nullable', 'url:http,https', 'max:255'],
             'x_url' => ['nullable', 'url:http,https', 'max:2048'],
             'linkedin_url' => ['nullable', 'url:http,https', 'max:2048'],
             'github_url' => ['nullable', 'url:http,https', 'max:2048'],

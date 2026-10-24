@@ -4,19 +4,19 @@
     <x-slot:secondaryPrompt>Already have an account?</x-slot:secondaryPrompt>
     <x-slot:secondaryText>Sign In</x-slot:secondaryText>
 
-    <div class="w-full max-w-3xl">
+    <div class="w-full min-w-0 max-w-3xl">
         <div class="mb-7" aria-label="Account setup progress">
-            <div class="mb-3 flex items-center justify-between text-xs font-bold">
-                <span class="flex items-center gap-1.5 text-indigo-500"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[10px] text-white">1</span> Account</span>
-                <span class="flex items-center gap-1.5 text-slate-400"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-300 text-[10px] text-slate-600 dark:bg-slate-700 dark:text-slate-300">2</span> Verify Email</span>
-                <span class="flex items-center gap-1.5 text-slate-400"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-300 text-[10px] text-slate-600 dark:bg-slate-700 dark:text-slate-300">3</span> Launch</span>
+            <div class="mb-3 grid grid-cols-3 gap-2 text-center text-[11px] font-bold min-[420px]:text-xs">
+                <span class="flex min-w-0 flex-col items-center gap-1.5 text-indigo-500 min-[520px]:flex-row"><span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-[10px] text-white">1</span> Account</span>
+                <span class="flex min-w-0 flex-col items-center gap-1.5 text-slate-400 min-[520px]:flex-row min-[520px]:justify-center"><span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-300 text-[10px] text-slate-600 dark:bg-slate-700 dark:text-slate-300">2</span> Verify Email</span>
+                <span class="flex min-w-0 flex-col items-center gap-1.5 text-slate-400 min-[520px]:flex-row min-[520px]:justify-end"><span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-300 text-[10px] text-slate-600 dark:bg-slate-700 dark:text-slate-300">3</span> Launch</span>
             </div>
             <div class="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"><div class="h-full w-1/3 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400"></div></div>
         </div>
 
-        <section class="bte-card rounded-3xl border border-slate-200 p-6 shadow-2xl sm:p-10 dark:border-slate-800" aria-labelledby="register-heading">
+        <section class="bte-card min-w-0 rounded-3xl border border-slate-200 p-5 shadow-2xl min-[360px]:p-6 sm:p-10 dark:border-slate-800" aria-labelledby="register-heading">
             <div class="mb-7">
-                <h1 id="register-heading" class="font-heading text-2xl font-black sm:text-3xl">Create Your Free Autopilot Account</h1>
+                <h1 id="register-heading" class="break-words font-heading text-2xl font-black sm:text-3xl">Create Your Free Autopilot Account</h1>
                 <p class="mt-1.5 text-xs leading-5 text-slate-500 dark:text-slate-400">Set up secure access to your BlackTechEngine workspace.</p>
             </div>
 

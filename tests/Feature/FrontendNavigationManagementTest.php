@@ -109,6 +109,18 @@ test('an authorized admin can create and update ordered navigation settings', fu
         ->and($setting->refresh()->footer_description)->toBe('Updated description.');
 });
 
+test('frontend navigation rejects a Facebook URL longer than its database column', function () {
+    $setting = SiteSetting::create(['facebook_url' => 'https://example.com/original']);
+    $payload = validFrontendNavigationPayload();
+    $payload['facebook_url'] = 'https://example.com/'.str_repeat('a', 256);
+
+    $this->actingAs(createFrontendNavigationAdmin(), 'admin')
+        ->post(route('admin.frontend_navigation.update'), $payload)
+        ->assertSessionHasErrors('facebook_url');
+
+    expect($setting->refresh()->facebook_url)->toBe('https://example.com/original');
+});
+
 test('a super admin can manage navigation without a direct permission', function () {
     $admin = createFrontendNavigationAdmin(false);
     $admin->assignRole(Role::create(['name' => 'Super Admin', 'guard_name' => 'admin']));

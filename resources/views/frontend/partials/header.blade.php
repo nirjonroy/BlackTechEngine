@@ -1,6 +1,6 @@
 <header class="sticky top-0 z-40 bte-glass-nav transition-colors duration-200">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-    <a href="{{ route('home') }}" class="flex items-center gap-3 group" aria-label="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }} home">
+  <div class="mx-auto flex h-20 max-w-7xl min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+    <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-3" aria-label="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }} home">
       @if($siteSetting?->logo_dark || $siteSetting?->logo_light)
         <img src="{{ asset('storage/'.($siteSetting?->logo_light ?: $siteSetting?->logo_dark)) }}" alt="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}" class="h-10 block dark:hidden">
         <img src="{{ asset('storage/'.($siteSetting?->logo_dark ?: $siteSetting?->logo_light)) }}" alt="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}" class="h-10 hidden dark:block">
@@ -8,7 +8,7 @@
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
           <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
-        <span class="font-heading text-2xl font-black tracking-tight text-slate-900 dark:text-white">{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}</span>
+        <span class="truncate font-heading text-xl font-black tracking-tight text-slate-900 sm:text-2xl dark:text-white">{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}</span>
       @endif
     </a>
 
@@ -23,7 +23,7 @@
       @endforeach
     </nav>
 
-    <div class="flex items-center gap-3.5">
+    <div class="flex shrink-0 items-center gap-2 min-[420px]:gap-3.5">
       <button id="themeToggle" type="button" aria-label="Toggle color theme" class="theme-toggle-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all hover:scale-105">
         <i data-lucide="sun" class="w-5 h-5 theme-icon-sun"></i>
         <i data-lucide="moon" class="w-5 h-5 theme-icon-moon hidden"></i>

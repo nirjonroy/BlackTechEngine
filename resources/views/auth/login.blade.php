@@ -4,14 +4,14 @@
     <x-slot:secondaryPrompt>Need an account?</x-slot:secondaryPrompt>
     <x-slot:secondaryText>Sign Up Free</x-slot:secondaryText>
 
-    <div class="grid w-full max-w-5xl grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
-        <section class="bte-card rounded-3xl border border-slate-200 p-6 shadow-xl sm:p-10 lg:col-span-6 dark:border-slate-800" aria-labelledby="login-heading">
+    <div class="grid w-full min-w-0 max-w-5xl grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
+        <section class="bte-card min-w-0 rounded-3xl border border-slate-200 p-5 shadow-xl min-[360px]:p-6 sm:p-10 lg:col-span-6 dark:border-slate-800" aria-labelledby="login-heading">
             <div class="mb-8">
                 <p class="mb-2 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-indigo-500">
                     <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
                     Secure account access
                 </p>
-                <h1 id="login-heading" class="font-heading text-3xl font-black tracking-tight text-slate-900 dark:text-white">Welcome Back</h1>
+                <h1 id="login-heading" class="break-words font-heading text-3xl font-black tracking-tight text-slate-900 dark:text-white">Welcome Back</h1>
                 <p class="mt-1.5 text-xs leading-5 text-slate-500 dark:text-slate-400">Sign in to manage your autopilot SEO schedule and Brand DNA.</p>
             </div>
 

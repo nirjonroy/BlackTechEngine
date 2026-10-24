@@ -77,6 +77,25 @@ test('site settings reject invalid contact data and preserve the existing record
         ->and($setting->email)->toBe('original@example.com');
 });
 
+test('site settings and about page reject URLs longer than their database columns', function () {
+    $setting = SiteSetting::create(['facebook_url' => 'https://example.com/original']);
+    $about = AboutPage::create(['cta_btn1_link' => 'https://example.com/original']);
+    $admin = createFormAdmin(['manage site settings', 'manage about page']);
+    $overlongUrl = 'https://example.com/'.str_repeat('a', 256);
+
+    $this->actingAs($admin, 'admin')
+        ->post(route('admin.settings.update'), ['facebook_url' => $overlongUrl])
+        ->assertSessionHasErrors('facebook_url');
+
+    $this->post(route('admin.about.update'), [
+        'cta_btn1_link' => $overlongUrl,
+        'cta_btn2_link' => $overlongUrl,
+    ])->assertSessionHasErrors(['cta_btn1_link', 'cta_btn2_link']);
+
+    expect($setting->refresh()->facebook_url)->toBe('https://example.com/original')
+        ->and($about->refresh()->cta_btn1_link)->toBe('https://example.com/original');
+});
+
 test('site settings accept valid images and safely replace an old logo', function () {
     Storage::fake('public');
     Storage::disk('public')->put('settings/old-logo.png', 'old');

@@ -7,7 +7,7 @@
             <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 <i data-lucide="layers" class="h-3.5 w-3.5"></i><span>{{ $setting?->hero_badge ?: 'Full-Stack Autopilot Capabilities' }}</span>
             </div>
-            <h1 class="mx-auto max-w-4xl font-heading text-4xl font-black leading-tight tracking-tight sm:text-6xl">{{ $setting?->hero_title_normal ?: 'Engineered for the Entire Content Lifecycle' }} <span class="gradient-text-primary">{{ $setting?->hero_title_highlighted ?: 'The 6 Pillars' }}</span></h1>
+            <h1 class="mx-auto max-w-4xl break-words font-heading text-4xl font-black leading-tight tracking-tight sm:text-6xl">{{ $setting?->hero_title_normal ?: 'Engineered for the Entire Content Lifecycle' }} <span class="gradient-text-primary">{{ $setting?->hero_title_highlighted ?: 'The 6 Pillars' }}</span></h1>
             <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-slate-300 sm:text-xl">{{ $setting?->hero_description ?: 'Discover how autonomous workflows support the content lifecycle, from brand voice guidance and answer-engine structure to publishing, social distribution, local visibility, and opportunity discovery.' }}</p>
         </div>
     </section>
@@ -15,8 +15,8 @@
     @foreach($deepDiveFeatures as $index => $feature)
         <section @class(['border-t border-slate-200 py-20 dark:border-slate-800/80', 'bg-slate-100/50 dark:bg-[#0E1526]/50' => $index % 2 === 1])>
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-                    <div @class(['lg:order-2' => $index % 2 === 1])>
+                <div class="grid min-w-0 grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+                    <div @class(['min-w-0', 'lg:order-2' => $index % 2 === 1])>
                         <div class="mb-4 inline-flex items-center gap-2 rounded-lg bg-indigo-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400"><i data-lucide="{{ $feature['icon'] }}" class="h-4 w-4"></i>Feature {{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</div>
                         <h2 class="font-heading text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">{{ $feature['title'] }}</h2>
                         <p class="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">{{ $feature['description'] }}</p>
@@ -40,7 +40,7 @@
                         @endif
                     </div>
 
-                    <div @class(['lg:order-1' => $index % 2 === 1])>
+                    <div @class(['min-w-0', 'lg:order-1' => $index % 2 === 1])>
                         <div @class(['bte-card rounded-3xl border border-slate-200 p-6 dark:border-slate-800 sm:p-8', 'glow-indigo' => $feature['id'] === 'brand_dna'])>
                             <div class="mb-5 flex items-center justify-between gap-4 border-b border-slate-200 pb-4 dark:border-slate-800">
                                 <div><div class="text-sm font-bold">{{ $feature['preview_heading'] }}</div>@if($feature['preview_label'])<div class="mt-1 text-[11px] text-slate-500">{{ $feature['preview_label'] }}</div>@endif</div>
