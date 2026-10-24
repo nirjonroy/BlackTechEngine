@@ -1,11 +1,11 @@
 <header class="sticky top-0 z-40 bte-glass-nav transition-colors duration-200">
   <div class="mx-auto flex h-20 max-w-7xl min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-    <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-3" aria-label="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }} home">
+    <a href="{{ route('home') }}" class="group flex min-w-0 flex-1 items-center gap-3" aria-label="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }} home">
       @if($siteSetting?->logo_dark || $siteSetting?->logo_light)
-        <img src="{{ asset('storage/'.($siteSetting?->logo_light ?: $siteSetting?->logo_dark)) }}" alt="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}" class="h-10 block dark:hidden">
-        <img src="{{ asset('storage/'.($siteSetting?->logo_dark ?: $siteSetting?->logo_light)) }}" alt="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}" class="h-10 hidden dark:block">
+        <img src="{{ asset('storage/'.($siteSetting?->logo_light ?: $siteSetting?->logo_dark)) }}" alt="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}" class="block h-10 max-w-full object-contain dark:hidden">
+        <img src="{{ asset('storage/'.($siteSetting?->logo_dark ?: $siteSetting?->logo_light)) }}" alt="{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}" class="hidden h-10 max-w-full object-contain dark:block">
       @else
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-cyan-400 text-white shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105">
           <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
         <span class="truncate font-heading text-xl font-black tracking-tight text-slate-900 sm:text-2xl dark:text-white">{{ $siteSetting?->site_name ?: 'BlackTechEngine' }}</span>
@@ -50,13 +50,13 @@
         @if($link['route'] === 'affiliate')<span class="text-[10px] uppercase tracking-wider text-violet-500">Planned</span>@endif
       </a>
     @endforeach
-    <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-3">
+    <div class="flex gap-3 border-t border-slate-200 pt-3 dark:border-slate-800">
       @guest
-        <a href="{{ route('login') }}" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Sign In</a>
-        <a href="{{ route('register') }}" class="w-1/2 text-center py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold">Start Free</a>
+        <a href="{{ route('login') }}" class="min-w-0 flex-1 rounded-xl border border-slate-300 py-2.5 text-center text-sm font-bold dark:border-slate-700">Sign In</a>
+        <a href="{{ route('register') }}" class="min-w-0 flex-1 rounded-xl bg-indigo-600 py-2.5 text-center text-sm font-bold text-white">Start Free</a>
       @else
-        <a href="{{ route('dashboard') }}" class="w-1/2 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold">Dashboard</a>
-        <form action="{{ route('logout') }}" method="POST" class="w-1/2">@csrf<button type="submit" class="w-full py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold">Log Out</button></form>
+        <a href="{{ route('dashboard') }}" class="min-w-0 flex-1 rounded-xl border border-slate-300 py-2.5 text-center text-sm font-bold dark:border-slate-700">Dashboard</a>
+        <form action="{{ route('logout') }}" method="POST" class="min-w-0 flex-1">@csrf<button type="submit" class="w-full rounded-xl bg-indigo-600 py-2.5 text-sm font-bold text-white">Log Out</button></form>
       @endguest
     </div>
   </nav>
