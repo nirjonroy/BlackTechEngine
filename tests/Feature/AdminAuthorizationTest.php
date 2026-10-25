@@ -29,6 +29,7 @@ const ADMIN_PERMISSIONS = [
     'manage pricing plans',
     'manage pricing page settings',
     'manage feature page settings',
+    'manage users',
 ];
 
 beforeEach(function () {
@@ -57,9 +58,12 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
     $blog = Blog::create(['title' => 'Protected blog', 'slug' => 'protected-blog']);
     $seo = SeoSetting::create(['page_name' => 'Protected SEO']);
     $plan = PricingPlan::create(['name' => 'Protected plan']);
+    $user = User::factory()->create();
 
     $endpoints = [
         ['GET', route('admin.dashboard')],
+        ['GET', route('admin.users.index')],
+        ['GET', route('admin.users.show', $user)],
         ['GET', route('admin.role-permission.index')],
         ['GET', route('admin.role-permission.admin.create')],
         ['POST', route('admin.role-permission.admin.store')],
@@ -138,6 +142,7 @@ test('an authorized admin can access only the permitted module', function (strin
     'pricing plans' => ['manage pricing plans', 'admin.pricing.index'],
     'pricing page' => ['manage pricing page settings', 'admin.pricing_page.index'],
     'feature page' => ['manage feature page settings', 'admin.feature_page.index'],
+    'registered users' => ['manage users', 'admin.users.index'],
 ]);
 
 test('a super admin can access every protected admin module without direct permissions', function () {
@@ -147,6 +152,7 @@ test('a super admin can access every protected admin module without direct permi
 
     $routes = [
         'admin.dashboard',
+        'admin.users.index',
         'admin.role-permission.index',
         'admin.role-permission.admin.create',
         'admin.role-permission.role.create',

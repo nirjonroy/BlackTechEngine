@@ -13,8 +13,14 @@
                 <i data-lucide="activity" class="h-4 w-4" aria-hidden="true"></i>
                 <span>Mission Control</span>
             </a>
+            @if($admin?->can('manage users'))
+                <a href="{{ route('admin.users.index') }}" class="{{ $baseClasses }} {{ request()->routeIs('admin.users.*') ? $activeClasses : $inactiveClasses }}" @if(request()->routeIs('admin.users.*')) aria-current="page" @endif>
+                    <i data-lucide="users" class="h-4 w-4" aria-hidden="true"></i>
+                    <span>Registered Users</span>
+                </a>
+            @endif
             @foreach([
-                ['icon' => 'users', 'label' => 'Workspaces & Users'],
+                ['icon' => 'building-2', 'label' => 'Workspace Management'],
                 ['icon' => 'cpu', 'label' => 'AI Router & Prompts'],
                 ['icon' => 'server', 'label' => 'Job Queues & Latency'],
                 ['icon' => 'badge-dollar-sign', 'label' => 'Affiliate Approvals'],

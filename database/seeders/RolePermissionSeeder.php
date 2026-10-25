@@ -30,6 +30,7 @@ class RolePermissionSeeder extends Seeder
             'manage pricing plans',
             'manage pricing page settings',
             'manage feature page settings',
+            'manage users',
         ];
 
         foreach ($requiredPermissions as $permission) {

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PricingPlanController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
 use App\Http\Controllers\Frontend\AffiliatePageController;
 use App\Http\Controllers\Frontend\BlogController as FrontendBlogController;
@@ -57,6 +58,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', DashboardController::class)
         ->middleware(PermissionMiddleware::using('view dashboard', 'admin'))
         ->name('admin.dashboard');
+
+    Route::middleware(PermissionMiddleware::using('manage users', 'admin'))->group(function () {
+        Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    });
 
     Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 

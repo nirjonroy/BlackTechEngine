@@ -26,6 +26,7 @@ const DASHBOARD_ADMIN_PERMISSIONS = [
     'manage pricing plans',
     'manage pricing page settings',
     'manage feature page settings',
+    'manage users',
 ];
 
 beforeEach(function () {
@@ -138,7 +139,8 @@ test('sidebar links are limited to the authenticated admin permissions', functio
         ->assertSee('Blog Management')
         ->assertDontSee('href="'.route('admin.settings.index').'"', false)
         ->assertDontSee('Site Settings')
-        ->assertSee('Workspaces &amp; Users', false)
+        ->assertDontSee('href="'.route('admin.users.index').'"', false)
+        ->assertSee('Workspace Management')
         ->assertSee('aria-disabled="true"', false)
         ->assertDontSee('users.html')
         ->assertDontSee('queues.html');
@@ -155,6 +157,7 @@ test('super admin navigation uses registered routes for every implemented module
 
     foreach ([
         'admin.dashboard',
+        'admin.users.index',
         'admin.homepage.index',
         'admin.about.index',
         'admin.feature_page.index',
