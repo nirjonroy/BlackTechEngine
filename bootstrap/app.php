@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+        $middleware->redirectGuestsTo(function (Request $request): string {
+            $usesAdminGuard = in_array('auth:admin', $request->route()?->gatherMiddleware() ?? [], true);
+
+            return route($usesAdminGuard ? 'admin.login' : 'login');
+        });
 
         $middleware->alias([
             'role' => RoleMiddleware::class,

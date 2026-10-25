@@ -51,10 +51,10 @@ test('an authenticated admin response retains authorization and baseline securit
     assertBaselineSecurityHeaders($response);
 });
 
-test('an unauthenticated admin redirect retains its existing destination and baseline security headers', function () {
+test('an unauthenticated admin redirect retains its correct destination and baseline security headers', function () {
     $response = $this->get(route('admin.dashboard'));
 
-    $response->assertRedirect(route('login'));
+    $response->assertRedirectToRoute('admin.login');
     $this->assertGuest('admin');
     assertBaselineSecurityHeaders($response);
 });

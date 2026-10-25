@@ -2,7 +2,9 @@
 
 use App\Http\Requests\Admin\AdminLoginRequest;
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -25,6 +27,55 @@ test('admin login screen can be rendered', function () {
         ->assertSee('name="email"', false)
         ->assertSee('name="password"', false)
         ->assertSee('name="remember"', false);
+});
+
+test('unauthenticated admin pages redirect to the registered admin login route', function (string $routeName) {
+    $response = $this->get(route($routeName));
+
+    $response
+        ->assertRedirectToRoute('admin.login')
+        ->assertSessionHas('url.intended', route($routeName));
+    $this->assertGuest('admin');
+})->with([
+    'dashboard' => ['admin.dashboard'],
+    'CMS settings' => ['admin.settings.index'],
+]);
+
+test('an unauthenticated regular user route still redirects to the user login', function () {
+    $response = $this->get(route('dashboard'));
+
+    $response->assertRedirectToRoute('login');
+    $this->assertGuest('web');
+});
+
+test('an unauthenticated JSON admin request returns 401 without redirecting', function () {
+    $response = $this->getJson(route('admin.dashboard'));
+
+    $response
+        ->assertUnauthorized()
+        ->assertHeaderMissing('Location');
+    $this->assertGuest('admin');
+});
+
+test('a regular user session does not authenticate the admin guard', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('admin.dashboard'));
+
+    $response->assertRedirectToRoute('admin.login');
+    $this->assertAuthenticatedAs($user, 'web');
+    $this->assertGuest('admin');
+});
+
+test('an admin session does not authenticate the regular user guard', function () {
+    $admin = createAuthenticatableAdmin();
+    Auth::guard('admin')->login($admin);
+
+    $response = $this->get(route('dashboard'));
+
+    $response->assertRedirectToRoute('login');
+    $this->assertAuthenticatedAs($admin, 'admin');
+    $this->assertGuest('web');
 });
 
 test('an admin can authenticate through the admin guard and regenerates the session', function () {
