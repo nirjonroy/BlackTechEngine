@@ -119,6 +119,13 @@ body {
   -webkit-backdrop-filter: blur(16px);
 }
 
+.admin-chart-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.16) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
 /* Text Gradients */
 .gradient-text-primary {
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
 use App\Http\Controllers\Admin\FrontendNavigationController;
 use App\Http\Controllers\Admin\HomepageSettingController;
@@ -53,9 +54,9 @@ Route::middleware('guest:admin')->group(function () {
 
 // Admin Authenticated Routes
 Route::middleware('auth:admin')->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard'); // Create this view later
-    })->middleware(PermissionMiddleware::using('view dashboard', 'admin'))->name('admin.dashboard');
+    Route::get('/admin/dashboard', DashboardController::class)
+        ->middleware(PermissionMiddleware::using('view dashboard', 'admin'))
+        ->name('admin.dashboard');
 
     Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 

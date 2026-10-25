@@ -188,16 +188,31 @@ function setupMobileNav() {
       document.body.appendChild(backdrop);
     }
 
+    const desktopQuery = window.matchMedia('(min-width: 1024px)');
+
+    const updateSidebarAccessibility = (isOpen) => {
+      sidebarBtn.setAttribute('aria-expanded', String(isOpen));
+      sidebarBtn.setAttribute('aria-label', isOpen ? 'Close admin navigation' : 'Open admin navigation');
+      sidebar.setAttribute('aria-hidden', String(!desktopQuery.matches && !isOpen));
+    };
+
     const openSidebar = () => {
       sidebar.classList.remove('-translate-x-full');
       backdrop.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+      updateSidebarAccessibility(true);
+      sidebar.querySelector('a[href], button:not([disabled])')?.focus();
     };
 
-    const closeSidebar = () => {
+    const closeSidebar = (restoreFocus = false) => {
       sidebar.classList.add('-translate-x-full');
       backdrop.classList.add('hidden');
       document.body.style.overflow = '';
+      updateSidebarAccessibility(false);
+
+      if (restoreFocus) {
+        sidebarBtn.focus();
+      }
     };
 
     sidebarBtn.addEventListener('click', (e) => {
@@ -205,11 +220,23 @@ function setupMobileNav() {
       if (sidebar.classList.contains('-translate-x-full')) {
         openSidebar();
       } else {
-        closeSidebar();
+        closeSidebar(true);
       }
     });
 
-    backdrop.addEventListener('click', closeSidebar);
+    backdrop.addEventListener('click', () => closeSidebar(true));
+    sidebar.querySelectorAll('a[href]').forEach(link => link.addEventListener('click', () => closeSidebar()));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !sidebar.classList.contains('-translate-x-full') && !desktopQuery.matches) {
+        closeSidebar(true);
+      }
+    });
+    desktopQuery.addEventListener('change', () => {
+      backdrop.classList.add('hidden');
+      document.body.style.overflow = '';
+      updateSidebarAccessibility(desktopQuery.matches || !sidebar.classList.contains('-translate-x-full'));
+    });
+    updateSidebarAccessibility(desktopQuery.matches || !sidebar.classList.contains('-translate-x-full'));
   }
 }
 
