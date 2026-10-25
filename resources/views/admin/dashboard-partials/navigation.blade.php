@@ -59,7 +59,7 @@
         <p class="mb-2 px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Pricing and site</p>
         <div class="space-y-1">
             @foreach([
-                ['permission' => 'manage pricing plans', 'route' => 'admin.pricing.index', 'icon' => 'layers-3', 'label' => 'Pricing Plans'],
+                ['permission' => 'manage pricing plans', 'route' => 'admin.pricing.index', 'icon' => 'layers-3', 'label' => 'Plans & Pricing Tiers'],
                 ['permission' => 'manage pricing page settings', 'route' => 'admin.pricing_page.index', 'icon' => 'badge-dollar-sign', 'label' => 'Pricing Page CMS'],
                 ['permission' => 'manage frontend navigation', 'route' => 'admin.frontend_navigation.index', 'icon' => 'panel-top', 'label' => 'Navigation & Footer'],
                 ['permission' => 'manage site settings', 'route' => 'admin.settings.index', 'icon' => 'settings', 'label' => 'Site Settings'],

@@ -11,18 +11,22 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class PricingPlanController extends Controller
 {
-    public function index(PricingPresentation $presentation)
+    public function index(PricingPresentation $presentation): View
     {
-        $plans = PricingPlan::query()->inDisplayOrder()->get();
+        $plans = PricingPlan::query()
+            ->with('features')
+            ->inDisplayOrder()
+            ->paginate(9);
         $currencyCode = $presentation->currencyCode(PricingPageSetting::query()->value('currency_code'));
 
         return view('admin.pricing.index', [
             'plans' => $plans,
             'currencyCode' => $currencyCode,
-            'formattedPlanPrices' => $plans->mapWithKeys(fn (PricingPlan $plan): array => [
+            'formattedPlanPrices' => $plans->getCollection()->mapWithKeys(fn (PricingPlan $plan): array => [
                 $plan->getKey() => [
                     'monthly' => $presentation->format($plan->monthly_price, $currencyCode),
                     'annual' => $presentation->format($plan->annual_price, $currencyCode),
