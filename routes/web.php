@@ -64,6 +64,11 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
     });
 
+    Route::middleware(PermissionMiddleware::using('edit users', 'admin'))->group(function () {
+        Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+        Route::patch('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    });
+
     Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
     Route::get('/admin/role-permission', [RolePermissionController::class, 'index'])

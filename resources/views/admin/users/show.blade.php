@@ -5,11 +5,29 @@
             <h1 class="mt-1 truncate font-heading text-2xl font-extrabold tracking-tight sm:text-3xl">{{ $user->name }}</h1>
             <p class="mt-1 font-mono text-xs text-slate-500 dark:text-slate-400">Registered user ID #{{ $user->id }}</p>
         </div>
-        <a href="{{ route('admin.users.index') }}" class="inline-flex w-fit items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 transition hover:border-cyan-500 hover:text-cyan-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:text-slate-300">
-            <i data-lucide="arrow-left" class="h-4 w-4" aria-hidden="true"></i>
-            Back to users
-        </a>
+        <div class="flex flex-wrap items-center gap-3">
+            @if(auth('admin')->user()?->can('edit users'))
+                <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex w-fit items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    <i data-lucide="pencil" class="h-4 w-4" aria-hidden="true"></i>
+                    Edit Profile
+                </a>
+            @endif
+            <a href="{{ route('admin.users.index') }}" class="inline-flex w-fit items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 transition hover:border-cyan-500 hover:text-cyan-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:text-slate-300">
+                <i data-lucide="arrow-left" class="h-4 w-4" aria-hidden="true"></i>
+                Back to users
+            </a>
+        </div>
     </div>
+
+    @if(session('status') === 'user-name-updated')
+        <div class="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300" role="status">
+            The user's name was updated successfully.
+        </div>
+    @elseif(session('status') === 'user-name-unchanged')
+        <div class="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3 text-sm font-semibold text-cyan-700 dark:text-cyan-300" role="status">
+            No changes were needed.
+        </div>
+    @endif
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-12 xl:gap-8">
         <section class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7 xl:col-span-7" aria-labelledby="account-details-heading">

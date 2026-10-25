@@ -30,6 +30,7 @@ const ADMIN_PERMISSIONS = [
     'manage pricing page settings',
     'manage feature page settings',
     'manage users',
+    'edit users',
 ];
 
 beforeEach(function () {
@@ -64,6 +65,8 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
         ['GET', route('admin.dashboard')],
         ['GET', route('admin.users.index')],
         ['GET', route('admin.users.show', $user)],
+        ['GET', route('admin.users.edit', $user)],
+        ['PATCH', route('admin.users.update', $user)],
         ['GET', route('admin.role-permission.index')],
         ['GET', route('admin.role-permission.admin.create')],
         ['POST', route('admin.role-permission.admin.store')],
