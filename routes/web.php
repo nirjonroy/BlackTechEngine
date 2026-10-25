@@ -19,6 +19,8 @@ use App\Http\Controllers\Frontend\BlogController as FrontendBlogController;
 use App\Http\Controllers\Frontend\FeaturesPageController as FrontendFeaturesPageController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageController;
+use App\Http\Controllers\Frontend\RobotsController;
+use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -30,6 +32,8 @@ Route::get('/pricing', FrontendPricingPageController::class)->name('pricing');
 Route::get('/affiliate', AffiliatePageController::class)->name('affiliate');
 Route::get('/blog', [FrontendBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [FrontendBlogController::class, 'show'])->name('blog.show');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

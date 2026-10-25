@@ -37,7 +37,8 @@ class PricingPageController extends Controller
             'finalPrimaryCtaUrl' => $presentation->destinationUrl($setting?->final_primary_cta_destination, 'register'),
             'finalSecondaryCtaUrl' => $presentation->destinationUrl($setting?->final_secondary_cta_destination, 'features'),
             'seoFallbackTitle' => $setting?->hero_title_normal ?: 'Pricing | BlackTechEngine',
-            'seoFallbackDescription' => $setting?->hero_description,
+            'seoFallbackDescription' => $setting?->hero_description
+                ?: 'Review BlackTechEngine pricing plans and available features for content and search optimization needs.',
             'pageSeo' => $setting?->only([
                 'seo_title',
                 'seo_description',

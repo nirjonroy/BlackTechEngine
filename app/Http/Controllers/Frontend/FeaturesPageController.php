@@ -23,7 +23,8 @@ class FeaturesPageController extends Controller
             'primaryCtaUrl' => $content->destinationUrl($setting?->final_primary_cta_destination, 'register'),
             'secondaryCtaUrl' => $content->destinationUrl($setting?->final_secondary_cta_destination, 'pricing'),
             'seoFallbackTitle' => $setting?->hero_title_normal ?: 'Features | BlackTechEngine',
-            'seoFallbackDescription' => $setting?->hero_description,
+            'seoFallbackDescription' => $setting?->hero_description
+                ?: 'Explore BlackTechEngine features for content workflows, search optimization, and generative engine visibility.',
             'pageSeo' => $setting?->only([
                 'seo_title',
                 'seo_description',

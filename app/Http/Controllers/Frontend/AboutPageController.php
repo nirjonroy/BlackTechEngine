@@ -17,7 +17,8 @@ class AboutPageController extends Controller
         return view('frontend.about', [
             'about' => $about,
             'seoFallbackTitle' => $about?->hero_title ?: 'About BlackTechEngine',
-            'seoFallbackDescription' => $about?->hero_description,
+            'seoFallbackDescription' => $about?->hero_description
+                ?: 'Learn about BlackTechEngine and its approach to content workflows, search visibility, and generative engine optimization.',
             'primaryCtaUrl' => $this->safeHttpUrl($about?->cta_btn1_link),
             'secondaryCtaUrl' => $this->safeHttpUrl($about?->cta_btn2_link),
         ]);
