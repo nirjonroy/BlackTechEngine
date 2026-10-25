@@ -16,6 +16,9 @@
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
+        <input type="hidden" name="lock_version" value="{{ old('lock_version', $user->lock_version ?? 0) }}">
+
+        <x-input-error class="mt-2" :messages="$errors->get('lock_version')" />
 
         <div>
             <x-input-label for="name" :value="__('Name')" />

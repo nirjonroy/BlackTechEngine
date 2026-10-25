@@ -297,6 +297,66 @@ test('two updates from the same version allow only the first update', function (
     $this->assertDatabaseCount('admin_user_audits', 1);
 });
 
+test('an admin update is rejected after the user changes their own profile', function () {
+    $admin = createUserEditingAdmin();
+    $user = User::factory()->create(['name' => 'Original Name']);
+
+    $this->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => 'User Chosen Name',
+            'email' => $user->email,
+            'lock_version' => 0,
+        ])
+        ->assertSessionHasNoErrors();
+
+    $this->actingAs($admin, 'admin')
+        ->from(route('admin.users.edit', $user))
+        ->patch(route('admin.users.update', $user), [
+            'name' => 'Stale Admin Name',
+            'lock_version' => 0,
+        ])
+        ->assertRedirect(route('admin.users.edit', $user))
+        ->assertSessionHasErrors('lock_version');
+
+    expect($user->fresh()->name)->toBe('User Chosen Name')
+        ->and($user->fresh()->lock_version)->toBe(1);
+    $this->assertDatabaseCount('admin_user_audits', 0);
+});
+
+test('a profile update is rejected after an admin changes the user name', function () {
+    $admin = createUserEditingAdmin();
+    $verifiedAt = now()->subDay()->startOfSecond();
+    $user = User::factory()->create([
+        'name' => 'Original Name',
+        'email' => 'original@example.test',
+        'email_verified_at' => $verifiedAt,
+    ]);
+
+    $this->actingAs($admin, 'admin')
+        ->patch(route('admin.users.update', $user), [
+            'name' => 'Admin Chosen Name',
+            'lock_version' => 0,
+        ])
+        ->assertSessionHasNoErrors();
+
+    $this->actingAs($user)
+        ->from(route('profile.edit'))
+        ->patch(route('profile.update'), [
+            'name' => 'Stale User Name',
+            'email' => 'stale@example.test',
+            'lock_version' => 0,
+        ])
+        ->assertRedirect(route('profile.edit'))
+        ->assertSessionHasErrors('lock_version');
+
+    $freshUser = $user->fresh();
+    expect($freshUser->name)->toBe('Admin Chosen Name')
+        ->and($freshUser->email)->toBe('original@example.test')
+        ->and($freshUser->email_verified_at->equalTo($verifiedAt))->toBeTrue()
+        ->and($freshUser->lock_version)->toBe(1);
+    $this->assertDatabaseCount('admin_user_audits', 1);
+});
+
 test('an unchanged name creates no audit and does not increment the version', function () {
     $admin = createUserEditingAdmin();
     $user = User::factory()->create(['name' => 'Same Name']);
