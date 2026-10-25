@@ -19,7 +19,7 @@
         </script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="https://unpkg.com/lucide@latest"></script>
+        <script src="https://unpkg.com/lucide@1.61.0/dist/umd/lucide.min.js"></script>
     </head>
     <body class="flex min-h-screen min-w-0 flex-col bg-slate-50 font-sans text-slate-900 antialiased selection:bg-indigo-500 selection:text-white dark:bg-[#090D16] dark:text-slate-100">
         <header class="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between gap-3 px-4 py-5 sm:gap-4 sm:px-6 sm:py-6 lg:px-8">
