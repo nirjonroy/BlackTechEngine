@@ -21,6 +21,7 @@ const ADMIN_PERMISSIONS = [
     'manage site settings',
     'manage homepage settings',
     'manage affiliate page settings',
+    'manage affiliates',
     'manage frontend navigation',
     'manage about page',
     'manage seo settings',
