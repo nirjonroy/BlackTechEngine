@@ -34,6 +34,7 @@ const ADMIN_PERMISSIONS = [
     'manage feature page settings',
     'manage users',
     'edit users',
+    'manage ai models',
 ];
 
 beforeEach(function () {
