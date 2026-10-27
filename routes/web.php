@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AffiliateApplicationController;
 use App\Http\Controllers\Admin\AffiliateController;
 use App\Http\Controllers\Admin\AffiliatePageSettingController;
+use App\Http\Controllers\Admin\AiConfigurationController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
@@ -64,6 +65,13 @@ Route::middleware('auth:admin')->group(function () {
     Route::middleware(PermissionMiddleware::using('manage users', 'admin'))->group(function () {
         Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage ai models', 'admin'))->group(function () {
+        Route::get('/admin/ai-configuration', [AiConfigurationController::class, 'index'])->name('admin.ai-configuration.index');
+        Route::get('/admin/ai-configuration/providers', [AiConfigurationController::class, 'providers'])->name('admin.ai-configuration.providers');
+        Route::get('/admin/ai-configuration/models', [AiConfigurationController::class, 'models'])->name('admin.ai-configuration.models');
+        Route::get('/admin/ai-configuration/workload-routes', [AiConfigurationController::class, 'workloadRoutes'])->name('admin.ai-configuration.workload-routes');
     });
 
     Route::middleware(PermissionMiddleware::using('edit users', 'admin'))->group(function () {

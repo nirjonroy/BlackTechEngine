@@ -158,6 +158,7 @@ test('super admin navigation uses registered routes for every implemented module
     foreach ([
         'admin.dashboard',
         'admin.users.index',
+        'admin.ai-configuration.index',
         'admin.homepage.index',
         'admin.about.index',
         'admin.feature_page.index',

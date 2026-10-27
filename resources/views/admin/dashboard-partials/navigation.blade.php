@@ -25,9 +25,14 @@
                     <span>Affiliate Management</span>
                 </a>
             @endif
+            @if($admin?->can('manage ai models'))
+                <a href="{{ route('admin.ai-configuration.index') }}" class="{{ $baseClasses }} {{ request()->routeIs('admin.ai-configuration.*') ? $activeClasses : $inactiveClasses }}" @if(request()->routeIs('admin.ai-configuration.*')) aria-current="page" @endif>
+                    <i data-lucide="cpu" class="h-4 w-4" aria-hidden="true"></i>
+                    <span>AI Models &amp; Routing</span>
+                </a>
+            @endif
             @foreach([
                 ['icon' => 'building-2', 'label' => 'Workspace Management'],
-                ['icon' => 'cpu', 'label' => 'AI Router & Prompts'],
                 ['icon' => 'server', 'label' => 'Job Queues & Latency'],
             ] as $futureItem)
                 <span class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2 text-slate-400 opacity-60" aria-disabled="true" title="Not available in Phase 14A">

@@ -76,6 +76,10 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
         ['GET', route('admin.users.show', $user)],
         ['GET', route('admin.users.edit', $user)],
         ['PATCH', route('admin.users.update', $user)],
+        ['GET', route('admin.ai-configuration.index')],
+        ['GET', route('admin.ai-configuration.providers')],
+        ['GET', route('admin.ai-configuration.models')],
+        ['GET', route('admin.ai-configuration.workload-routes')],
         ['GET', route('admin.role-permission.index')],
         ['GET', route('admin.role-permission.admin.create')],
         ['POST', route('admin.role-permission.admin.store')],
@@ -160,6 +164,7 @@ test('an authorized admin can access only the permitted module', function (strin
     'pricing page' => ['manage pricing page settings', 'admin.pricing_page.index'],
     'feature page' => ['manage feature page settings', 'admin.feature_page.index'],
     'registered users' => ['manage users', 'admin.users.index'],
+    'AI model management' => ['manage ai models', 'admin.ai-configuration.index'],
 ]);
 
 test('a super admin can access every protected admin module without direct permissions', function () {
@@ -170,6 +175,10 @@ test('a super admin can access every protected admin module without direct permi
     $routes = [
         'admin.dashboard',
         'admin.users.index',
+        'admin.ai-configuration.index',
+        'admin.ai-configuration.providers',
+        'admin.ai-configuration.models',
+        'admin.ai-configuration.workload-routes',
         'admin.role-permission.index',
         'admin.role-permission.admin.create',
         'admin.role-permission.role.create',
