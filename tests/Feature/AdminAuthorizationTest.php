@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\Affiliate;
+use App\Models\AffiliateApplication;
 use App\Models\Blog;
 use App\Models\PricingPlan;
 use App\Models\SeoSetting;
@@ -61,6 +63,11 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
     $seo = SeoSetting::create(['page_name' => 'Protected SEO']);
     $plan = PricingPlan::create(['name' => 'Protected plan']);
     $user = User::factory()->create();
+    $affiliateApplication = AffiliateApplication::create(['user_id' => $user->id]);
+    $affiliate = Affiliate::create([
+        'user_id' => $user->id,
+        'application_id' => $affiliateApplication->id,
+    ]);
 
     $endpoints = [
         ['GET', route('admin.dashboard')],
@@ -81,6 +88,10 @@ test('every sensitive admin endpoint rejects an admin without permission', funct
         ['POST', route('admin.homepage.update')],
         ['GET', route('admin.affiliate_page.index')],
         ['POST', route('admin.affiliate_page.update')],
+        ['GET', route('admin.affiliates.index')],
+        ['GET', route('admin.affiliates.show', $affiliate)],
+        ['GET', route('admin.affiliate-applications.index')],
+        ['GET', route('admin.affiliate-applications.show', $affiliateApplication)],
         ['GET', route('admin.frontend_navigation.index')],
         ['POST', route('admin.frontend_navigation.update')],
         ['GET', route('admin.about.index')],
@@ -138,6 +149,7 @@ test('an authorized admin can access only the permitted module', function (strin
     'site settings' => ['manage site settings', 'admin.settings.index'],
     'homepage settings' => ['manage homepage settings', 'admin.homepage.index'],
     'affiliate page settings' => ['manage affiliate page settings', 'admin.affiliate_page.index'],
+    'affiliate management' => ['manage affiliates', 'admin.affiliates.index'],
     'frontend navigation' => ['manage frontend navigation', 'admin.frontend_navigation.index'],
     'about page' => ['manage about page', 'admin.about.index'],
     'SEO settings' => ['manage seo settings', 'admin.seo.index'],
@@ -163,6 +175,8 @@ test('a super admin can access every protected admin module without direct permi
         'admin.settings.index',
         'admin.homepage.index',
         'admin.affiliate_page.index',
+        'admin.affiliates.index',
+        'admin.affiliate-applications.index',
         'admin.frontend_navigation.index',
         'admin.about.index',
         'admin.seo.index',

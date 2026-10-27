@@ -19,11 +19,16 @@
                     <span>Registered Users</span>
                 </a>
             @endif
+            @if($admin?->can('manage affiliates'))
+                <a href="{{ route('admin.affiliates.index') }}" class="{{ $baseClasses }} {{ request()->routeIs('admin.affiliates.*', 'admin.affiliate-applications.*') ? $activeClasses : $inactiveClasses }}" @if(request()->routeIs('admin.affiliates.*', 'admin.affiliate-applications.*')) aria-current="page" @endif>
+                    <i data-lucide="badge-dollar-sign" class="h-4 w-4" aria-hidden="true"></i>
+                    <span>Affiliate Management</span>
+                </a>
+            @endif
             @foreach([
                 ['icon' => 'building-2', 'label' => 'Workspace Management'],
                 ['icon' => 'cpu', 'label' => 'AI Router & Prompts'],
                 ['icon' => 'server', 'label' => 'Job Queues & Latency'],
-                ['icon' => 'badge-dollar-sign', 'label' => 'Affiliate Approvals'],
             ] as $futureItem)
                 <span class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2 text-slate-400 opacity-60" aria-disabled="true" title="Not available in Phase 14A">
                     <i data-lucide="{{ $futureItem['icon'] }}" class="h-4 w-4" aria-hidden="true"></i>

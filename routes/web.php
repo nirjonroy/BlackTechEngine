@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AboutPageController;
+use App\Http\Controllers\Admin\AffiliateApplicationController;
+use App\Http\Controllers\Admin\AffiliateController;
 use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
@@ -100,6 +102,13 @@ Route::middleware('auth:admin')->group(function () {
     Route::middleware(PermissionMiddleware::using('manage affiliate page settings', 'admin'))->group(function () {
         Route::get('/admin/affiliate-page-settings', [AffiliatePageSettingController::class, 'index'])->name('admin.affiliate_page.index');
         Route::post('/admin/affiliate-page-settings', [AffiliatePageSettingController::class, 'update'])->name('admin.affiliate_page.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('manage affiliates', 'admin'))->group(function () {
+        Route::get('/admin/affiliates', [AffiliateController::class, 'index'])->name('admin.affiliates.index');
+        Route::get('/admin/affiliates/{affiliate}', [AffiliateController::class, 'show'])->name('admin.affiliates.show');
+        Route::get('/admin/affiliate-applications', [AffiliateApplicationController::class, 'index'])->name('admin.affiliate-applications.index');
+        Route::get('/admin/affiliate-applications/{affiliateApplication}', [AffiliateApplicationController::class, 'show'])->name('admin.affiliate-applications.show');
     });
 
     Route::middleware(PermissionMiddleware::using('manage frontend navigation', 'admin'))->group(function () {
