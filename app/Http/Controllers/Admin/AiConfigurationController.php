@@ -13,6 +13,7 @@ use App\Models\AiConfigurationAudit;
 use App\Models\AiModel;
 use App\Models\AiProvider;
 use App\Models\AiWorkloadRoute;
+use App\Services\AiMetadataWriteGate;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -20,6 +21,8 @@ use Illuminate\Support\Str;
 
 class AiConfigurationController extends Controller
 {
+    public function __construct(private AiMetadataWriteGate $writeGate) {}
+
     public function index(): View
     {
         return view('admin.ai-configuration.index', [
@@ -77,6 +80,7 @@ class AiConfigurationController extends Controller
             'filters' => $filters,
             'healthStatuses' => AiProviderHealthStatus::cases(),
             'providers' => $providersQuery->paginate($filters['per_page'])->withQueryString(),
+            'metadataWritesAvailable' => $this->writeGate->isAvailable(),
         ]);
     }
 
@@ -130,6 +134,7 @@ class AiConfigurationController extends Controller
             'filters' => $filters,
             'modalities' => AiModelModality::cases(),
             'models' => $modelsQuery->paginate($filters['per_page'])->withQueryString(),
+            'metadataWritesAvailable' => $this->writeGate->isAvailable(),
             'providers' => AiProvider::query()->orderBy('display_name')->orderBy('id')->get(['id', 'display_name']),
         ]);
     }

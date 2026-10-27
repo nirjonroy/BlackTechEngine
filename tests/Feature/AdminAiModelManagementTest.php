@@ -96,7 +96,7 @@ test('authorized and super admins can access every AI configuration page', funct
     }
 });
 
-test('AI configuration routes are read only and use the admin permission middleware', function () {
+test('AI configuration catalog routes are read only and use the admin permission middleware', function () {
     foreach (aiConfigurationRouteNames() as $routeName) {
         $route = Route::getRoutes()->getByName($routeName);
 
@@ -106,9 +106,8 @@ test('AI configuration routes are read only and use the admin permission middlew
             ->and(implode('|', $route->gatherMiddleware()))->toContain('manage ai models');
     }
 
-    expect(collect(Route::getRoutes()->getRoutes()))
-        ->filter(fn ($route): bool => str_starts_with((string) $route->getName(), 'admin.ai-configuration.'))
-        ->each(fn ($route) => $route->methods()->toBe(['GET', 'HEAD']));
+    expect(Route::getRoutes()->getByName('admin.ai-configuration.workload-routes')->methods())
+        ->toBe(['GET', 'HEAD']);
 });
 
 test('empty AI configuration tables render honest zero and empty states', function () {

@@ -33,6 +33,7 @@ class AiProvider extends Model
         'health_status' => 'unverified',
         'request_timeout_seconds' => self::DEFAULT_REQUEST_TIMEOUT_SECONDS,
         'retry_limit' => 0,
+        'lock_version' => 0,
     ];
 
     /** @return HasMany<AiModel, $this> */
@@ -124,6 +125,7 @@ class AiProvider extends Model
             'request_timeout_seconds' => 'integer',
             'retry_limit' => 'integer',
             'last_verified_at' => 'datetime',
+            'lock_version' => 'integer',
         ];
     }
 }

@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\AffiliateApplicationController;
 use App\Http\Controllers\Admin\AffiliateController;
 use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AiConfigurationController;
+use App\Http\Controllers\Admin\AiModelController;
+use App\Http\Controllers\Admin\AiProviderController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
@@ -70,7 +72,15 @@ Route::middleware('auth:admin')->group(function () {
     Route::middleware(PermissionMiddleware::using('manage ai models', 'admin'))->group(function () {
         Route::get('/admin/ai-configuration', [AiConfigurationController::class, 'index'])->name('admin.ai-configuration.index');
         Route::get('/admin/ai-configuration/providers', [AiConfigurationController::class, 'providers'])->name('admin.ai-configuration.providers');
+        Route::get('/admin/ai-configuration/providers/create', [AiProviderController::class, 'create'])->name('admin.ai-configuration.providers.create');
+        Route::post('/admin/ai-configuration/providers', [AiProviderController::class, 'store'])->name('admin.ai-configuration.providers.store');
+        Route::get('/admin/ai-configuration/providers/{aiProvider}/edit', [AiProviderController::class, 'edit'])->name('admin.ai-configuration.providers.edit');
+        Route::patch('/admin/ai-configuration/providers/{aiProvider}', [AiProviderController::class, 'update'])->name('admin.ai-configuration.providers.update');
         Route::get('/admin/ai-configuration/models', [AiConfigurationController::class, 'models'])->name('admin.ai-configuration.models');
+        Route::get('/admin/ai-configuration/models/create', [AiModelController::class, 'create'])->name('admin.ai-configuration.models.create');
+        Route::post('/admin/ai-configuration/models', [AiModelController::class, 'store'])->name('admin.ai-configuration.models.store');
+        Route::get('/admin/ai-configuration/models/{aiModel}/edit', [AiModelController::class, 'edit'])->name('admin.ai-configuration.models.edit');
+        Route::patch('/admin/ai-configuration/models/{aiModel}', [AiModelController::class, 'update'])->name('admin.ai-configuration.models.update');
         Route::get('/admin/ai-configuration/workload-routes', [AiConfigurationController::class, 'workloadRoutes'])->name('admin.ai-configuration.workload-routes');
     });
 

@@ -1,6 +1,10 @@
 <x-admin.layout title="AI Provider Catalog" :breadcrumbs="[['label' => 'Mission Control', 'route' => 'admin.dashboard'], ['label' => 'AI Models & Routing', 'route' => 'admin.ai-configuration.index'], ['label' => 'Providers']]">
     @include('admin.ai-configuration.partials.header')
 
+    @unless($metadataWritesAvailable)
+        <div class="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-xs leading-5 text-amber-800 dark:text-amber-200" role="note"><strong>Metadata changes are currently unavailable.</strong> The concurrency migration must be separately rehearsed and deployed before the server-side write gate can be enabled.</div>
+    @endunless
+
     <section class="bte-card overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800" aria-labelledby="provider-catalog-heading">
         <div class="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-7">
             <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
@@ -8,7 +12,12 @@
                     <h2 id="provider-catalog-heading" class="font-heading text-lg font-bold">Provider catalog</h2>
                     <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Persisted provider metadata only; no credentials or live connectivity checks.</p>
                 </div>
-                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">{{ number_format($providers->total()) }} matching</span>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">{{ number_format($providers->total()) }} matching</span>
+                    @if($metadataWritesAvailable)
+                        <a href="{{ route('admin.ai-configuration.providers.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-500/20 transition hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"><i data-lucide="plus" class="h-4 w-4" aria-hidden="true"></i>Create provider</a>
+                    @endif
+                </div>
             </div>
 
             <form method="GET" action="{{ route('admin.ai-configuration.providers') }}" class="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-12" role="search">
@@ -39,7 +48,7 @@
         @else
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[76rem] text-left text-xs">
-                    <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 dark:bg-slate-900/40 dark:text-slate-400"><tr><th class="px-5 py-3 sm:px-7" scope="col">Provider</th><th class="px-5 py-3" scope="col">State</th><th class="px-5 py-3" scope="col">Health</th><th class="px-5 py-3" scope="col">Adapter</th><th class="px-5 py-3" scope="col">Models</th><th class="px-5 py-3" scope="col">Policy</th><th class="px-5 py-3 sm:px-7" scope="col">Last verified</th></tr></thead>
+                    <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 dark:bg-slate-900/40 dark:text-slate-400"><tr><th class="px-5 py-3 sm:px-7" scope="col">Provider</th><th class="px-5 py-3" scope="col">State</th><th class="px-5 py-3" scope="col">Health</th><th class="px-5 py-3" scope="col">Adapter</th><th class="px-5 py-3" scope="col">Models</th><th class="px-5 py-3" scope="col">Policy</th><th class="px-5 py-3" scope="col">Last verified</th>@if($metadataWritesAvailable)<th class="px-5 py-3 text-right sm:px-7" scope="col">Action</th>@endif</tr></thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                         @foreach($providers as $provider)
                             @php($health = $provider->getRawOriginal('health_status'))
@@ -50,7 +59,8 @@
                                 <td class="px-5 py-4 text-slate-500 dark:text-slate-400">{{ $provider->adapter_type ?: 'Not configured' }}</td>
                                 <td class="px-5 py-4 font-bold">{{ number_format($provider->models_count) }}</td>
                                 <td class="px-5 py-4 text-slate-500 dark:text-slate-400">{{ $provider->request_timeout_seconds }}s timeout · {{ $provider->retry_limit }} retries</td>
-                                <td class="px-5 py-4 text-slate-500 dark:text-slate-400 sm:px-7"><time datetime="{{ $provider->last_verified_at?->toAtomString() }}">{{ $provider->last_verified_at?->format('M j, Y H:i') ?? 'Never' }}</time></td>
+                                <td class="px-5 py-4 text-slate-500 dark:text-slate-400"><time datetime="{{ $provider->last_verified_at?->toAtomString() }}">{{ $provider->last_verified_at?->format('M j, Y H:i') ?? 'Never' }}</time></td>
+                                @if($metadataWritesAvailable)<td class="px-5 py-4 text-right sm:px-7"><a href="{{ route('admin.ai-configuration.providers.edit', $provider) }}" class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 font-bold text-indigo-600 transition hover:bg-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-indigo-400">Edit <i data-lucide="pencil" class="h-3.5 w-3.5" aria-hidden="true"></i></a></td>@endif
                             </tr>
                         @endforeach
                     </tbody>

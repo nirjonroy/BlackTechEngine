@@ -24,6 +24,7 @@ class AiModel extends Model
         'capabilities' => '[]',
         'is_enabled' => false,
         'availability_status' => 'unverified',
+        'lock_version' => 0,
     ];
 
     /** @return BelongsTo<AiProvider, $this> */
@@ -76,6 +77,7 @@ class AiModel extends Model
             'is_enabled' => 'boolean',
             'availability_status' => AiModelAvailabilityStatus::class,
             'last_verified_at' => 'datetime',
+            'lock_version' => 'integer',
         ];
     }
 }

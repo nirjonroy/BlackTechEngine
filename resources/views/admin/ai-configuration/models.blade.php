@@ -1,9 +1,13 @@
 <x-admin.layout title="AI Model Catalog" :breadcrumbs="[['label' => 'Mission Control', 'route' => 'admin.dashboard'], ['label' => 'AI Models & Routing', 'route' => 'admin.ai-configuration.index'], ['label' => 'Models']]">
     @include('admin.ai-configuration.partials.header')
 
+    @unless($metadataWritesAvailable)
+        <div class="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-xs leading-5 text-amber-800 dark:text-amber-200" role="note"><strong>Metadata changes are currently unavailable.</strong> The concurrency migration must be separately rehearsed and deployed before the server-side write gate can be enabled.</div>
+    @endunless
+
     <section class="bte-card overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800" aria-labelledby="model-catalog-heading">
         <div class="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-7">
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="model-catalog-heading" class="font-heading text-lg font-bold">Model catalog</h2><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Review identifiers and capability metadata; no model is invoked from this screen.</p></div><span class="text-xs font-semibold text-slate-500 dark:text-slate-400">{{ number_format($models->total()) }} matching</span></div>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="model-catalog-heading" class="font-heading text-lg font-bold">Model catalog</h2><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Review identifiers and capability metadata; no model is invoked from this screen.</p></div><div class="flex items-center gap-3"><span class="text-xs font-semibold text-slate-500 dark:text-slate-400">{{ number_format($models->total()) }} matching</span>@if($metadataWritesAvailable)<a href="{{ route('admin.ai-configuration.models.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-500/20 transition hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"><i data-lucide="plus" class="h-4 w-4" aria-hidden="true"></i>Create model</a>@endif</div></div>
             <form method="GET" action="{{ route('admin.ai-configuration.models') }}" class="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-12" role="search">
                 <div class="relative lg:col-span-4"><label for="model-search" class="sr-only">Search models</label><i data-lucide="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true"></i><input id="model-search" name="search" type="search" maxlength="100" value="{{ $filters['search'] }}" placeholder="Name, identifier, or provider" class="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white"></div>
                 <select name="provider" aria-label="Model provider" class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 lg:col-span-2"><option value="">All providers</option>@foreach($providers as $provider)<option value="{{ $provider->id }}" @selected($filters['provider'] === $provider->id)>{{ $provider->display_name }}</option>@endforeach</select>
@@ -18,7 +22,7 @@
         @else
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[76rem] text-left text-xs">
-                    <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 dark:bg-slate-900/40 dark:text-slate-400"><tr><th class="px-5 py-3 sm:px-7" scope="col">Model</th><th class="px-5 py-3" scope="col">Provider</th><th class="px-5 py-3" scope="col">Modality</th><th class="px-5 py-3" scope="col">Capabilities</th><th class="px-5 py-3" scope="col">State</th><th class="px-5 py-3 sm:px-7" scope="col">Last verified</th></tr></thead>
+                    <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 dark:bg-slate-900/40 dark:text-slate-400"><tr><th class="px-5 py-3 sm:px-7" scope="col">Model</th><th class="px-5 py-3" scope="col">Provider</th><th class="px-5 py-3" scope="col">Modality</th><th class="px-5 py-3" scope="col">Capabilities</th><th class="px-5 py-3" scope="col">State</th><th class="px-5 py-3" scope="col">Last verified</th>@if($metadataWritesAvailable)<th class="px-5 py-3 text-right sm:px-7" scope="col">Action</th>@endif</tr></thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                         @foreach($models as $model)
                             @php($availability = $model->getRawOriginal('availability_status'))
@@ -28,7 +32,8 @@
                                 <td class="px-5 py-4 text-slate-500 dark:text-slate-400">{{ Str::headline($model->getRawOriginal('modality') ?: 'unknown') }}</td>
                                 <td class="px-5 py-4"><div class="flex max-w-sm flex-wrap gap-1.5">@forelse($model->capabilities as $capability)<span class="rounded-full bg-indigo-500/10 px-2 py-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400">{{ Str::headline($capability) }}</span>@empty<span class="text-slate-400">None declared</span>@endforelse</div></td>
                                 <td class="px-5 py-4"><span class="block font-bold {{ $model->is_enabled ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500' }}">{{ $model->is_enabled ? 'Enabled' : 'Disabled' }}</span><span class="mt-1 block text-[10px] text-slate-400">{{ Str::headline($availability ?: 'unknown') }}</span></td>
-                                <td class="px-5 py-4 text-slate-500 dark:text-slate-400 sm:px-7"><time datetime="{{ $model->last_verified_at?->toAtomString() }}">{{ $model->last_verified_at?->format('M j, Y H:i') ?? 'Never' }}</time></td>
+                                <td class="px-5 py-4 text-slate-500 dark:text-slate-400"><time datetime="{{ $model->last_verified_at?->toAtomString() }}">{{ $model->last_verified_at?->format('M j, Y H:i') ?? 'Never' }}</time></td>
+                                @if($metadataWritesAvailable)<td class="px-5 py-4 text-right sm:px-7"><a href="{{ route('admin.ai-configuration.models.edit', $model) }}" class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 font-bold text-indigo-600 transition hover:bg-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-indigo-400">Edit <i data-lucide="pencil" class="h-3.5 w-3.5" aria-hidden="true"></i></a></td>@endif
                             </tr>
                         @endforeach
                     </tbody>
