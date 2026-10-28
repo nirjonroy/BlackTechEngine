@@ -13,7 +13,9 @@ use App\Models\AiConfigurationAudit;
 use App\Models\AiModel;
 use App\Models\AiProvider;
 use App\Models\AiWorkloadRoute;
+use App\Services\Ai\AiProviderCredentialResolver;
 use App\Services\AiMetadataWriteGate;
+use App\Services\AiProviderVerificationGate;
 use App\Services\AiWorkloadDraftWriteGate;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,6 +27,8 @@ class AiConfigurationController extends Controller
     public function __construct(
         private AiMetadataWriteGate $writeGate,
         private AiWorkloadDraftWriteGate $draftWriteGate,
+        private AiProviderVerificationGate $providerVerificationGate,
+        private AiProviderCredentialResolver $credentialResolver,
     ) {}
 
     public function index(): View
@@ -48,7 +52,7 @@ class AiConfigurationController extends Controller
         $providersQuery = AiProvider::query()
             ->select([
                 'id', 'key', 'display_name', 'adapter_type', 'description', 'is_enabled',
-                'health_status', 'request_timeout_seconds', 'retry_limit', 'last_verified_at', 'created_at',
+                'health_status', 'request_timeout_seconds', 'retry_limit', 'last_verified_at', 'lock_version', 'created_at',
             ])
             ->withCount('models');
 
@@ -80,11 +84,19 @@ class AiConfigurationController extends Controller
             default => $providersQuery->orderBy('display_name')->orderBy('id'),
         };
 
+        $canVerifyAiProviders = $request->user('admin')?->can('verify ai providers') ?? false;
+
         return view('admin.ai-configuration.providers', [
+            'canVerifyAiProviders' => $canVerifyAiProviders,
             'filters' => $filters,
+            'geminiCredentialsConfigured' => $canVerifyAiProviders
+                && $this->credentialResolver->hasGeminiCredentials(),
+            'hasGeminiProvider' => AiProvider::query()->where('key', 'gemini')->exists(),
             'healthStatuses' => AiProviderHealthStatus::cases(),
             'providers' => $providersQuery->paginate($filters['per_page'])->withQueryString(),
             'metadataWritesAvailable' => $this->writeGate->isAvailable(),
+            'providerVerificationAvailable' => $this->providerVerificationGate->isAvailable(),
+            'showProviderActions' => $this->writeGate->isAvailable() || $canVerifyAiProviders,
         ]);
     }
 

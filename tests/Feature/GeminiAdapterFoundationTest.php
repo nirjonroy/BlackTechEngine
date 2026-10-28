@@ -73,7 +73,7 @@ test('adapter registry resolves only the code-owned Gemini adapter', function ()
             'The requested AI provider adapter is not registered.',
         )
         ->and(fn () => $registry->resolve('https://attacker.example'))->toThrow(InvalidArgumentException::class)
-        ->and(AiProvider::SUPPORTED_ADAPTER_TYPES)->toBe([]);
+        ->and(AiProvider::SUPPORTED_ADAPTER_TYPES)->toBe(['gemini']);
 });
 
 test('credential resolver reports presence without exposing a credential', function () {

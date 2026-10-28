@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\AffiliateController;
 use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AiConfigurationController;
 use App\Http\Controllers\Admin\AiModelController;
+use App\Http\Controllers\Admin\AiProviderBindingController;
 use App\Http\Controllers\Admin\AiProviderController;
+use App\Http\Controllers\Admin\AiProviderVerificationController;
 use App\Http\Controllers\Admin\AiWorkloadDraftController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
@@ -87,6 +89,14 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('/admin/ai-configuration/workload-routes', [AiWorkloadDraftController::class, 'store'])->name('admin.ai-configuration.workload-routes.store');
         Route::get('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}/edit', [AiWorkloadDraftController::class, 'edit'])->name('admin.ai-configuration.workload-routes.edit');
         Route::patch('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}', [AiWorkloadDraftController::class, 'update'])->name('admin.ai-configuration.workload-routes.update');
+    });
+
+    Route::middleware(PermissionMiddleware::using('verify ai providers', 'admin'))->group(function () {
+        Route::post('/admin/ai-configuration/providers/{aiProvider}/binding', [AiProviderBindingController::class, 'store'])
+            ->name('admin.ai-configuration.providers.binding.store');
+        Route::post('/admin/ai-configuration/providers/{aiProvider}/verification', [AiProviderVerificationController::class, 'store'])
+            ->middleware('throttle:ai-provider-verification')
+            ->name('admin.ai-configuration.providers.verification.store');
     });
 
     Route::middleware(PermissionMiddleware::using('edit users', 'admin'))->group(function () {

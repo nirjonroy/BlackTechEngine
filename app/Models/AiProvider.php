@@ -26,7 +26,7 @@ class AiProvider extends Model
     public const MAX_RETRY_LIMIT = 5;
 
     /** @var list<string> */
-    public const SUPPORTED_ADAPTER_TYPES = [];
+    public const SUPPORTED_ADAPTER_TYPES = ['gemini'];
 
     protected $attributes = [
         'is_enabled' => false,
@@ -73,7 +73,7 @@ class AiProvider extends Model
                 $adapterType = trim($value);
 
                 if (! in_array($adapterType, self::SUPPORTED_ADAPTER_TYPES, true)) {
-                    throw new InvalidArgumentException('No AI provider adapters are implemented.');
+                    throw new InvalidArgumentException('The AI provider adapter type is not supported.');
                 }
 
                 return $adapterType;

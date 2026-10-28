@@ -35,6 +35,7 @@ const ADMIN_PERMISSIONS = [
     'manage users',
     'edit users',
     'manage ai models',
+    'verify ai providers',
 ];
 
 beforeEach(function () {
