@@ -14,6 +14,7 @@ use App\Models\AiModel;
 use App\Models\AiProvider;
 use App\Models\AiWorkloadRoute;
 use App\Services\AiMetadataWriteGate;
+use App\Services\AiWorkloadDraftWriteGate;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -21,7 +22,10 @@ use Illuminate\Support\Str;
 
 class AiConfigurationController extends Controller
 {
-    public function __construct(private AiMetadataWriteGate $writeGate) {}
+    public function __construct(
+        private AiMetadataWriteGate $writeGate,
+        private AiWorkloadDraftWriteGate $draftWriteGate,
+    ) {}
 
     public function index(): View
     {
@@ -184,6 +188,7 @@ class AiConfigurationController extends Controller
         };
 
         return view('admin.ai-configuration.workload-routes', [
+            'draftWritesAvailable' => $this->draftWriteGate->isAvailable(),
             'filters' => $filters,
             'workloadRoutes' => $routesQuery->paginate($filters['per_page'])->withQueryString(),
         ]);

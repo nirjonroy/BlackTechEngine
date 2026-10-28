@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AiConfigurationController;
 use App\Http\Controllers\Admin\AiModelController;
 use App\Http\Controllers\Admin\AiProviderController;
+use App\Http\Controllers\Admin\AiWorkloadDraftController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
@@ -82,6 +83,10 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('/admin/ai-configuration/models/{aiModel}/edit', [AiModelController::class, 'edit'])->name('admin.ai-configuration.models.edit');
         Route::patch('/admin/ai-configuration/models/{aiModel}', [AiModelController::class, 'update'])->name('admin.ai-configuration.models.update');
         Route::get('/admin/ai-configuration/workload-routes', [AiConfigurationController::class, 'workloadRoutes'])->name('admin.ai-configuration.workload-routes');
+        Route::get('/admin/ai-configuration/workload-routes/create', [AiWorkloadDraftController::class, 'create'])->name('admin.ai-configuration.workload-routes.create');
+        Route::post('/admin/ai-configuration/workload-routes', [AiWorkloadDraftController::class, 'store'])->name('admin.ai-configuration.workload-routes.store');
+        Route::get('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}/edit', [AiWorkloadDraftController::class, 'edit'])->name('admin.ai-configuration.workload-routes.edit');
+        Route::patch('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}', [AiWorkloadDraftController::class, 'update'])->name('admin.ai-configuration.workload-routes.update');
     });
 
     Route::middleware(PermissionMiddleware::using('edit users', 'admin'))->group(function () {

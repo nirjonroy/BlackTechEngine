@@ -21,6 +21,7 @@ class AiWorkloadRoute extends Model
 
     protected $attributes = [
         'is_enabled' => false,
+        'lock_version' => 0,
     ];
 
     protected static function booted(): void
@@ -83,6 +84,7 @@ class AiWorkloadRoute extends Model
     {
         return [
             'is_enabled' => 'boolean',
+            'lock_version' => 'integer',
         ];
     }
 }
