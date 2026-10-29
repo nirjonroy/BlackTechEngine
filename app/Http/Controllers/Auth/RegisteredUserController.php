@@ -46,6 +46,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        $routeName = config('customer.workspaces_enabled') ? 'onboarding.start' : 'dashboard';
+
+        return redirect(route($routeName, absolute: false));
     }
 }

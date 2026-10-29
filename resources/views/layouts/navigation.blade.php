@@ -1,100 +1,81 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+<div x-cloak x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-slate-950/60 lg:hidden" x-on:click="sidebarOpen = false" aria-hidden="true"></div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+<aside class="bte-surface fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 transition-transform duration-200 lg:translate-x-0 dark:border-slate-800" x-bind:class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" aria-label="Customer navigation">
+    <div class="flex h-16 items-center justify-between border-b border-slate-200 px-5 dark:border-slate-800">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/25">
+                <i data-lucide="sparkles" class="h-5 w-5" aria-hidden="true"></i>
+            </span>
+            <span>
+                <span class="block font-heading text-base font-black leading-none">BlackTechEngine</span>
+                <span class="mt-1 block text-[10px] font-bold uppercase tracking-[0.18em] text-indigo-500">Customer Studio</span>
+            </span>
+        </a>
+        <button type="button" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 lg:hidden dark:hover:bg-slate-800" x-on:click="sidebarOpen = false" aria-label="Close customer navigation">
+            <i data-lucide="x" class="h-5 w-5" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+    @if (config('customer.workspaces_enabled'))
+        <div class="border-b border-slate-200 p-4 dark:border-slate-800">
+            <p class="mb-2 text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-400">Active workspace</p>
+            @if ($customerWorkspaces->isNotEmpty())
+                <div x-data="{ open: false }" class="relative">
+                    <button type="button" class="bte-card flex w-full items-center gap-3 rounded-xl p-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" x-on:click="open = ! open" x-bind:aria-expanded="open">
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-300"><i data-lucide="panels-top-left" class="h-4 w-4" aria-hidden="true"></i></span>
+                        <span class="min-w-0 flex-1 truncate text-sm font-bold">{{ $customerActiveWorkspace?->name ?? 'Choose workspace' }}</span>
+                        <i data-lucide="chevrons-up-down" class="h-4 w-4 text-slate-400" aria-hidden="true"></i>
+                    </button>
+                    <div x-cloak x-show="open" x-on:click.outside="open = false" class="bte-card absolute left-0 right-0 top-full z-20 mt-2 max-h-60 overflow-y-auto rounded-xl p-2 shadow-xl">
+                        @foreach ($customerWorkspaces as $navigationWorkspace)
+                            <form method="POST" action="{{ route('workspaces.active.update', $navigationWorkspace) }}">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm font-semibold hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-indigo-950/50">
+                                    <span class="truncate">{{ $navigationWorkspace->name }}</span>
+                                    @if ($customerActiveWorkspace?->is($navigationWorkspace))
+                                        <i data-lucide="check" class="h-4 w-4 text-indigo-500" aria-hidden="true"></i>
+                                    @endif
+                                </button>
+                            </form>
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('onboarding.start') }}" class="flex items-center gap-2 rounded-xl border border-dashed border-indigo-300 px-3 py-3 text-sm font-bold text-indigo-600 hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/50">
+                    <i data-lucide="plus" class="h-4 w-4" aria-hidden="true"></i> Create first workspace
+                </a>
+            @endif
         </div>
+    @endif
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
+    <nav class="flex-1 space-y-1 overflow-y-auto p-4">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold {{ request()->routeIs('dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}">
+            <i data-lucide="layout-dashboard" class="h-5 w-5" aria-hidden="true"></i> Dashboard
+        </a>
+        @if (config('customer.workspaces_enabled'))
+            <a href="{{ route('workspaces.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold {{ request()->routeIs('workspaces.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}">
+                <i data-lucide="blocks" class="h-5 w-5" aria-hidden="true"></i> Workspaces &amp; brands
+            </a>
+        @endif
+        <div class="pt-4">
+            <p class="px-3 text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-400">Account</p>
         </div>
+        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold {{ request()->routeIs('profile.*') ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}">
+            <i data-lucide="user-cog" class="h-5 w-5" aria-hidden="true"></i> Account settings
+        </a>
+    </nav>
+
+    <div class="border-t border-slate-200 p-4 dark:border-slate-800">
+        <div class="mb-3 flex items-center gap-3 px-2">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 text-sm font-black text-white">{{ str(auth()->user()->name)->substr(0, 1)->upper() }}</span>
+            <span class="min-w-0"><span class="block truncate text-sm font-bold">{{ auth()->user()->name }}</span><span class="block truncate text-xs text-slate-500 dark:text-slate-400">{{ auth()->user()->email }}</span></span>
+        </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:text-slate-300 dark:hover:bg-rose-950/40 dark:hover:text-rose-300">
+                <i data-lucide="log-out" class="h-5 w-5" aria-hidden="true"></i> Log out
+            </button>
+        </form>
     </div>
-</nav>
+</aside>

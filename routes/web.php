@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActiveWorkspaceController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AffiliateApplicationController;
 use App\Http\Controllers\Admin\AffiliateController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
 use App\Http\Controllers\Frontend\AffiliatePageController;
 use App\Http\Controllers\Frontend\BlogController as FrontendBlogController;
@@ -31,7 +34,9 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageController;
 use App\Http\Controllers\Frontend\RobotsController;
 use App\Http\Controllers\Frontend\SitemapController;
+use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 
@@ -45,9 +50,33 @@ Route::get('/blog/{slug}', [FrontendBlogController::class, 'show'])->name('blog.
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+if (config('customer.workspaces_enabled')) {
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/dashboard', CustomerDashboardController::class)->name('dashboard');
+
+        Route::get('/onboarding', [OnboardingController::class, 'start'])->name('onboarding.start');
+        Route::get('/onboarding/workspace', [WorkspaceController::class, 'create'])->name('onboarding.workspace.create');
+        Route::post('/onboarding/workspace', [WorkspaceController::class, 'store'])->name('onboarding.workspace.store');
+        Route::get('/onboarding/workspaces/{workspace}/brand', [BrandController::class, 'create'])->name('onboarding.brand.create');
+        Route::post('/onboarding/workspaces/{workspace}/brand', [BrandController::class, 'store'])->name('onboarding.brand.store');
+        Route::get('/onboarding/workspaces/{workspace}/brands/{brand}/confirm', [OnboardingController::class, 'confirm'])
+            ->scopeBindings()
+            ->name('onboarding.confirm');
+        Route::post('/onboarding/workspaces/{workspace}/brands/{brand}/complete', [OnboardingController::class, 'complete'])
+            ->scopeBindings()
+            ->name('onboarding.complete');
+
+        Route::put('/workspaces/{workspace}/active', ActiveWorkspaceController::class)->name('workspaces.active.update');
+        Route::resource('workspaces', WorkspaceController::class)->except('destroy');
+        Route::resource('workspaces.brands', BrandController::class)
+            ->except('destroy')
+            ->scoped();
+    });
+} else {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+}
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

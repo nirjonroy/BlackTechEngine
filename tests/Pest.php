@@ -48,3 +48,28 @@ function something()
 {
     // ..
 }
+
+function validWorkspacePayload(array $overrides = []): array
+{
+    return array_merge([
+        'name' => 'Acme Growth',
+        'timezone' => 'Asia/Dhaka',
+    ], $overrides);
+}
+
+function validBrandPayload(array $overrides = []): array
+{
+    return array_merge([
+        'name' => 'Acme AI',
+        'website_url' => 'https://acme.example',
+        'business_description' => 'A practical SaaS platform for growing teams.',
+        'industry' => 'SaaS',
+        'target_audience' => 'Marketing teams at growing B2B companies.',
+        'primary_market' => 'United States',
+        'preferred_language' => 'English',
+        'voice_tone' => 'Clear, confident, and helpful.',
+        'content_objectives' => "Build qualified traffic\nEducate buyers",
+        'seo_topic_categories' => "Technical SEO\nContent operations",
+        'is_active' => '1',
+    ], $overrides);
+}

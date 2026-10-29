@@ -27,7 +27,7 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('onboarding.start', absolute: false));
 });
 
 test('registration requires valid account details and matching passwords', function () {

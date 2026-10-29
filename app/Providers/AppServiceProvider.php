@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Admin;
 use App\Models\AiProvider;
+use App\View\Composers\CustomerLayoutComposer;
 use App\View\Composers\FrontendLayoutComposer;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -50,5 +51,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::composer('frontend.app', FrontendLayoutComposer::class);
+        View::composer('layouts.app', CustomerLayoutComposer::class);
     }
 }
