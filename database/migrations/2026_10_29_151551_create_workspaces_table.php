@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('workspaces', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('owner_id')->constrained('users')->restrictOnDelete();
             $table->string('name');
             $table->json('settings')->nullable();
             $table->timestamps();

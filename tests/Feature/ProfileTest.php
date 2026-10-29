@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\Brand;
 use App\Models\User;
+use App\Models\Workspace;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 test('profile page is displayed', function () {
@@ -209,6 +213,76 @@ test('user can delete their account', function () {
     $this->assertNull($user->fresh());
 });
 
+test('a workspace owner cannot delete their account or any workspace data', function () {
+    $owner = User::factory()->create();
+    $member = User::factory()->create();
+    $workspace = Workspace::factory()->for($owner, 'owner')->create();
+    $workspace->members()->attach($owner, ['role' => 'owner']);
+    $workspace->members()->attach($member, ['role' => 'member']);
+    $brand = Brand::factory()->for($workspace)->create();
+    $owner->forceFill(['active_workspace_id' => $workspace->id])->save();
+
+    $message = 'Your account owns one or more workspaces. Transfer or otherwise resolve those workspaces before deleting your account.';
+
+    $response = $this->followingRedirects()
+        ->actingAs($owner)
+        ->from(route('profile.edit'))
+        ->delete(route('profile.destroy'), ['password' => 'password']);
+
+    $response
+        ->assertOk()
+        ->assertViewIs('profile.edit')
+        ->assertSee($message);
+
+    $this->assertAuthenticatedAs($owner);
+    $this->assertDatabaseHas('users', ['id' => $owner->id]);
+    $this->assertDatabaseHas('workspaces', ['id' => $workspace->id, 'owner_id' => $owner->id]);
+    $this->assertDatabaseHas('brands', ['id' => $brand->id, 'workspace_id' => $workspace->id]);
+    $this->assertDatabaseHas('user_workspace', [
+        'user_id' => $owner->id,
+        'workspace_id' => $workspace->id,
+        'role' => 'owner',
+    ]);
+    $this->assertDatabaseHas('user_workspace', [
+        'user_id' => $member->id,
+        'workspace_id' => $workspace->id,
+        'role' => 'member',
+    ]);
+});
+
+test('database constraints reject direct deletion of a workspace owner', function () {
+    $owner = User::factory()->create();
+    $workspace = Workspace::factory()->for($owner, 'owner')->create();
+
+    expect(fn () => DB::table('users')->where('id', $owner->id)->delete())
+        ->toThrow(QueryException::class);
+
+    $this->assertDatabaseHas('users', ['id' => $owner->id]);
+    $this->assertDatabaseHas('workspaces', ['id' => $workspace->id, 'owner_id' => $owner->id]);
+});
+
+test('workspace membership does not prevent a non-owner from deleting their account', function () {
+    $owner = User::factory()->create();
+    $member = User::factory()->create();
+    $workspace = Workspace::factory()->for($owner, 'owner')->create();
+    $workspace->members()->attach($member, ['role' => 'member']);
+    $member->forceFill(['active_workspace_id' => $workspace->id])->save();
+
+    $this->actingAs($member)
+        ->delete(route('profile.destroy'), ['password' => 'password'])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/');
+
+    $this->assertGuest();
+    $this->assertDatabaseMissing('users', ['id' => $member->id]);
+    $this->assertDatabaseHas('users', ['id' => $owner->id]);
+    $this->assertDatabaseHas('workspaces', ['id' => $workspace->id, 'owner_id' => $owner->id]);
+    $this->assertDatabaseMissing('user_workspace', [
+        'user_id' => $member->id,
+        'workspace_id' => $workspace->id,
+    ]);
+});
+
 test('correct password must be provided to delete account', function () {
     $user = User::factory()->create();
 
@@ -223,5 +297,6 @@ test('correct password must be provided to delete account', function () {
         ->assertSessionHasErrorsIn('userDeletion', 'password')
         ->assertRedirect('/profile');
 
+    $this->assertAuthenticatedAs($user);
     $this->assertNotNull($user->fresh());
 });

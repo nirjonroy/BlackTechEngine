@@ -69,11 +69,27 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = $request->user();
+        $wasDeleted = DB::transaction(function () use ($request): bool {
+            $user = User::query()
+                ->lockForUpdate()
+                ->findOrFail($request->user()->getAuthIdentifier());
+
+            if ($user->ownedWorkspaces()->exists()) {
+                return false;
+            }
+
+            $user->delete();
+
+            return true;
+        });
+
+        if (! $wasDeleted) {
+            return Redirect::route('profile.edit')->withErrors([
+                'account' => 'Your account owns one or more workspaces. Transfer or otherwise resolve those workspaces before deleting your account.',
+            ], 'userDeletion');
+        }
 
         Auth::logout();
-
-        $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
