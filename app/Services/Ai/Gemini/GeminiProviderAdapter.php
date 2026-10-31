@@ -6,9 +6,12 @@ use App\Contracts\AiProviderAdapter;
 use App\Enums\AiProviderErrorCategory;
 use App\Services\Ai\AiProviderCredentialResolver;
 use App\Services\Ai\Exceptions\AiProviderException;
+use App\Services\Ai\Results\AiTextGenerationResult;
 use App\Services\Ai\Results\DiscoveredAiModel;
+use App\Services\Ai\Results\GeneratedAiContent;
 use App\Services\Ai\Results\ModelDiscoveryResult;
 use App\Services\Ai\Results\ProviderVerificationResult;
+use JsonException;
 
 class GeminiProviderAdapter implements AiProviderAdapter
 {
@@ -126,6 +129,62 @@ class GeminiProviderAdapter implements AiProviderAdapter
             false,
             $pagesFetched,
             'page_limit',
+        );
+    }
+
+    public function generateStructuredContent(string $modelId, string $prompt, int $maximumOutputTokens): AiTextGenerationResult
+    {
+        if (! $this->hasCredentials()) {
+            throw new AiProviderException(AiProviderErrorCategory::MissingCredentials, 'Gemini credentials are not configured.');
+        }
+
+        $payload = $this->transport->generateContent($modelId, $prompt, $maximumOutputTokens);
+        $candidate = $payload['candidates'][0] ?? null;
+        $text = is_array($candidate) ? ($candidate['content']['parts'][0]['text'] ?? null) : null;
+        $finishReason = is_array($candidate) ? ($candidate['finishReason'] ?? null) : null;
+
+        if (! is_string($text) || $text === '' || ($finishReason !== null && $finishReason !== 'STOP')) {
+            $this->throwMalformedContentResponse();
+        }
+
+        try {
+            $structured = json_decode($text, true, 64, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            $this->throwMalformedContentResponse();
+        }
+
+        if (! is_array($structured) || array_is_list($structured)) {
+            $this->throwMalformedContentResponse();
+        }
+
+        $usage = is_array($payload['usageMetadata'] ?? null) ? $payload['usageMetadata'] : [];
+
+        return new AiTextGenerationResult(
+            GeneratedAiContent::fromArray($structured),
+            $this->optionalTokenCount($usage, 'promptTokenCount'),
+            $this->optionalTokenCount($usage, 'candidatesTokenCount'),
+        );
+    }
+
+    /** @param array<string, mixed> $usage */
+    private function optionalTokenCount(array $usage, string $key): ?int
+    {
+        if (! array_key_exists($key, $usage)) {
+            return null;
+        }
+
+        if (! is_int($usage[$key]) || $usage[$key] < 0) {
+            $this->throwMalformedContentResponse();
+        }
+
+        return $usage[$key];
+    }
+
+    private function throwMalformedContentResponse(): never
+    {
+        throw new AiProviderException(
+            AiProviderErrorCategory::MalformedResponse,
+            'Gemini returned an invalid structured content response.',
         );
     }
 

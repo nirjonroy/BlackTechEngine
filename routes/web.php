@@ -25,7 +25,9 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AiContentGenerationController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ContentDraftController;
 use App\Http\Controllers\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
 use App\Http\Controllers\Frontend\AffiliatePageController;
@@ -72,6 +74,22 @@ if (config('customer.workspaces_enabled')) {
         Route::resource('workspaces.brands', BrandController::class)
             ->except('destroy')
             ->scoped();
+
+        if (config('ai.content_studio_enabled')) {
+            Route::get('/content-studio', [ContentDraftController::class, 'index'])->name('content-studio.index');
+            Route::get('/workspaces/{workspace}/brands/{brand}/content-drafts/create', [ContentDraftController::class, 'create'])
+                ->scopeBindings()->name('content-studio.drafts.create');
+            Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts', [ContentDraftController::class, 'store'])
+                ->scopeBindings()->name('content-studio.drafts.store');
+            Route::get('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}', [ContentDraftController::class, 'show'])
+                ->scopeBindings()->name('content-studio.drafts.show');
+            Route::get('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/edit', [ContentDraftController::class, 'edit'])
+                ->scopeBindings()->name('content-studio.drafts.edit');
+            Route::patch('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}', [ContentDraftController::class, 'update'])
+                ->scopeBindings()->name('content-studio.drafts.update');
+            Route::post('/workspaces/{workspace}/brands/{brand}/content-generations', AiContentGenerationController::class)
+                ->scopeBindings()->middleware('throttle:ai-content-generation')->name('content-studio.generations.store');
+        }
     });
 } else {
     Route::get('/dashboard', function () {

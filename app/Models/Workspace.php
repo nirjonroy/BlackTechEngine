@@ -36,6 +36,12 @@ class Workspace extends Model
         return $this->hasMany(Brand::class);
     }
 
+    /** @return HasMany<AiContentDraft, $this> */
+    public function contentDrafts(): HasMany
+    {
+        return $this->hasMany(AiContentDraft::class);
+    }
+
     public function isAccessibleBy(User $user): bool
     {
         return $this->owner_id === $user->getKey()

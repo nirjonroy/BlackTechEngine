@@ -58,6 +58,11 @@
                 <i data-lucide="blocks" class="h-5 w-5" aria-hidden="true"></i> Workspaces &amp; brands
             </a>
         @endif
+        @if (config('ai.content_studio_enabled'))
+            <a href="{{ route('content-studio.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold {{ request()->routeIs('content-studio.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}">
+                <i data-lucide="file-sparkles" class="h-5 w-5" aria-hidden="true"></i> AI Content Studio
+            </a>
+        @endif
         <div class="pt-4">
             <p class="px-3 text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-400">Account</p>
         </div>

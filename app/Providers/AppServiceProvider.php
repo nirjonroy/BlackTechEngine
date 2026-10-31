@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Admin;
 use App\Models\AiProvider;
+use App\Models\Workspace;
 use App\View\Composers\CustomerLayoutComposer;
 use App\View\Composers\FrontendLayoutComposer;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -39,6 +40,17 @@ class AppServiceProvider extends ServiceProvider
             return [
                 Limit::perMinute(3)->by('admin-provider-verification:'.$adminIdentifier),
                 Limit::perMinute(5)->by('provider-verification:'.$providerIdentifier),
+            ];
+        });
+
+        RateLimiter::for('ai-content-generation', function (Request $request): array {
+            $userIdentifier = $request->user()?->getAuthIdentifier() ?? $request->ip();
+            $workspace = $request->route('workspace');
+            $workspaceIdentifier = $workspace instanceof Workspace ? $workspace->getKey() : (string) $workspace;
+
+            return [
+                Limit::perMinute(3)->by('ai-content-user:'.$userIdentifier),
+                Limit::perMinute(10)->by('ai-content-workspace:'.$workspaceIdentifier),
             ];
         });
 

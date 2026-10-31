@@ -26,6 +26,10 @@ class GeminiHttpTransport
 
     private const REQUEST_TIMEOUT_SECONDS = 30;
 
+    private const MAX_OUTPUT_TOKENS = 8192;
+
+    private const MAX_PROMPT_BYTES = 50000;
+
     public function __construct(
         private readonly AiProviderCredentialResolver $credentialResolver,
     ) {}
@@ -100,6 +104,99 @@ class GeminiHttpTransport
                 AiProviderErrorCategory::MalformedResponse,
                 'Gemini returned an unexpected response shape.',
             );
+        }
+
+        return $payload;
+    }
+
+    /** @return array<string, mixed> */
+    public function generateContent(string $modelId, string $prompt, int $maximumOutputTokens): array
+    {
+        if (preg_match('/\A[A-Za-z0-9][A-Za-z0-9._-]{0,254}\z/D', $modelId) !== 1
+            || $prompt === ''
+            || strlen($prompt) > self::MAX_PROMPT_BYTES
+            || $maximumOutputTokens < 1
+            || $maximumOutputTokens > self::MAX_OUTPUT_TOKENS) {
+            throw new AiProviderException(
+                AiProviderErrorCategory::InvalidRequest,
+                'The Gemini content generation request is outside the permitted bounds.',
+            );
+        }
+
+        try {
+            $response = Http::baseUrl(self::BASE_URL)
+                ->acceptJson()
+                ->asJson()
+                ->withHeaders(['x-goog-api-key' => $this->credentialResolver->geminiApiKey()])
+                ->connectTimeout(self::CONNECT_TIMEOUT_SECONDS)
+                ->timeout(self::REQUEST_TIMEOUT_SECONDS)
+                ->withoutRedirecting()
+                ->post('/'.self::API_VERSION.'/models/'.$modelId.':generateContent', [
+                    'contents' => [[
+                        'role' => 'user',
+                        'parts' => [['text' => $prompt]],
+                    ]],
+                    'generationConfig' => [
+                        'temperature' => 0.3,
+                        'maxOutputTokens' => $maximumOutputTokens,
+                        'responseMimeType' => 'application/json',
+                        'responseSchema' => $this->contentResponseSchema(),
+                    ],
+                ]);
+        } catch (ConnectionException $exception) {
+            $category = preg_match('/cURL error 28|timed? out|timeout/i', $exception->getMessage()) === 1
+                ? AiProviderErrorCategory::Timeout
+                : AiProviderErrorCategory::NetworkFailure;
+
+            throw new AiProviderException($category, $this->safeMessage($category));
+        }
+
+        if (! $response->successful()) {
+            $this->throwResponseException($response);
+        }
+
+        return $this->decodedPayload($response->body());
+    }
+
+    /** @return array<string, mixed> */
+    private function contentResponseSchema(): array
+    {
+        return [
+            'type' => 'OBJECT',
+            'required' => ['seo_title', 'meta_description', 'suggested_slug', 'outline', 'content', 'faq_entries', 'internal_link_opportunities', 'external_research_topics', 'verification_notes'],
+            'properties' => [
+                'seo_title' => ['type' => 'STRING'],
+                'meta_description' => ['type' => 'STRING'],
+                'suggested_slug' => ['type' => 'STRING'],
+                'outline' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
+                'content' => ['type' => 'STRING'],
+                'faq_entries' => ['type' => 'ARRAY', 'items' => [
+                    'type' => 'OBJECT',
+                    'required' => ['question', 'answer'],
+                    'properties' => ['question' => ['type' => 'STRING'], 'answer' => ['type' => 'STRING']],
+                ]],
+                'internal_link_opportunities' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
+                'external_research_topics' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
+                'verification_notes' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
+            ],
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    private function decodedPayload(string $body): array
+    {
+        if (strlen($body) > self::MAX_RESPONSE_BYTES) {
+            throw new AiProviderException(AiProviderErrorCategory::MalformedResponse, 'The Gemini response exceeded the permitted in-memory size.');
+        }
+
+        try {
+            $payload = json_decode($body, true, 64, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            throw new AiProviderException(AiProviderErrorCategory::MalformedResponse, 'Gemini returned malformed JSON.');
+        }
+
+        if (! is_array($payload) || array_is_list($payload)) {
+            throw new AiProviderException(AiProviderErrorCategory::MalformedResponse, 'Gemini returned an unexpected response shape.');
         }
 
         return $payload;

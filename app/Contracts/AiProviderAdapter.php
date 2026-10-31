@@ -2,6 +2,7 @@
 
 namespace App\Contracts;
 
+use App\Services\Ai\Results\AiTextGenerationResult;
 use App\Services\Ai\Results\ModelDiscoveryResult;
 use App\Services\Ai\Results\ProviderVerificationResult;
 
@@ -14,4 +15,6 @@ interface AiProviderAdapter
     public function verifyConnection(): ProviderVerificationResult;
 
     public function discoverModels(): ModelDiscoveryResult;
+
+    public function generateStructuredContent(string $modelId, string $prompt, int $maximumOutputTokens): AiTextGenerationResult;
 }
