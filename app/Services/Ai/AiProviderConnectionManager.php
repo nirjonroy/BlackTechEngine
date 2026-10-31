@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\AiConfigurationAudit;
 use App\Models\AiProvider;
 use App\Services\Ai\Gemini\GeminiProviderAdapter;
+use App\Services\Ai\Results\ModelDiscoveryResult;
 use App\Services\Ai\Results\ProviderVerificationResult;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -101,6 +102,13 @@ class AiProviderConnectionManager
 
             return $result;
         });
+    }
+
+    public function discoverModels(AiProvider $provider): ModelDiscoveryResult
+    {
+        $provider->refresh();
+
+        return $this->boundAdapter($provider)->discoverModels();
     }
 
     private function boundAdapter(AiProvider $provider): AiProviderAdapter

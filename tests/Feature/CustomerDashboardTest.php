@@ -34,7 +34,7 @@ test('the dashboard renders only real workspace and brand counts', function () {
         ->assertViewHas('recentBrands', fn ($brands): bool => $brands->contains($activeBrand))
         ->assertSee('Growth Lab')
         ->assertSee('Active Brand')
-        ->assertSee('Not connected yet')
+        ->assertSee('AI generation is not configured yet')
         ->assertSee('No drafts are available');
     expect($response->viewData('activeWorkspace')->brands_count)->toBe(2)
         ->and($response->viewData('activeWorkspace')->active_brands_count)->toBe(1);

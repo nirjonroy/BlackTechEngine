@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AiConfigurationController;
 use App\Http\Controllers\Admin\AiModelController;
 use App\Http\Controllers\Admin\AiProviderBindingController;
 use App\Http\Controllers\Admin\AiProviderController;
+use App\Http\Controllers\Admin\AiProviderModelDiscoveryController;
 use App\Http\Controllers\Admin\AiProviderVerificationController;
 use App\Http\Controllers\Admin\AiWorkloadDraftController;
 use App\Http\Controllers\Admin\AuthController;
@@ -126,6 +127,9 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('/admin/ai-configuration/providers/{aiProvider}/verification', [AiProviderVerificationController::class, 'store'])
             ->middleware('throttle:ai-provider-verification')
             ->name('admin.ai-configuration.providers.verification.store');
+        Route::post('/admin/ai-configuration/providers/{aiProvider}/discovery', [AiProviderModelDiscoveryController::class, 'store'])
+            ->middleware('throttle:ai-provider-verification')
+            ->name('admin.ai-configuration.providers.discovery.store');
     });
 
     Route::middleware(PermissionMiddleware::using('edit users', 'admin'))->group(function () {

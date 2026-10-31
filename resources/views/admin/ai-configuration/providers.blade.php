@@ -13,6 +13,21 @@
         <div class="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 text-xs leading-5 text-cyan-800 dark:text-cyan-200" role="note"><strong>Gemini setup prerequisite:</strong> no provider with the normalized key <code class="font-mono">gemini</code> exists. Create its metadata explicitly before binding an adapter.</div>
     @endunless
 
+    <section class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Gemini provider setup workflow">
+        @foreach([
+            ['step' => '1', 'title' => 'Provider metadata', 'copy' => 'Create the normalized gemini provider record. It remains disabled by default.'],
+            ['step' => '2', 'title' => 'Server credential', 'copy' => 'Confirm credential availability without revealing the API key.'],
+            ['step' => '3', 'title' => 'Trusted connection', 'copy' => 'Bind the code-owned adapter and verify the non-generating Models endpoint.'],
+            ['step' => '4', 'title' => 'Model catalog', 'copy' => 'Preview discovered models, then review approved models separately.'],
+        ] as $workflowStep)
+            <div class="bte-card rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500/10 text-xs font-black text-indigo-600 dark:text-indigo-300">{{ $workflowStep['step'] }}</span>
+                <h2 class="mt-3 font-heading text-sm font-bold">{{ $workflowStep['title'] }}</h2>
+                <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{{ $workflowStep['copy'] }}</p>
+            </div>
+        @endforeach
+    </section>
+
     <section class="bte-card overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800" aria-labelledby="provider-catalog-heading">
         <div class="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-7">
             <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
@@ -91,6 +106,11 @@
                                                         <input type="hidden" name="confirm_verification" value="1">
                                                         <input type="hidden" name="lock_version" value="{{ $provider->lock_version }}">
                                                         <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 font-bold text-emerald-600 transition hover:bg-emerald-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-emerald-400">Verify connection</button>
+                                                    </form>
+                                                    <form method="POST" action="{{ route('admin.ai-configuration.providers.discovery.store', $provider) }}" aria-label="Preview Gemini model catalog">
+                                                        @csrf
+                                                        <input type="hidden" name="confirm_discovery" value="1">
+                                                        <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 font-bold text-violet-600 transition hover:bg-violet-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 dark:text-violet-400">Discover models</button>
                                                     </form>
                                                 @elseif($provider->adapter_type === 'gemini')
                                                     <span class="inline-flex items-center rounded-lg px-2.5 py-1.5 font-bold text-amber-700 dark:text-amber-300">Credential required</span>

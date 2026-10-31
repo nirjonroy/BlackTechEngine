@@ -58,7 +58,7 @@
                     @endforeach
                     <article class="bte-card rounded-2xl p-5">
                         <div class="flex items-center justify-between gap-3"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Generated drafts</p><i data-lucide="file-clock" class="h-5 w-5 text-slate-400" aria-hidden="true"></i></div>
-                        <p class="mt-3 text-sm font-bold text-slate-600 dark:text-slate-300">Not connected yet</p>
+                        <p class="mt-3 text-sm font-bold text-slate-600 dark:text-slate-300">AI generation is not configured yet</p>
                     </article>
                 </section>
 
