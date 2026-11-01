@@ -57,6 +57,12 @@ class AiMetadataManager
                     ]);
                 }
 
+                if ($lockedProvider->is_enabled) {
+                    throw ValidationException::withMessages([
+                        'metadata' => 'Deactivate this provider before changing its approved metadata.',
+                    ]);
+                }
+
                 $lockedProvider->key = $metadata['key'];
                 $lockedProvider->display_name = $metadata['display_name'];
                 $lockedProvider->description = $metadata['description'];
@@ -80,7 +86,7 @@ class AiMetadataManager
     }
 
     /**
-     * @param  array{ai_provider_id: int, provider_model_id: string, display_name: string, modality: string, capabilities: list<string>}  $metadata
+     * @param  array{ai_provider_id: int, provider_model_id: string, display_name: string, modality: string, capabilities: list<string>, input_token_limit: int|null, output_token_limit: int|null}  $metadata
      */
     public function createModel(Admin $admin, array $metadata): AiModel
     {
@@ -92,6 +98,8 @@ class AiMetadataManager
                 $model->display_name = $metadata['display_name'];
                 $model->modality = $metadata['modality'];
                 $model->capabilities = $metadata['capabilities'];
+                $model->input_token_limit = $metadata['input_token_limit'];
+                $model->output_token_limit = $metadata['output_token_limit'];
                 $model->is_enabled = false;
                 $model->availability_status = 'unverified';
                 $model->last_verified_at = null;
@@ -108,7 +116,7 @@ class AiMetadataManager
     }
 
     /**
-     * @param  array{ai_provider_id: int, provider_model_id: string, display_name: string, modality: string, capabilities: list<string>}  $metadata
+     * @param  array{ai_provider_id: int, provider_model_id: string, display_name: string, modality: string, capabilities: list<string>, input_token_limit: int|null, output_token_limit: int|null}  $metadata
      */
     public function updateModel(Admin $admin, AiModel $model, array $metadata, int $expectedVersion): bool
     {
@@ -122,11 +130,19 @@ class AiMetadataManager
                     ]);
                 }
 
+                if ($lockedModel->is_enabled) {
+                    throw ValidationException::withMessages([
+                        'metadata' => 'Deactivate this model before changing its approved metadata.',
+                    ]);
+                }
+
                 $lockedModel->ai_provider_id = $metadata['ai_provider_id'];
                 $lockedModel->provider_model_id = $metadata['provider_model_id'];
                 $lockedModel->display_name = $metadata['display_name'];
                 $lockedModel->modality = $metadata['modality'];
                 $lockedModel->capabilities = $metadata['capabilities'];
+                $lockedModel->input_token_limit = $metadata['input_token_limit'];
+                $lockedModel->output_token_limit = $metadata['output_token_limit'];
                 $changedFields = array_keys($lockedModel->getDirty());
 
                 if ($changedFields === []) {

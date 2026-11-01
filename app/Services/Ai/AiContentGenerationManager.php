@@ -20,6 +20,7 @@ use App\Models\Workspace;
 use App\Services\Ai\Exceptions\AiContentGenerationException;
 use App\Services\Ai\Exceptions\AiProviderException;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -29,6 +30,12 @@ use Throwable;
 class AiContentGenerationManager
 {
     public const WORKLOAD_KEY = 'seo-geo-content-generation';
+
+    public const MAXIMUM_INPUT_TOKENS = 4000;
+
+    public const MAXIMUM_OUTPUT_TOKENS = 2500;
+
+    public const FIRST_GENERATION_SINGLE_USE_KEY = 'first-controlled-gemini-generation';
 
     public function __construct(
         private readonly AiContentPromptBuilder $promptBuilder,
@@ -58,14 +65,50 @@ class AiContentGenerationManager
         /** @var AiModel $model */
         $model = $reservation['model'];
 
+        $inputTokenLimit = min(self::MAXIMUM_INPUT_TOKENS, $model->input_token_limit ?? self::MAXIMUM_INPUT_TOKENS);
+        $outputTokenLimit = min(
+            self::MAXIMUM_OUTPUT_TOKENS,
+            $model->output_token_limit ?? self::MAXIMUM_OUTPUT_TOKENS,
+            AiContentLength::from($input['content_length'])->maximumOutputTokens(),
+        );
+
         try {
-            $result = $this->adapterRegistry
-                ->resolve((string) $model->provider->adapter_type)
-                ->generateStructuredContent(
-                    $model->provider_model_id,
-                    $reservation['prompt'],
-                    AiContentLength::from($input['content_length'])->maximumOutputTokens(),
+            $adapter = $this->adapterRegistry->resolve((string) $model->provider->adapter_type);
+            $countedInputTokens = $adapter->countInputTokens(
+                $model->provider_model_id,
+                $reservation['prompt'],
+                $outputTokenLimit,
+            );
+
+            if ($countedInputTokens > $inputTokenLimit) {
+                $this->failAttempt($attempt, 'input_token_limit_exceeded');
+
+                throw new AiContentGenerationException(
+                    'input_token_limit_exceeded',
+                    'The content brief exceeds the approved AI input limit. Shorten the brief and try again.',
                 );
+            }
+
+            $result = $adapter->generateStructuredContent(
+                $model->provider_model_id,
+                $reservation['prompt'],
+                $outputTokenLimit,
+            );
+
+            if (($result->inputTokens !== null && $result->inputTokens > $inputTokenLimit)
+                || ($result->outputTokens !== null && $result->outputTokens > $outputTokenLimit)) {
+                $this->failAttempt(
+                    $attempt,
+                    'provider_token_limit_mismatch',
+                    $result->inputTokens,
+                    $result->outputTokens,
+                );
+
+                throw new AiContentGenerationException(
+                    'provider_token_limit_mismatch',
+                    'AI generation exceeded an approved token limit, so no draft was saved.',
+                );
+            }
         } catch (InvalidArgumentException) {
             $this->failAttempt($attempt, 'invalid_configuration');
 
@@ -128,6 +171,12 @@ class AiContentGenerationManager
      */
     private function reserve(User $user, Workspace $workspace, Brand $brand, array $input): array
     {
+        $firstGenerationTest = $this->firstGenerationTestEnabled();
+
+        if ($firstGenerationTest) {
+            $this->ensureApprovedFirstGenerationTenant($user, $workspace, $brand);
+        }
+
         $existing = AiGenerationAttempt::query()
             ->whereBelongsTo($user)
             ->where('idempotency_key', $input['idempotency_key'])
@@ -141,7 +190,7 @@ class AiContentGenerationManager
             throw new AiContentGenerationException('duplicate_request', 'This generation request has already been submitted.');
         }
 
-        $dailyLimit = (int) config('ai.content_generation_daily_limit', 20);
+        $dailyLimit = $firstGenerationTest ? 1 : (int) config('ai.content_generation_daily_limit', 20);
         $dailyAttempts = AiGenerationAttempt::query()
             ->where(fn ($query) => $query->whereBelongsTo($user)->orWhereBelongsTo($workspace))
             ->where('created_at', '>=', now()->startOfDay())
@@ -153,16 +202,28 @@ class AiContentGenerationManager
 
         $model = $this->eligibleModel();
         $prompt = $this->promptBuilder->build($brand, $input);
-        $attempt = AiGenerationAttempt::query()->create([
-            'correlation_id' => (string) Str::uuid(),
-            'idempotency_key' => $input['idempotency_key'],
-            'workspace_id' => $workspace->getKey(),
-            'brand_id' => $brand->getKey(),
-            'user_id' => $user->getKey(),
-            'ai_model_id' => $model->getKey(),
-            'status' => AiGenerationAttemptStatus::Pending,
-            'prompt_hash' => hash('sha256', $prompt),
-        ]);
+        try {
+            $attempt = AiGenerationAttempt::query()->create([
+                'correlation_id' => (string) Str::uuid(),
+                'idempotency_key' => $input['idempotency_key'],
+                'single_use_key' => $firstGenerationTest ? self::FIRST_GENERATION_SINGLE_USE_KEY : null,
+                'workspace_id' => $workspace->getKey(),
+                'brand_id' => $brand->getKey(),
+                'user_id' => $user->getKey(),
+                'ai_model_id' => $model->getKey(),
+                'status' => AiGenerationAttemptStatus::Pending,
+                'prompt_hash' => hash('sha256', $prompt),
+            ]);
+        } catch (QueryException $exception) {
+            if ($firstGenerationTest && preg_match('/single_use_key|ai_generation_attempts_single_use_key_unique/i', $exception->getMessage()) === 1) {
+                throw new AiContentGenerationException(
+                    'single_use_consumed',
+                    'The controlled Gemini generation attempt has already been used. Further generation remains disabled.',
+                );
+            }
+
+            throw $exception;
+        }
 
         return compact('attempt', 'model', 'prompt') + ['draft' => null];
     }
@@ -186,7 +247,8 @@ class AiContentGenerationManager
             && $provider->is_enabled
             && $provider->health_status === AiProviderHealthStatus::Healthy
             && is_string($provider->adapter_type)
-            && in_array($provider->adapter_type, AiProvider::SUPPORTED_ADAPTER_TYPES, true);
+            && in_array($provider->adapter_type, AiProvider::SUPPORTED_ADAPTER_TYPES, true)
+            && (! $this->firstGenerationTestEnabled() || $route->fallback_ai_model_id === null);
 
         if (! $eligible) {
             throw new AiContentGenerationException('missing_configuration', 'AI generation is not configured yet.');
@@ -195,12 +257,42 @@ class AiContentGenerationManager
         return $model;
     }
 
-    private function failAttempt(AiGenerationAttempt $attempt, string $category): void
-    {
+    private function failAttempt(
+        AiGenerationAttempt $attempt,
+        string $category,
+        ?int $inputTokens = null,
+        ?int $outputTokens = null,
+    ): void {
         $attempt->update([
             'status' => AiGenerationAttemptStatus::Failed,
             'error_category' => $category,
+            'input_tokens' => $inputTokens,
+            'output_tokens' => $outputTokens,
             'completed_at' => now(),
         ]);
+    }
+
+    private function firstGenerationTestEnabled(): bool
+    {
+        return (bool) config('ai.first_generation_test.enabled', false);
+    }
+
+    private function ensureApprovedFirstGenerationTenant(User $user, Workspace $workspace, Brand $brand): void
+    {
+        $approvedUserId = (int) config('ai.first_generation_test.user_id', 0);
+        $approvedWorkspaceId = (int) config('ai.first_generation_test.workspace_id', 0);
+        $approvedBrandId = (int) config('ai.first_generation_test.brand_id', 0);
+
+        if ($approvedUserId < 1
+            || $approvedWorkspaceId < 1
+            || $approvedBrandId < 1
+            || $user->getKey() !== $approvedUserId
+            || $workspace->getKey() !== $approvedWorkspaceId
+            || $brand->getKey() !== $approvedBrandId) {
+            throw new AiContentGenerationException(
+                'single_use_not_authorized',
+                'This account, workspace, and brand are not approved for the controlled Gemini generation test.',
+            );
+        }
     }
 }

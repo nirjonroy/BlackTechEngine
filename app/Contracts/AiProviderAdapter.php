@@ -16,5 +16,7 @@ interface AiProviderAdapter
 
     public function discoverModels(): ModelDiscoveryResult;
 
+    public function countInputTokens(string $modelId, string $prompt, int $maximumOutputTokens): int;
+
     public function generateStructuredContent(string $modelId, string $prompt, int $maximumOutputTokens): AiTextGenerationResult;
 }

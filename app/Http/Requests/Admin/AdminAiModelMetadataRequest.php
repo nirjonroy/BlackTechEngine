@@ -37,6 +37,8 @@ class AdminAiModelMetadataRequest extends FormRequest
             'modality' => ['required', Rule::in(array_column(AiModelModality::cases(), 'value'))],
             'capabilities' => ['present', 'array', 'max:'.count(AiModelCapability::cases())],
             'capabilities.*' => ['required', 'string', 'distinct', Rule::in(array_column(AiModelCapability::cases(), 'value'))],
+            'input_token_limit' => ['nullable', 'integer', 'min:1', 'max:2147483647'],
+            'output_token_limit' => ['nullable', 'integer', 'min:1', 'max:2147483647'],
             'lock_version' => $this->isMethod('PATCH')
                 ? ['required', 'integer', 'min:0']
                 : ['prohibited'],
@@ -48,7 +50,10 @@ class AdminAiModelMetadataRequest extends FormRequest
     {
         return [
             function (Validator $validator): void {
-                $allowedFields = ['ai_provider_id', 'provider_model_id', 'display_name', 'modality', 'capabilities'];
+                $allowedFields = [
+                    'ai_provider_id', 'provider_model_id', 'display_name', 'modality', 'capabilities',
+                    'input_token_limit', 'output_token_limit',
+                ];
 
                 if ($this->isMethod('PATCH')) {
                     $allowedFields[] = 'lock_version';
@@ -86,7 +91,7 @@ class AdminAiModelMetadataRequest extends FormRequest
         ];
     }
 
-    /** @return array{ai_provider_id: int, provider_model_id: string, display_name: string, modality: string, capabilities: list<string>} */
+    /** @return array{ai_provider_id: int, provider_model_id: string, display_name: string, modality: string, capabilities: list<string>, input_token_limit: int|null, output_token_limit: int|null} */
     public function metadata(): array
     {
         $validated = $this->validated();
@@ -97,6 +102,8 @@ class AdminAiModelMetadataRequest extends FormRequest
             'display_name' => (string) $validated['display_name'],
             'modality' => (string) $validated['modality'],
             'capabilities' => array_values($validated['capabilities']),
+            'input_token_limit' => isset($validated['input_token_limit']) ? (int) $validated['input_token_limit'] : null,
+            'output_token_limit' => isset($validated['output_token_limit']) ? (int) $validated['output_token_limit'] : null,
         ];
     }
 
@@ -114,6 +121,8 @@ class AdminAiModelMetadataRequest extends FormRequest
             'provider_model_id' => is_string($providerModelId) ? trim($providerModelId) : $providerModelId,
             'display_name' => is_string($displayName) ? trim($displayName) : $displayName,
             'capabilities' => $this->has('capabilities') ? $this->input('capabilities') : [],
+            'input_token_limit' => $this->filled('input_token_limit') ? $this->input('input_token_limit') : null,
+            'output_token_limit' => $this->filled('output_token_limit') ? $this->input('output_token_limit') : null,
         ]);
     }
 }

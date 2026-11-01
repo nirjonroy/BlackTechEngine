@@ -251,7 +251,8 @@ test('enabled routes cannot be changed through draft management', function () {
 
     $this->actingAs($admin, 'admin')
         ->get(route('admin.ai-configuration.workload-routes.edit', $route))
-        ->assertConflict();
+        ->assertOk()
+        ->assertSee('Deactivate this workload before changing its approved routing metadata.');
 
     $this->patch(route('admin.ai-configuration.workload-routes.update', $route), aiWorkloadDraftPayload([
         'workload_key' => $route->workload_key,

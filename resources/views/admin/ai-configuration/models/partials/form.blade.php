@@ -58,5 +58,22 @@
         @error('capabilities.*')<p class="mt-2 text-xs font-semibold text-rose-600 dark:text-rose-400">{{ $message }}</p>@enderror
     </fieldset>
 
+    <fieldset class="rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+        <legend class="px-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Discovered token limits</legend>
+        <p class="text-xs leading-5 text-slate-500 dark:text-slate-400">Copy these values only from the trusted model discovery preview. Activation remains unavailable until both limits are recorded.</p>
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+                <label for="input_token_limit" class="block text-xs font-bold text-slate-600 dark:text-slate-300">Input token limit</label>
+                <input id="input_token_limit" name="input_token_limit" type="number" min="1" max="2147483647" value="{{ old('input_token_limit', $model?->input_token_limit) }}" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                @error('input_token_limit')<p class="mt-2 text-xs font-semibold text-rose-600 dark:text-rose-400">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="output_token_limit" class="block text-xs font-bold text-slate-600 dark:text-slate-300">Output token limit</label>
+                <input id="output_token_limit" name="output_token_limit" type="number" min="1" max="2147483647" value="{{ old('output_token_limit', $model?->output_token_limit) }}" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                @error('output_token_limit')<p class="mt-2 text-xs font-semibold text-rose-600 dark:text-rose-400">{{ $message }}</p>@enderror
+            </div>
+        </div>
+    </fieldset>
+
     <div class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 dark:border-slate-800 sm:flex-row sm:justify-end"><a href="{{ route('admin.ai-configuration.models') }}" class="inline-flex items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-xs font-bold text-slate-600 transition hover:border-cyan-500 hover:text-cyan-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:text-slate-300">Cancel</a><button type="submit" @disabled($providers->isEmpty()) class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"><i data-lucide="save" class="h-4 w-4" aria-hidden="true"></i>{{ $submitLabel }}</button></div>
 </form>

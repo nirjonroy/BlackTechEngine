@@ -19,6 +19,8 @@ class AiModelFactory extends Factory
             'display_name' => fake()->words(3, true),
             'modality' => AiModelModality::Text,
             'capabilities' => [],
+            'input_token_limit' => null,
+            'output_token_limit' => null,
             'is_enabled' => false,
             'availability_status' => AiModelAvailabilityStatus::Unverified,
             'last_verified_at' => null,

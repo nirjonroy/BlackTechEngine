@@ -6,11 +6,14 @@ use App\Http\Controllers\Admin\AffiliateApplicationController;
 use App\Http\Controllers\Admin\AffiliateController;
 use App\Http\Controllers\Admin\AffiliatePageSettingController;
 use App\Http\Controllers\Admin\AiConfigurationController;
+use App\Http\Controllers\Admin\AiModelActivationController;
 use App\Http\Controllers\Admin\AiModelController;
+use App\Http\Controllers\Admin\AiProviderActivationController;
 use App\Http\Controllers\Admin\AiProviderBindingController;
 use App\Http\Controllers\Admin\AiProviderController;
 use App\Http\Controllers\Admin\AiProviderModelDiscoveryController;
 use App\Http\Controllers\Admin\AiProviderVerificationController;
+use App\Http\Controllers\Admin\AiWorkloadActivationController;
 use App\Http\Controllers\Admin\AiWorkloadDraftController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
@@ -127,16 +130,22 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('/admin/ai-configuration/providers', [AiProviderController::class, 'store'])->name('admin.ai-configuration.providers.store');
         Route::get('/admin/ai-configuration/providers/{aiProvider}/edit', [AiProviderController::class, 'edit'])->name('admin.ai-configuration.providers.edit');
         Route::patch('/admin/ai-configuration/providers/{aiProvider}', [AiProviderController::class, 'update'])->name('admin.ai-configuration.providers.update');
+        Route::patch('/admin/ai-configuration/providers/{aiProvider}/activation', AiProviderActivationController::class)
+            ->name('admin.ai-configuration.providers.activation.update');
         Route::get('/admin/ai-configuration/models', [AiConfigurationController::class, 'models'])->name('admin.ai-configuration.models');
         Route::get('/admin/ai-configuration/models/create', [AiModelController::class, 'create'])->name('admin.ai-configuration.models.create');
         Route::post('/admin/ai-configuration/models', [AiModelController::class, 'store'])->name('admin.ai-configuration.models.store');
         Route::get('/admin/ai-configuration/models/{aiModel}/edit', [AiModelController::class, 'edit'])->name('admin.ai-configuration.models.edit');
         Route::patch('/admin/ai-configuration/models/{aiModel}', [AiModelController::class, 'update'])->name('admin.ai-configuration.models.update');
+        Route::patch('/admin/ai-configuration/models/{aiModel}/activation', AiModelActivationController::class)
+            ->name('admin.ai-configuration.models.activation.update');
         Route::get('/admin/ai-configuration/workload-routes', [AiConfigurationController::class, 'workloadRoutes'])->name('admin.ai-configuration.workload-routes');
         Route::get('/admin/ai-configuration/workload-routes/create', [AiWorkloadDraftController::class, 'create'])->name('admin.ai-configuration.workload-routes.create');
         Route::post('/admin/ai-configuration/workload-routes', [AiWorkloadDraftController::class, 'store'])->name('admin.ai-configuration.workload-routes.store');
         Route::get('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}/edit', [AiWorkloadDraftController::class, 'edit'])->name('admin.ai-configuration.workload-routes.edit');
         Route::patch('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}', [AiWorkloadDraftController::class, 'update'])->name('admin.ai-configuration.workload-routes.update');
+        Route::patch('/admin/ai-configuration/workload-routes/{aiWorkloadRoute}/activation', AiWorkloadActivationController::class)
+            ->name('admin.ai-configuration.workload-routes.activation.update');
     });
 
     Route::middleware(PermissionMiddleware::using('verify ai providers', 'admin'))->group(function () {

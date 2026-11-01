@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'correlation_id', 'idempotency_key', 'workspace_id', 'brand_id', 'user_id',
+    'correlation_id', 'idempotency_key', 'single_use_key', 'workspace_id', 'brand_id', 'user_id',
     'ai_content_draft_id', 'ai_model_id', 'status', 'error_category', 'input_tokens',
     'output_tokens', 'prompt_hash', 'completed_at',
 ])]

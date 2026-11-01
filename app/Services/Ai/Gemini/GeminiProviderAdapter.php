@@ -166,6 +166,15 @@ class GeminiProviderAdapter implements AiProviderAdapter
         );
     }
 
+    public function countInputTokens(string $modelId, string $prompt, int $maximumOutputTokens): int
+    {
+        if (! $this->hasCredentials()) {
+            throw new AiProviderException(AiProviderErrorCategory::MissingCredentials, 'Gemini credentials are not configured.');
+        }
+
+        return $this->transport->countTokens($modelId, $prompt, $maximumOutputTokens);
+    }
+
     /** @param array<string, mixed> $usage */
     private function optionalTokenCount(array $usage, string $key): ?int
     {

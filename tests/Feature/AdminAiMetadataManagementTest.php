@@ -273,6 +273,8 @@ test('model creation preserves the native identifier and forces safe defaults', 
         ->post(route('admin.ai-configuration.models.store'), aiModelPayload($provider, [
             'provider_model_id' => '  Vendor/Model-V1  ',
             'capabilities' => ['text_generation', 'structured_output'],
+            'input_token_limit' => 32000,
+            'output_token_limit' => 8192,
         ]));
 
     $model = AiModel::query()->sole();
@@ -280,12 +282,15 @@ test('model creation preserves the native identifier and forces safe defaults', 
     expect($model->provider_model_id)->toBe('Vendor/Model-V1')
         ->and($model->ai_provider_id)->toBe($provider->id)
         ->and($model->capabilities)->toBe(['text_generation', 'structured_output'])
+        ->and($model->input_token_limit)->toBe(32000)
+        ->and($model->output_token_limit)->toBe(8192)
         ->and($model->is_enabled)->toBeFalse()
         ->and($model->getRawOriginal('availability_status'))->toBe('unverified')
         ->and($model->last_verified_at)->toBeNull()
         ->and($model->lock_version)->toBe(0);
     expect(AiConfigurationAudit::query()->sole()->changes)->toBe(['changed_fields' => [
         'ai_provider_id', 'provider_model_id', 'display_name', 'modality', 'capabilities',
+        'input_token_limit', 'output_token_limit',
     ]]);
 });
 

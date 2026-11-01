@@ -1,8 +1,5 @@
 <?php
 
-use App\Enums\AiContentDraftStatus;
-use App\Enums\AiContentLength;
-use App\Enums\AiContentType;
 use App\Models\Admin;
 use App\Models\AiContentDraft;
 use App\Models\Brand;
@@ -10,41 +7,6 @@ use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-function contentStudioTenant(?User $user = null): array
-{
-    $user ??= User::factory()->create();
-    $workspace = Workspace::factory()->for($user, 'owner')->create();
-    $workspace->members()->attach($user, ['role' => 'owner']);
-    $brand = Brand::factory()->for($workspace)->create();
-
-    return [$user, $workspace, $brand];
-}
-
-function contentDraftPayload(array $overrides = []): array
-{
-    return array_merge([
-        'content_type' => AiContentType::SeoBlogArticle->value,
-        'topic' => 'A safe guide to technical SEO',
-        'primary_keyword' => 'technical seo guide',
-        'secondary_keywords' => "site audits\nsearch visibility",
-        'target_audience' => 'Marketing leaders at growing SaaS companies.',
-        'language' => 'English',
-        'region' => 'United States',
-        'content_length' => AiContentLength::Standard->value,
-        'tone' => 'Clear and practical.',
-        'seo_title' => 'A Safe Technical SEO Guide',
-        'meta_description' => 'Learn a practical and careful approach to technical SEO.',
-        'suggested_slug' => 'safe-technical-seo-guide',
-        'outline' => "Introduction\nAudit foundations\nConclusion",
-        'content' => "# A Safe Guide\n\nReview every claim before publishing.",
-        'faq_entries' => [['question' => 'What is technical SEO?', 'answer' => 'It improves how search systems access a site.']],
-        'internal_link_opportunities' => 'SEO audit page',
-        'external_research_topics' => 'Current search engine documentation',
-        'verification_notes' => 'Verify current platform limits',
-        'status' => AiContentDraftStatus::Draft->value,
-    ], $overrides);
-}
 
 test('guests and unverified customers cannot enter the content studio', function () {
     [$user, $workspace, $brand] = contentStudioTenant(User::factory()->unverified()->create());

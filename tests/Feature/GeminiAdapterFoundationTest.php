@@ -95,12 +95,48 @@ test('missing credentials fail safely without making an HTTP request', function 
 
     $verification = $adapter->verifyConnection();
     $exception = capturedProviderException(fn () => $adapter->discoverModels());
+    $countException = capturedProviderException(fn () => $adapter->countInputTokens('discovered-model', 'Safe prompt', 2500));
 
     expect($verification->successful)->toBeFalse()
         ->and($verification->errorCategory)->toBe(AiProviderErrorCategory::MissingCredentials)
         ->and($exception->category)->toBe(AiProviderErrorCategory::MissingCredentials)
-        ->and($exception->getMessage())->not->toContain('key');
+        ->and($exception->getMessage())->not->toContain('key')
+        ->and($countException->category)->toBe(AiProviderErrorCategory::MissingCredentials);
     Http::assertNothingSent();
+});
+
+test('token counting uses the fixed model endpoint and returns a validated total', function () {
+    fakeGeminiHttp(Http::response(['totalTokens' => 432]));
+
+    $total = configuredGeminiAdapter()->countInputTokens('discovered-model-v1', 'The exact effective prompt.', 2500);
+
+    expect($total)->toBe(432);
+    Http::assertSent(function (Request $request): bool {
+        $data = $request->data();
+
+        return $request->method() === 'POST'
+            && parse_url($request->url(), PHP_URL_SCHEME) === 'https'
+            && parse_url($request->url(), PHP_URL_HOST) === 'generativelanguage.googleapis.com'
+            && parse_url($request->url(), PHP_URL_PATH) === '/v1beta/models/discovered-model-v1:countTokens'
+            && ($data['generateContentRequest']['model'] ?? null) === 'models/discovered-model-v1'
+            && ($data['generateContentRequest']['contents'][0]['role'] ?? null) === 'user'
+            && ($data['generateContentRequest']['contents'][0]['parts'][0]['text'] ?? null) === 'The exact effective prompt.'
+            && ($data['generateContentRequest']['generationConfig']['maxOutputTokens'] ?? null) === 2500
+            && ($data['generateContentRequest']['generationConfig']['responseJsonSchema']['type'] ?? null) === 'object'
+            && $request->hasHeader('x-goog-api-key', 'synthetic-gemini-key-for-tests')
+            && ! str_contains($request->url(), 'synthetic-gemini-key-for-tests');
+    });
+});
+
+test('token counting rejects malformed totals without exposing response content', function () {
+    fakeGeminiHttp(Http::response(['totalTokens' => 'secret invalid count']));
+
+    $exception = capturedProviderException(
+        fn () => configuredGeminiAdapter()->countInputTokens('discovered-model-v1', 'Safe prompt', 2500),
+    );
+
+    expect($exception->category)->toBe(AiProviderErrorCategory::MalformedResponse)
+        ->and($exception->getMessage())->not->toContain('secret invalid count');
 });
 
 test('transport uses a fixed versioned HTTPS endpoint and API key header', function () {

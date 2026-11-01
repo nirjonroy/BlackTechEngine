@@ -48,7 +48,6 @@ class AiWorkloadDraftController extends Controller
     public function edit(AiWorkloadRoute $aiWorkloadRoute): View
     {
         $this->writeGate->ensureAvailable();
-        abort_if($aiWorkloadRoute->is_enabled, 409, 'Enabled workload routes cannot be edited through draft management.');
 
         $aiWorkloadRoute->load([
             'primaryModel.provider:id,key,display_name',

@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['ai_provider_id', 'provider_model_id', 'display_name', 'modality', 'capabilities', 'is_enabled', 'availability_status', 'last_verified_at'])]
+#[Fillable(['ai_provider_id', 'provider_model_id', 'display_name', 'modality', 'capabilities', 'input_token_limit', 'output_token_limit', 'is_enabled', 'availability_status', 'last_verified_at'])]
 class AiModel extends Model
 {
     /** @use HasFactory<AiModelFactory> */
@@ -76,6 +76,8 @@ class AiModel extends Model
             'modality' => AiModelModality::class,
             'is_enabled' => 'boolean',
             'availability_status' => AiModelAvailabilityStatus::class,
+            'input_token_limit' => 'integer',
+            'output_token_limit' => 'integer',
             'last_verified_at' => 'datetime',
             'lock_version' => 'integer',
         ];

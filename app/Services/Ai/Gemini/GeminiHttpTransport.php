@@ -110,18 +110,10 @@ class GeminiHttpTransport
     }
 
     /** @return array<string, mixed> */
-    public function generateContent(string $modelId, string $prompt, int $maximumOutputTokens): array
+    public function countTokens(string $modelId, string $prompt, int $maximumOutputTokens): int
     {
-        if (preg_match('/\A[A-Za-z0-9][A-Za-z0-9._-]{0,254}\z/D', $modelId) !== 1
-            || $prompt === ''
-            || strlen($prompt) > self::MAX_PROMPT_BYTES
-            || $maximumOutputTokens < 1
-            || $maximumOutputTokens > self::MAX_OUTPUT_TOKENS) {
-            throw new AiProviderException(
-                AiProviderErrorCategory::InvalidRequest,
-                'The Gemini content generation request is outside the permitted bounds.',
-            );
-        }
+        $this->validateModelAndPrompt($modelId, $prompt);
+        $this->validateOutputTokenLimit($maximumOutputTokens);
 
         try {
             $response = Http::baseUrl(self::BASE_URL)
@@ -131,24 +123,53 @@ class GeminiHttpTransport
                 ->connectTimeout(self::CONNECT_TIMEOUT_SECONDS)
                 ->timeout(self::REQUEST_TIMEOUT_SECONDS)
                 ->withoutRedirecting()
-                ->post('/'.self::API_VERSION.'/models/'.$modelId.':generateContent', [
-                    'contents' => [[
-                        'role' => 'user',
-                        'parts' => [['text' => $prompt]],
-                    ]],
-                    'generationConfig' => [
-                        'temperature' => 0.3,
-                        'maxOutputTokens' => $maximumOutputTokens,
-                        'responseMimeType' => 'application/json',
-                        'responseSchema' => $this->contentResponseSchema(),
+                ->post('/'.self::API_VERSION.'/models/'.$modelId.':countTokens', [
+                    'generateContentRequest' => [
+                        'model' => 'models/'.$modelId,
+                        ...$this->generationRequestPayload($prompt, $maximumOutputTokens),
                     ],
                 ]);
         } catch (ConnectionException $exception) {
-            $category = preg_match('/cURL error 28|timed? out|timeout/i', $exception->getMessage()) === 1
-                ? AiProviderErrorCategory::Timeout
-                : AiProviderErrorCategory::NetworkFailure;
+            $this->throwConnectionException($exception);
+        }
 
-            throw new AiProviderException($category, $this->safeMessage($category));
+        if (! $response->successful()) {
+            $this->throwResponseException($response);
+        }
+
+        $payload = $this->decodedPayload($response->body());
+        $totalTokens = $payload['totalTokens'] ?? null;
+
+        if (! is_int($totalTokens) || $totalTokens < 0) {
+            throw new AiProviderException(
+                AiProviderErrorCategory::MalformedResponse,
+                'Gemini returned an invalid token count response.',
+            );
+        }
+
+        return $totalTokens;
+    }
+
+    /** @return array<string, mixed> */
+    public function generateContent(string $modelId, string $prompt, int $maximumOutputTokens): array
+    {
+        $this->validateModelAndPrompt($modelId, $prompt);
+        $this->validateOutputTokenLimit($maximumOutputTokens);
+
+        try {
+            $response = Http::baseUrl(self::BASE_URL)
+                ->acceptJson()
+                ->asJson()
+                ->withHeaders(['x-goog-api-key' => $this->credentialResolver->geminiApiKey()])
+                ->connectTimeout(self::CONNECT_TIMEOUT_SECONDS)
+                ->timeout(self::REQUEST_TIMEOUT_SECONDS)
+                ->withoutRedirecting()
+                ->post(
+                    '/'.self::API_VERSION.'/models/'.$modelId.':generateContent',
+                    $this->generationRequestPayload($prompt, $maximumOutputTokens),
+                );
+        } catch (ConnectionException $exception) {
+            $this->throwConnectionException($exception);
         }
 
         if (! $response->successful()) {
@@ -162,24 +183,78 @@ class GeminiHttpTransport
     private function contentResponseSchema(): array
     {
         return [
-            'type' => 'OBJECT',
+            'type' => 'object',
             'required' => ['seo_title', 'meta_description', 'suggested_slug', 'outline', 'content', 'faq_entries', 'internal_link_opportunities', 'external_research_topics', 'verification_notes'],
             'properties' => [
-                'seo_title' => ['type' => 'STRING'],
-                'meta_description' => ['type' => 'STRING'],
-                'suggested_slug' => ['type' => 'STRING'],
-                'outline' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
-                'content' => ['type' => 'STRING'],
-                'faq_entries' => ['type' => 'ARRAY', 'items' => [
-                    'type' => 'OBJECT',
+                'seo_title' => ['type' => 'string'],
+                'meta_description' => ['type' => 'string'],
+                'suggested_slug' => ['type' => 'string'],
+                'outline' => ['type' => 'array', 'items' => ['type' => 'string']],
+                'content' => ['type' => 'string'],
+                'faq_entries' => ['type' => 'array', 'items' => [
+                    'type' => 'object',
                     'required' => ['question', 'answer'],
-                    'properties' => ['question' => ['type' => 'STRING'], 'answer' => ['type' => 'STRING']],
+                    'properties' => ['question' => ['type' => 'string'], 'answer' => ['type' => 'string']],
                 ]],
-                'internal_link_opportunities' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
-                'external_research_topics' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
-                'verification_notes' => ['type' => 'ARRAY', 'items' => ['type' => 'STRING']],
+                'internal_link_opportunities' => ['type' => 'array', 'items' => ['type' => 'string']],
+                'external_research_topics' => ['type' => 'array', 'items' => ['type' => 'string']],
+                'verification_notes' => ['type' => 'array', 'items' => ['type' => 'string']],
             ],
         ];
+    }
+
+    /** @return list<array{role: string, parts: list<array{text: string}>}> */
+    private function promptContents(string $prompt): array
+    {
+        return [[
+            'role' => 'user',
+            'parts' => [['text' => $prompt]],
+        ]];
+    }
+
+    /** @return array{contents: list<array{role: string, parts: list<array{text: string}>}>, generationConfig: array<string, mixed>} */
+    private function generationRequestPayload(string $prompt, int $maximumOutputTokens): array
+    {
+        return [
+            'contents' => $this->promptContents($prompt),
+            'generationConfig' => [
+                'temperature' => 0.3,
+                'maxOutputTokens' => $maximumOutputTokens,
+                'responseMimeType' => 'application/json',
+                'responseJsonSchema' => $this->contentResponseSchema(),
+            ],
+        ];
+    }
+
+    private function validateModelAndPrompt(string $modelId, string $prompt): void
+    {
+        if (preg_match('/\A[A-Za-z0-9][A-Za-z0-9._-]{0,254}\z/D', $modelId) !== 1
+            || $prompt === ''
+            || strlen($prompt) > self::MAX_PROMPT_BYTES) {
+            throw new AiProviderException(
+                AiProviderErrorCategory::InvalidRequest,
+                'The Gemini request is outside the permitted bounds.',
+            );
+        }
+    }
+
+    private function validateOutputTokenLimit(int $maximumOutputTokens): void
+    {
+        if ($maximumOutputTokens < 1 || $maximumOutputTokens > self::MAX_OUTPUT_TOKENS) {
+            throw new AiProviderException(
+                AiProviderErrorCategory::InvalidRequest,
+                'The Gemini content generation request is outside the permitted bounds.',
+            );
+        }
+    }
+
+    private function throwConnectionException(ConnectionException $exception): never
+    {
+        $category = preg_match('/cURL error 28|timed? out|timeout/i', $exception->getMessage()) === 1
+            ? AiProviderErrorCategory::Timeout
+            : AiProviderErrorCategory::NetworkFailure;
+
+        throw new AiProviderException($category, $this->safeMessage($category));
     }
 
     /** @return array<string, mixed> */
