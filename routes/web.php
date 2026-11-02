@@ -30,7 +30,11 @@ use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AiContentGenerationController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ContentApprovalController;
+use App\Http\Controllers\ContentChangeRequestController;
 use App\Http\Controllers\ContentDraftController;
+use App\Http\Controllers\ContentDraftExportController;
+use App\Http\Controllers\ContentReviewRequestController;
 use App\Http\Controllers\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Frontend\AboutPageController as FrontendAboutPageController;
 use App\Http\Controllers\Frontend\AffiliatePageController;
@@ -90,6 +94,16 @@ if (config('customer.workspaces_enabled')) {
                 ->scopeBindings()->name('content-studio.drafts.edit');
             Route::patch('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}', [ContentDraftController::class, 'update'])
                 ->scopeBindings()->name('content-studio.drafts.update');
+            if (config('ai.content_review_enabled')) {
+                Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/review-requests', ContentReviewRequestController::class)
+                    ->scopeBindings()->name('content-studio.drafts.review-requests.store');
+                Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/approval', ContentApprovalController::class)
+                    ->scopeBindings()->name('content-studio.drafts.approval.store');
+                Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/change-requests', ContentChangeRequestController::class)
+                    ->scopeBindings()->name('content-studio.drafts.change-requests.store');
+                Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/exports', ContentDraftExportController::class)
+                    ->scopeBindings()->name('content-studio.drafts.exports.store');
+            }
             Route::post('/workspaces/{workspace}/brands/{brand}/content-generations', AiContentGenerationController::class)
                 ->scopeBindings()->middleware('throttle:ai-content-generation')->name('content-studio.generations.store');
         }

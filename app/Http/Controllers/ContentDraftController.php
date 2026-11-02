@@ -11,14 +11,24 @@ use App\Http\Requests\UpdateAiContentDraftRequest;
 use App\Models\AiContentDraft;
 use App\Models\Brand;
 use App\Models\Workspace;
+use App\Services\ContentDraftExporter;
+use App\Services\ContentEditorialWorkflow;
+use App\Services\ContentReviewGate;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
 class ContentDraftController extends Controller
 {
+    public function __construct(
+        private readonly ContentEditorialWorkflow $workflow,
+        private readonly ContentDraftExporter $exporter,
+        private readonly ContentReviewGate $reviewGate,
+    ) {}
+
     public function index(AiContentDraftIndexRequest $request): View
     {
         $workspaces = $request->user()->accessibleWorkspaces()
@@ -42,6 +52,7 @@ class ContentDraftController extends Controller
             ->with(['brand', 'model.provider'])
             ->when($selectedWorkspace, fn ($query, Workspace $workspace) => $query->whereBelongsTo($workspace))
             ->when($selectedBrand, fn ($query, Brand $brand) => $query->whereBelongsTo($brand))
+            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')->toString()))
             ->whereHas('workspace', fn ($query) => $query
                 ->where('owner_id', $request->user()->getKey())
                 ->orWhereHas('members', fn ($members) => $members->whereKey($request->user()->getKey())))
@@ -49,7 +60,17 @@ class ContentDraftController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('content-studio.index', compact('workspaces', 'selectedWorkspace', 'selectedBrand', 'drafts'));
+        $statuses = AiContentDraftStatus::cases();
+        $reviewEnabled = $this->reviewGate->enabled();
+
+        return view('content-studio.index', compact(
+            'workspaces',
+            'selectedWorkspace',
+            'selectedBrand',
+            'drafts',
+            'statuses',
+            'reviewEnabled',
+        ));
     }
 
     public function create(Workspace $workspace, Brand $brand): View
@@ -67,12 +88,17 @@ class ContentDraftController extends Controller
 
     public function store(StoreAiContentDraftRequest $request, Workspace $workspace, Brand $brand): RedirectResponse
     {
-        $draft = AiContentDraft::query()->create([
-            ...$request->draftData(),
-            'workspace_id' => $workspace->getKey(),
-            'brand_id' => $brand->getKey(),
-            'created_by_user_id' => $request->user()->getKey(),
-        ]);
+        $draft = DB::transaction(function () use ($brand, $request, $workspace): AiContentDraft {
+            $draft = AiContentDraft::query()->create([
+                ...$request->draftData(),
+                'workspace_id' => $workspace->getKey(),
+                'brand_id' => $brand->getKey(),
+                'created_by_user_id' => $request->user()->getKey(),
+            ]);
+            $this->workflow->recordCreation($draft, $request->user());
+
+            return $draft;
+        });
 
         return Redirect::route('content-studio.drafts.show', [$workspace, $brand, $draft])
             ->with('status', 'Draft saved. Nothing has been published.');
@@ -81,9 +107,25 @@ class ContentDraftController extends Controller
     public function show(Workspace $workspace, Brand $brand, AiContentDraft $aiContentDraft): View
     {
         Gate::authorize('view', $aiContentDraft);
-        $aiContentDraft->load(['creator', 'model.provider', 'generationAttempts' => fn ($query) => $query->latest()]);
+        $reviewEnabled = $this->reviewGate->enabled();
+        $relations = ['creator', 'model.provider', 'generationAttempts' => fn ($query) => $query->latest()];
 
-        return view('content-studio.show', compact('workspace', 'brand', 'aiContentDraft'));
+        if ($reviewEnabled) {
+            $relations[] = 'approver';
+            $relations['revisions'] = fn ($query) => $query->with('editor')->limit((int) config('ai.content_revision_limit', 25));
+            $relations['editorialEvents'] = fn ($query) => $query->with('actor')->limit((int) config('ai.content_review_history_limit', 100));
+        }
+
+        $aiContentDraft->load($relations);
+        $previewHtml = $reviewEnabled ? $this->exporter->previewHtml($aiContentDraft) : null;
+
+        return view('content-studio.show', compact(
+            'workspace',
+            'brand',
+            'aiContentDraft',
+            'previewHtml',
+            'reviewEnabled',
+        ));
     }
 
     public function edit(Workspace $workspace, Brand $brand, AiContentDraft $aiContentDraft): View
@@ -96,13 +138,22 @@ class ContentDraftController extends Controller
             'aiContentDraft' => $aiContentDraft,
             'contentTypes' => AiContentType::cases(),
             'contentLengths' => AiContentLength::cases(),
-            'statuses' => AiContentDraftStatus::cases(),
+            'reviewEnabled' => $this->reviewGate->enabled(),
         ]);
     }
 
     public function update(UpdateAiContentDraftRequest $request, Workspace $workspace, Brand $brand, AiContentDraft $aiContentDraft): RedirectResponse
     {
-        $aiContentDraft->update($request->draftData());
+        if ($this->reviewGate->enabled()) {
+            $aiContentDraft = $this->workflow->update(
+                $aiContentDraft,
+                $request->user(),
+                $request->draftData(),
+                $request->expectedVersion(),
+            );
+        } else {
+            $aiContentDraft->update($request->draftData());
+        }
 
         return Redirect::route('content-studio.drafts.show', [$workspace, $brand, $aiContentDraft])
             ->with('status', 'Draft changes saved. Nothing has been published.');

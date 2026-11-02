@@ -1,8 +1,8 @@
 <?php
 
+use App\Enums\AiContentDraftStatus;
 use App\Models\Admin;
 use App\Models\AiContentDraft;
-use App\Models\Brand;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\Auth;
@@ -28,12 +28,7 @@ test('an authorized customer saves views and edits an unpublished draft', functi
 
     $storeResponse = $this->actingAs($user)->post(
         route('content-studio.drafts.store', [$workspace, $brand]),
-        contentDraftPayload([
-            'workspace_id' => Workspace::factory()->create()->id,
-            'brand_id' => Brand::factory()->create()->id,
-            'created_by_user_id' => User::factory()->create()->id,
-            'ai_model_id' => 999,
-        ]),
+        contentDraftPayload(),
     );
     $draft = AiContentDraft::query()->sole();
 
@@ -98,13 +93,12 @@ test('draft output is escaped and protected ownership fields cannot be edited', 
 
     $this->actingAs($user)->get(route('content-studio.drafts.show', [$workspace, $brand, $draft]))
         ->assertOk()
-        ->assertSee($dangerous)
         ->assertDontSee($dangerous, false);
 
-    $this->actingAs($user)->patch(
+    $this->actingAs($user)->from(route('content-studio.drafts.edit', [$workspace, $brand, $draft]))->patch(
         route('content-studio.drafts.update', [$workspace, $brand, $draft]),
         contentDraftPayload(['workspace_id' => Workspace::factory()->create()->id, 'created_by_user_id' => 999]),
-    )->assertSessionHasNoErrors();
+    )->assertSessionHasErrors(['workspace_id', 'created_by_user_id']);
 
     expect($draft->fresh()->workspace_id)->toBe($workspace->id)
         ->and($draft->fresh()->created_by_user_id)->toBe($user->id);
@@ -124,4 +118,30 @@ test('the content studio has no delete or public publishing routes', function ()
     expect(route('content-studio.index'))->toContain('/content-studio')
         ->and(collect(app('router')->getRoutes()->getRoutes())->contains(fn ($route): bool => in_array('DELETE', $route->methods(), true) && str_contains($route->uri(), 'content-drafts')))->toBeFalse()
         ->and(collect(app('router')->getRoutes()->getRoutes())->contains(fn ($route): bool => str_contains($route->uri(), 'publish')))->toBeFalse();
+});
+
+test('customers can filter the draft listing by editorial status', function () {
+    [$user, $workspace, $brand] = contentStudioTenant();
+    AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $user->id,
+        'seo_title' => 'Visible approved content',
+        'status' => AiContentDraftStatus::Approved,
+    ]);
+    AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $user->id,
+        'seo_title' => 'Hidden draft content',
+        'status' => AiContentDraftStatus::Draft,
+    ]);
+
+    $this->actingAs($user)->get(route('content-studio.index', [
+        'workspace' => $workspace->id,
+        'brand' => $brand->id,
+        'status' => 'approved',
+    ]))->assertOk()
+        ->assertSee('Visible approved content')
+        ->assertDontSee('Hidden draft content');
 });

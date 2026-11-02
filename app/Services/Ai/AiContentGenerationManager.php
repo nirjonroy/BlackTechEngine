@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Workspace;
 use App\Services\Ai\Exceptions\AiContentGenerationException;
 use App\Services\Ai\Exceptions\AiProviderException;
+use App\Services\ContentEditorialWorkflow;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
@@ -40,6 +41,7 @@ class AiContentGenerationManager
     public function __construct(
         private readonly AiContentPromptBuilder $promptBuilder,
         private readonly AiProviderAdapterRegistry $adapterRegistry,
+        private readonly ContentEditorialWorkflow $editorialWorkflow,
     ) {}
 
     /** @param array<string, mixed> $input */
@@ -151,6 +153,8 @@ class AiContentGenerationManager
                     'output_tokens' => $result->outputTokens,
                     'completed_at' => now(),
                 ]);
+
+                $this->editorialWorkflow->recordCreation($draft, $user, 'ai_draft_created');
 
                 return $draft;
             });

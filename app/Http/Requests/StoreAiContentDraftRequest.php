@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\AiContentDraftStatus;
 use App\Enums\AiContentLength;
 use App\Enums\AiContentType;
 use App\Models\Brand;
@@ -52,7 +51,16 @@ class StoreAiContentDraftRequest extends FormRequest
             'external_research_topics.*' => ['required', 'string', 'max:500'],
             'verification_notes' => ['nullable', 'array', 'max:30'],
             'verification_notes.*' => ['required', 'string', 'max:1000'],
-            'status' => ['required', Rule::enum(AiContentDraftStatus::class)],
+            'status' => ['prohibited'],
+            'workspace_id' => ['prohibited'],
+            'brand_id' => ['prohibited'],
+            'created_by_user_id' => ['prohibited'],
+            'ai_provider_id' => ['prohibited'],
+            'ai_model_id' => ['prohibited'],
+            'approved_by_user_id' => ['prohibited'],
+            'approved_at' => ['prohibited'],
+            'review_submitted_at' => ['prohibited'],
+            'changes_requested_at' => ['prohibited'],
         ];
     }
 
@@ -63,7 +71,7 @@ class StoreAiContentDraftRequest extends FormRequest
             'content_type', 'topic', 'primary_keyword', 'secondary_keywords', 'target_audience',
             'language', 'region', 'content_length', 'tone', 'seo_title', 'meta_description',
             'suggested_slug', 'outline', 'content', 'faq_entries', 'internal_link_opportunities',
-            'external_research_topics', 'verification_notes', 'status',
+            'external_research_topics', 'verification_notes',
         ]);
     }
 

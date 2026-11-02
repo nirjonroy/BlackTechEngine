@@ -5,6 +5,9 @@ return [
     'provider_verification_enabled' => env('AI_PROVIDER_VERIFICATION_ENABLED', false),
     'workload_draft_writes_enabled' => env('AI_WORKLOAD_DRAFT_WRITES_ENABLED', false),
     'content_studio_enabled' => env('AI_CONTENT_STUDIO_ENABLED', false),
+    'content_review_enabled' => env('AI_CONTENT_REVIEW_ENABLED', false),
+    'content_review_history_limit' => (int) env('AI_CONTENT_REVIEW_HISTORY_LIMIT', 100),
+    'content_revision_limit' => (int) env('AI_CONTENT_REVISION_LIMIT', 25),
     'content_generation_enabled' => env('AI_CONTENT_GENERATION_ENABLED', false),
     'content_generation_daily_limit' => (int) env('AI_CONTENT_GENERATION_DAILY_LIMIT', 20),
     'first_generation_test' => [

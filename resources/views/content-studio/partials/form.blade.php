@@ -3,10 +3,14 @@
     @if ($method !== 'POST') @method($method) @endif
     @if ($mode === 'create')
         <input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}">
-        <input type="hidden" name="status" value="draft">
+    @elseif($reviewEnabled ?? false)
+        <input type="hidden" name="lock_version" value="{{ old('lock_version', $aiContentDraft->lock_version) }}">
     @endif
 
     @error('generation')
+        <div class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200" role="alert">{{ $message }}</div>
+    @enderror
+    @error('lock_version')
         <div class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200" role="alert">{{ $message }}</div>
     @enderror
 
@@ -31,7 +35,10 @@
 
     @if ($mode === 'edit')
         <section class="bte-card rounded-2xl p-5 sm:p-6">
-            <div class="mb-5 flex flex-wrap items-center justify-between gap-3"><div><h2 class="font-heading text-lg font-black">Draft editor</h2><p class="mt-1 text-sm text-slate-500">Content is stored as text and remains unpublished.</p></div><select name="status" aria-label="Draft status" class="bte-surface rounded-xl border border-slate-300 text-sm dark:border-slate-700">@foreach($statuses as $status)<option value="{{ $status->value }}" @selected(old('status', $aiContentDraft->status->value) === $status->value)>{{ str($status->value)->replace('_', ' ')->title() }}</option>@endforeach</select></div>
+            <div class="mb-5 flex flex-wrap items-center justify-between gap-3"><div><h2 class="font-heading text-lg font-black">Draft editor</h2><p class="mt-1 text-sm text-slate-500">Content is stored as text and remains unpublished.</p></div><span class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-black uppercase text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">{{ $aiContentDraft->status->label() }}</span></div>
+            @if(($reviewEnabled ?? false) && $aiContentDraft->review_feedback)
+                <div class="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"><p class="font-black">Reviewer feedback</p><p class="mt-1 whitespace-pre-wrap">{{ $aiContentDraft->review_feedback }}</p></div>
+            @endif
             <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 <div><label for="seo_title" class="mb-2 block text-sm font-bold">SEO title</label><input id="seo_title" name="seo_title" value="{{ old('seo_title', $aiContentDraft->seo_title) }}" maxlength="120" class="bte-surface w-full rounded-xl border border-slate-300 text-sm dark:border-slate-700"></div>
                 <div><label for="suggested_slug" class="mb-2 block text-sm font-bold">Suggested slug</label><input id="suggested_slug" name="suggested_slug" value="{{ old('suggested_slug', $aiContentDraft->suggested_slug) }}" maxlength="191" class="bte-surface w-full rounded-xl border border-slate-300 text-sm dark:border-slate-700"></div>

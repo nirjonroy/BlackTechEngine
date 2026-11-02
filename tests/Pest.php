@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\AiContentDraftStatus;
 use App\Enums\AiContentLength;
 use App\Enums\AiContentType;
 use App\Models\Brand;
@@ -111,6 +110,6 @@ function contentDraftPayload(array $overrides = []): array
         'internal_link_opportunities' => 'SEO audit page',
         'external_research_topics' => 'Current search engine documentation',
         'verification_notes' => 'Verify current platform limits',
-        'status' => AiContentDraftStatus::Draft->value,
+        'lock_version' => 0,
     ], $overrides);
 }

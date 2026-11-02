@@ -30,6 +30,28 @@ class AiContentDraftPolicy
         return $this->view($user, $aiContentDraft);
     }
 
+    public function requestReview(User $user, AiContentDraft $aiContentDraft): Response
+    {
+        return $this->update($user, $aiContentDraft);
+    }
+
+    public function approve(User $user, AiContentDraft $aiContentDraft): Response
+    {
+        return $aiContentDraft->workspace->isOwnedBy($user)
+            ? Response::allow()
+            : Response::denyAsNotFound();
+    }
+
+    public function requestChanges(User $user, AiContentDraft $aiContentDraft): Response
+    {
+        return $this->approve($user, $aiContentDraft);
+    }
+
+    public function export(User $user, AiContentDraft $aiContentDraft): Response
+    {
+        return $this->view($user, $aiContentDraft);
+    }
+
     public function delete(User $user, AiContentDraft $aiContentDraft): bool
     {
         return false;

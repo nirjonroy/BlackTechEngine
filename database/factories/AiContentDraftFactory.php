@@ -41,6 +41,8 @@ class AiContentDraftFactory extends Factory
             'external_research_topics' => [],
             'verification_notes' => [],
             'status' => AiContentDraftStatus::Draft,
+            'lock_version' => 0,
+            'current_revision' => 0,
         ];
     }
 }

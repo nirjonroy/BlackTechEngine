@@ -48,6 +48,11 @@ class Workspace extends Model
             || $this->members()->whereKey($user->getKey())->exists();
     }
 
+    public function isOwnedBy(User $user): bool
+    {
+        return $this->owner_id === $user->getKey();
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

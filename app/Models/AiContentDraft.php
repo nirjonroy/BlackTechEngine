@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'language', 'region', 'content_length', 'tone', 'seo_title', 'meta_description',
     'suggested_slug', 'outline', 'content', 'faq_entries', 'internal_link_opportunities',
     'external_research_topics', 'verification_notes', 'status',
+    'lock_version', 'current_revision', 'review_feedback', 'review_submitted_at',
+    'changes_requested_at', 'approved_at', 'approved_by_user_id',
 ])]
 class AiContentDraft extends Model
 {
@@ -32,6 +34,8 @@ class AiContentDraft extends Model
         'external_research_topics' => '[]',
         'verification_notes' => '[]',
         'status' => 'draft',
+        'lock_version' => 0,
+        'current_revision' => 0,
     ];
 
     /** @return BelongsTo<Workspace, $this> */
@@ -70,6 +74,24 @@ class AiContentDraft extends Model
         return $this->hasMany(AiGenerationAttempt::class);
     }
 
+    /** @return BelongsTo<User, $this> */
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by_user_id');
+    }
+
+    /** @return HasMany<AiContentDraftRevision, $this> */
+    public function revisions(): HasMany
+    {
+        return $this->hasMany(AiContentDraftRevision::class)->latest('revision_number');
+    }
+
+    /** @return HasMany<AiContentDraftEvent, $this> */
+    public function editorialEvents(): HasMany
+    {
+        return $this->hasMany(AiContentDraftEvent::class)->latest();
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {
@@ -83,6 +105,11 @@ class AiContentDraft extends Model
             'external_research_topics' => 'array',
             'verification_notes' => 'array',
             'status' => AiContentDraftStatus::class,
+            'lock_version' => 'integer',
+            'current_revision' => 'integer',
+            'review_submitted_at' => 'datetime',
+            'changes_requested_at' => 'datetime',
+            'approved_at' => 'datetime',
         ];
     }
 }

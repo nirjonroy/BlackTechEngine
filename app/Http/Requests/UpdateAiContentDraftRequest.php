@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Models\AiContentDraft;
 use App\Models\Brand;
 use App\Models\Workspace;
+use App\Services\ContentReviewGate;
+use Illuminate\Validation\Rule;
 
 class UpdateAiContentDraftRequest extends StoreAiContentDraftRequest
 {
@@ -21,5 +23,24 @@ class UpdateAiContentDraftRequest extends StoreAiContentDraftRequest
             && $draft->workspace_id === $workspace->getKey()
             && $draft->brand_id === $brand->getKey()
             && ($this->user()?->can('update', $draft) ?? false);
+    }
+
+    /** @return array<string, array<mixed>> */
+    public function rules(): array
+    {
+        return [
+            ...parent::rules(),
+            'lock_version' => [
+                Rule::requiredIf(app(ContentReviewGate::class)->enabled()),
+                'nullable',
+                'integer',
+                'min:0',
+            ],
+        ];
+    }
+
+    public function expectedVersion(): int
+    {
+        return (int) $this->validated('lock_version', 0);
     }
 }
