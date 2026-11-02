@@ -89,7 +89,7 @@ class AiContentDraft extends Model
     /** @return HasMany<AiContentDraftEvent, $this> */
     public function editorialEvents(): HasMany
     {
-        return $this->hasMany(AiContentDraftEvent::class)->latest();
+        return $this->hasMany(AiContentDraftEvent::class)->latest('id');
     }
 
     /** @return array<string, string> */

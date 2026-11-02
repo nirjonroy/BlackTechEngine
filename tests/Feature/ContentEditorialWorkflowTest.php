@@ -8,6 +8,7 @@ use App\Models\AiContentDraftRevision;
 use App\Models\User;
 
 test('each content type follows the owner-approved review lifecycle', function (AiContentType $contentType) {
+    $this->freezeTime();
     [$owner, $workspace, $brand] = contentStudioTenant();
     $draft = AiContentDraft::factory()->create([
         'workspace_id' => $workspace->id,
@@ -28,12 +29,14 @@ test('each content type follows the owner-approved review lifecycle', function (
     )->assertRedirectToRoute('content-studio.drafts.show', [$workspace, $brand, $draft]);
 
     $draft->refresh();
+    $events = $draft->editorialEvents()->get();
 
     expect($draft->status)->toBe(AiContentDraftStatus::Approved)
         ->and($draft->lock_version)->toBe(2)
         ->and($draft->approved_by_user_id)->toBe($owner->id)
         ->and($draft->approved_at)->not->toBeNull()
-        ->and($draft->editorialEvents()->pluck('action')->all())->toBe(['approved', 'review_submitted']);
+        ->and($events->pluck('created_at')->unique()->count())->toBe(1)
+        ->and($events->pluck('action')->all())->toBe(['approved', 'review_submitted']);
 })->with([
     'SEO article' => AiContentType::SeoBlogArticle,
     'GEO explanatory article' => AiContentType::GeoExplanatoryArticle,
@@ -135,6 +138,47 @@ test('an owner can request changes with sanitized feedback and the member can re
     )->assertSessionHasNoErrors();
 
     expect($draft->fresh()->status)->toBe(AiContentDraftStatus::NeedsReview);
+});
+
+test('equal timestamps retain deterministic change request and revision history order', function () {
+    $this->freezeTime();
+    [$owner, $workspace, $brand] = contentStudioTenant();
+    $draft = AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $owner->id,
+        'content' => 'Initial content.',
+    ]);
+
+    $this->actingAs($owner)->post(
+        route('content-studio.drafts.review-requests.store', [$workspace, $brand, $draft]),
+        ['lock_version' => 0],
+    )->assertSessionHasNoErrors();
+
+    $this->actingAs($owner)->post(
+        route('content-studio.drafts.change-requests.store', [$workspace, $brand, $draft]),
+        ['lock_version' => 1, 'notes' => 'Add a source.'],
+    )->assertSessionHasNoErrors();
+
+    $this->actingAs($owner)->patch(
+        route('content-studio.drafts.update', [$workspace, $brand, $draft]),
+        contentDraftPayload(['content' => 'Revised with a source.', 'lock_version' => 2]),
+    )->assertSessionHasNoErrors();
+
+    $draft->refresh();
+    $events = $draft->editorialEvents()->get();
+    $revisions = $draft->revisions()->get();
+
+    expect($events->pluck('created_at')->unique()->count())->toBe(1)
+        ->and($events->pluck('action')->all())->toBe([
+            'content_edited',
+            'changes_requested',
+            'review_submitted',
+        ])
+        ->and($events->pluck('lock_version')->all())->toBe([3, 2, 1])
+        ->and($revisions->pluck('revision_number')->all())->toBe([1])
+        ->and($draft->current_revision)->toBe(1)
+        ->and($draft->lock_version)->toBe(3);
 });
 
 test('material edits create revisions and invalidate prior approval', function () {
