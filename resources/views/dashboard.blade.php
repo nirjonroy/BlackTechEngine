@@ -62,6 +62,13 @@
                     </article>
                 </section>
 
+                @if (config('customer.workspaces_enabled') && config('social.enabled') && $socialStats)
+                    <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="social-overview-heading">
+                        <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Manual publishing workflow</p><h2 id="social-overview-heading" class="mt-1 font-heading text-xl font-black">Social content</h2></div><a href="{{ route('social-content.index') }}" class="text-sm font-bold text-indigo-600 dark:text-indigo-300">Open social studio</a></div>
+                        <div class="mt-5 grid gap-3 sm:grid-cols-3">@foreach([['Drafts',$socialStats['drafts']],['Needs review',$socialStats['review']],['Planned',$socialStats['planned']]] as [$label,$value])<div class="rounded-xl border border-slate-200 p-4 dark:border-slate-700"><p class="text-xs font-bold uppercase text-slate-500">{{ $label }}</p><p class="mt-2 font-heading text-2xl font-black">{{ $value }}</p></div>@endforeach</div>
+                    </section>
+                @endif
+
                 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
                     <section class="bte-card rounded-2xl p-5 sm:p-6 xl:col-span-2" aria-labelledby="brands-heading">
                         <div class="flex flex-wrap items-center justify-between gap-3">

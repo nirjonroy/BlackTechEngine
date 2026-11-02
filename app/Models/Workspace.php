@@ -42,6 +42,12 @@ class Workspace extends Model
         return $this->hasMany(AiContentDraft::class);
     }
 
+    /** @return HasMany<SocialPost, $this> */
+    public function socialPosts(): HasMany
+    {
+        return $this->hasMany(SocialPost::class);
+    }
+
     public function isAccessibleBy(User $user): bool
     {
         return $this->owner_id === $user->getKey()

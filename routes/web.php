@@ -46,6 +46,10 @@ use App\Http\Controllers\Frontend\RobotsController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialCalendarController;
+use App\Http\Controllers\SocialPostController;
+use App\Http\Controllers\SocialPostExportController;
+use App\Http\Controllers\SocialPostWorkflowController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -106,6 +110,28 @@ if (config('customer.workspaces_enabled')) {
             }
             Route::post('/workspaces/{workspace}/brands/{brand}/content-generations', AiContentGenerationController::class)
                 ->scopeBindings()->middleware('throttle:ai-content-generation')->name('content-studio.generations.store');
+        }
+
+        if (config('social.enabled')) {
+            Route::get('/social-content', [SocialPostController::class, 'index'])->name('social-content.index');
+            Route::get('/social-content/calendar', SocialCalendarController::class)->name('social-content.calendar');
+            Route::get('/workspaces/{workspace}/brands/{brand}/social-posts/create', [SocialPostController::class, 'create'])
+                ->scopeBindings()->name('social-content.posts.create');
+            Route::post('/workspaces/{workspace}/brands/{brand}/social-posts', [SocialPostController::class, 'store'])
+                ->scopeBindings()->name('social-content.posts.store');
+            Route::get('/workspaces/{workspace}/brands/{brand}/social-posts/{socialPost}', [SocialPostController::class, 'show'])
+                ->scopeBindings()->name('social-content.posts.show');
+            Route::get('/workspaces/{workspace}/brands/{brand}/social-posts/{socialPost}/edit', [SocialPostController::class, 'edit'])
+                ->scopeBindings()->name('social-content.posts.edit');
+            Route::patch('/workspaces/{workspace}/brands/{brand}/social-posts/{socialPost}', [SocialPostController::class, 'update'])
+                ->scopeBindings()->name('social-content.posts.update');
+            Route::post('/workspaces/{workspace}/brands/{brand}/social-posts/{socialPost}/duplicate', [SocialPostController::class, 'duplicate'])
+                ->scopeBindings()->name('social-content.posts.duplicate');
+            Route::post('/workspaces/{workspace}/brands/{brand}/social-posts/{socialPost}/workflow/{action}', SocialPostWorkflowController::class)
+                ->whereIn('action', ['submit', 'approve', 'changes', 'plan', 'publish', 'cancel'])
+                ->scopeBindings()->name('social-content.posts.workflow');
+            Route::post('/workspaces/{workspace}/brands/{brand}/social-posts/{socialPost}/exports', SocialPostExportController::class)
+                ->scopeBindings()->name('social-content.posts.exports');
         }
     });
 } else {

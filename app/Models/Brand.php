@@ -46,6 +46,12 @@ class Brand extends Model
         return $this->contentDrafts();
     }
 
+    /** @return HasMany<SocialPost, $this> */
+    public function socialPosts(): HasMany
+    {
+        return $this->hasMany(SocialPost::class);
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {
