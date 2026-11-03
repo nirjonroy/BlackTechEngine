@@ -235,7 +235,7 @@ test('mariadb datetime preserves canonical utc across session timezones', functi
         ->and($utc->published_at)->toBe('2026-07-02 16:00:00');
 });
 
-test('social list and calendar combine platform status and brand filters without duplicates', function () {
+test('social list and calendar modes combine platform status and brand filters without duplicates', function (string $view) {
     [$owner, $workspace, $brand] = socialTenant();
     $otherBrand = Brand::factory()->for($workspace)->create();
     $matching = SocialPost::factory()->create(['workspace_id' => $workspace->id, 'brand_id' => $brand->id, 'owner_user_id' => $owner->id, 'title' => 'Matching planned post', 'status' => SocialPostStatus::Planned, 'planned_at' => '2026-11-15 06:00:00']);
@@ -248,8 +248,8 @@ test('social list and calendar combine platform status and brand filters without
 
     $query = ['workspace' => $workspace->id, 'brand' => $brand->id, 'platform' => SocialPlatform::LinkedIn->value, 'status' => SocialPostStatus::Planned->value];
     $this->actingAs($owner)->get(route('social-content.index', $query))->assertOk()->assertSee('Matching planned post')->assertDontSee('Wrong status post')->assertDontSee('Wrong brand post');
-    $this->actingAs($owner)->get(route('social-content.calendar', [...$query, 'view' => 'month', 'date' => '2026-11-15']))->assertOk()->assertSee('Matching planned post')->assertDontSee('Wrong status post')->assertDontSee('Wrong brand post');
-});
+    $this->actingAs($owner)->get(route('social-content.calendar', [...$query, 'view' => $view, 'date' => '2026-11-15']))->assertOk()->assertSee('Matching planned post')->assertDontSee('Wrong status post')->assertDontSee('Wrong brand post');
+})->with(['month', 'week', 'list']);
 
 test('social filters reject unsupported platform and status values', function () {
     [$owner, $workspace] = socialTenant();
