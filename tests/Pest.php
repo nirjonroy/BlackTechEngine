@@ -2,10 +2,16 @@
 
 use App\Enums\AiContentLength;
 use App\Enums\AiContentType;
+use App\Enums\BillingInterval;
 use App\Models\Brand;
+use App\Models\PricingPlan;
+use App\Models\PricingPlanEntitlement;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceSubscription;
+use App\Services\Subscriptions\SubscriptionManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /*
@@ -92,6 +98,7 @@ function contentStudioTenant(?User $user = null): array
 function contentDraftPayload(array $overrides = []): array
 {
     return array_merge([
+        'idempotency_key' => (string) Str::uuid(),
         'content_type' => AiContentType::SeoBlogArticle->value,
         'topic' => 'A safe guide to technical SEO',
         'primary_keyword' => 'technical seo guide',
@@ -112,4 +119,28 @@ function contentDraftPayload(array $overrides = []): array
         'verification_notes' => 'Verify current platform limits',
         'lock_version' => 0,
     ], $overrides);
+}
+
+function subscriptionFixture(array $entitlements = []): array
+{
+    $user = User::factory()->create();
+    $workspace = Workspace::factory()->for($user, 'owner')->create();
+    $workspace->members()->attach($user, ['role' => 'owner']);
+    $plan = PricingPlan::factory()->create();
+
+    foreach ($entitlements as $key => $limit) {
+        PricingPlanEntitlement::factory()->for($plan, 'plan')->create([
+            'key' => $key,
+            'is_enabled' => true,
+            'is_unlimited' => $limit === null,
+            'limit' => $limit,
+        ]);
+    }
+
+    $subscription = WorkspaceSubscription::factory()->for($workspace)->for($plan, 'plan')->create([
+        'entitlement_snapshot' => app(SubscriptionManager::class)
+            ->snapshot($plan, BillingInterval::Monthly),
+    ]);
+
+    return [$user, $workspace, $plan, $subscription];
 }

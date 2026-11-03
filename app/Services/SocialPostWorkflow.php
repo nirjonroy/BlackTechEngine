@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\EntitlementKey;
 use App\Enums\SocialPostStatus;
 use App\Models\AiContentDraft;
 use App\Models\Brand;
@@ -10,6 +11,8 @@ use App\Models\SocialPostEvent;
 use App\Models\SocialPostRevision;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Services\Subscriptions\EntitlementService;
+use App\Services\Subscriptions\UsageMeter;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +22,15 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class SocialPostWorkflow
 {
+    public function __construct(
+        private readonly EntitlementService $entitlements,
+        private readonly UsageMeter $usage,
+    ) {}
+
     /** @param array<string, mixed> $attributes @param list<array<string, mixed>> $variants */
     public function create(Workspace $workspace, Brand $brand, User $actor, string $idempotencyKey, array $attributes, array $variants, ?AiContentDraft $source): SocialPost
     {
+        $this->entitlements->assertFeature($workspace, EntitlementKey::SocialContent);
         $fingerprint = $this->requestFingerprint($workspace, $brand, $actor, $attributes, $variants, $source);
 
         try {
@@ -35,6 +44,14 @@ class SocialPostWorkflow
                     return $this->validatedReplay($existing, $brand, $actor, $fingerprint);
                 }
 
+                $reservation = $this->usage->reserve(
+                    $workspace,
+                    EntitlementKey::SocialPostsPerPeriod,
+                    1,
+                    $idempotencyKey,
+                    $actor,
+                );
+
                 $post = SocialPost::query()->create([
                     ...$attributes, 'workspace_id' => $workspace->getKey(), 'brand_id' => $brand->getKey(),
                     'owner_user_id' => $workspace->owner_id, 'created_by_user_id' => $actor->getKey(),
@@ -45,6 +62,7 @@ class SocialPostWorkflow
                 $post->variants()->createMany($variants);
                 $this->recordRevision($post, $actor, ['created']);
                 $this->recordEvent($post, $actor, 'created', null, SocialPostStatus::Draft);
+                $this->usage->commit($reservation, SocialPost::class, $post->getKey());
 
                 return $post;
             });

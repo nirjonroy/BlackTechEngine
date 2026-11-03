@@ -9,6 +9,7 @@ use App\Enums\AiModelAvailabilityStatus;
 use App\Enums\AiModelCapability;
 use App\Enums\AiProviderErrorCategory;
 use App\Enums\AiProviderHealthStatus;
+use App\Enums\EntitlementKey;
 use App\Models\AiContentDraft;
 use App\Models\AiGenerationAttempt;
 use App\Models\AiModel;
@@ -20,6 +21,7 @@ use App\Models\Workspace;
 use App\Services\Ai\Exceptions\AiContentGenerationException;
 use App\Services\Ai\Exceptions\AiProviderException;
 use App\Services\ContentEditorialWorkflow;
+use App\Services\Subscriptions\EntitlementService;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
@@ -42,6 +44,7 @@ class AiContentGenerationManager
         private readonly AiContentPromptBuilder $promptBuilder,
         private readonly AiProviderAdapterRegistry $adapterRegistry,
         private readonly ContentEditorialWorkflow $editorialWorkflow,
+        private readonly EntitlementService $entitlements,
     ) {}
 
     /** @param array<string, mixed> $input */
@@ -50,6 +53,8 @@ class AiContentGenerationManager
         if (! config('ai.content_generation_enabled')) {
             throw new AiContentGenerationException('feature_disabled', 'AI content generation is currently disabled.');
         }
+
+        $this->entitlements->assertFeature($workspace, EntitlementKey::ContentStudio);
 
         try {
             $reservation = Cache::lock('ai-content-generation:workspace:'.$workspace->getKey(), 10)

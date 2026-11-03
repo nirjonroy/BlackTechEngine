@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['owner_id', 'name', 'settings'])]
 class Workspace extends Model
@@ -46,6 +47,18 @@ class Workspace extends Model
     public function socialPosts(): HasMany
     {
         return $this->hasMany(SocialPost::class);
+    }
+
+    /** @return HasOne<WorkspaceSubscription, $this> */
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(WorkspaceSubscription::class);
+    }
+
+    /** @return HasMany<BillingInvoice, $this> */
+    public function billingInvoices(): HasMany
+    {
+        return $this->hasMany(BillingInvoice::class);
     }
 
     public function isAccessibleBy(User $user): bool

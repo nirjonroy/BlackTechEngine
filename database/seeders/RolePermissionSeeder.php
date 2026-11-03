@@ -35,6 +35,7 @@ class RolePermissionSeeder extends Seeder
             'edit users',
             'manage ai models',
             'verify ai providers',
+            'manage subscriptions',
         ];
 
         foreach ($requiredPermissions as $permission) {

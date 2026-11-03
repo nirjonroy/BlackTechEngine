@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AiContentDraftStatus;
 use App\Enums\AiContentLength;
 use App\Enums\AiContentType;
+use App\Enums\EntitlementKey;
 use App\Http\Requests\AiContentDraftIndexRequest;
 use App\Http\Requests\StoreAiContentDraftRequest;
 use App\Http\Requests\UpdateAiContentDraftRequest;
@@ -14,6 +15,8 @@ use App\Models\Workspace;
 use App\Services\ContentDraftExporter;
 use App\Services\ContentEditorialWorkflow;
 use App\Services\ContentReviewGate;
+use App\Services\Subscriptions\EntitlementService;
+use App\Services\Subscriptions\UsageMeter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +30,8 @@ class ContentDraftController extends Controller
         private readonly ContentEditorialWorkflow $workflow,
         private readonly ContentDraftExporter $exporter,
         private readonly ContentReviewGate $reviewGate,
+        private readonly EntitlementService $entitlements,
+        private readonly UsageMeter $usage,
     ) {}
 
     public function index(AiContentDraftIndexRequest $request): View
@@ -88,7 +93,16 @@ class ContentDraftController extends Controller
 
     public function store(StoreAiContentDraftRequest $request, Workspace $workspace, Brand $brand): RedirectResponse
     {
+        $this->entitlements->assertFeature($workspace, EntitlementKey::ContentStudio);
+
         $draft = DB::transaction(function () use ($brand, $request, $workspace): AiContentDraft {
+            $reservation = $this->usage->reserve(
+                $workspace,
+                EntitlementKey::ContentDraftsPerPeriod,
+                1,
+                $request->idempotencyKey(),
+                $request->user(),
+            );
             $draft = AiContentDraft::query()->create([
                 ...$request->draftData(),
                 'workspace_id' => $workspace->getKey(),
@@ -96,6 +110,7 @@ class ContentDraftController extends Controller
                 'created_by_user_id' => $request->user()->getKey(),
             ]);
             $this->workflow->recordCreation($draft, $request->user());
+            $this->usage->commit($reservation, AiContentDraft::class, $draft->getKey());
 
             return $draft;
         });

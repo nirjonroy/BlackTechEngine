@@ -1,0 +1,280 @@
+<?php
+
+namespace App\Services\Subscriptions;
+
+use App\Enums\BillingInterval;
+use App\Enums\PaymentStatus;
+use App\Enums\SubscriptionStatus;
+use App\Models\Admin;
+use App\Models\PaymentTransaction;
+use App\Models\PricingPlan;
+use App\Models\SubscriptionHistory;
+use App\Models\User;
+use App\Models\Workspace;
+use App\Models\WorkspaceSubscription;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+
+class SubscriptionManager
+{
+    public function grant(
+        Workspace $workspace,
+        PricingPlan $plan,
+        Admin $admin,
+        BillingInterval $interval,
+        bool $trial = false,
+    ): WorkspaceSubscription {
+        $this->ensureBillable($plan, $interval);
+
+        return DB::transaction(function () use ($admin, $interval, $plan, $trial, $workspace): WorkspaceSubscription {
+            Workspace::query()->lockForUpdate()->findOrFail($workspace->getKey());
+
+            if (WorkspaceSubscription::query()->whereBelongsTo($workspace)->exists()) {
+                throw ValidationException::withMessages(['workspace' => 'This workspace already has a subscription record.']);
+            }
+
+            $startsAt = CarbonImmutable::now('UTC')->startOfSecond();
+            $periodEndsAt = $this->periodEnd($startsAt, $interval);
+            $trialEndsAt = $trial && $plan->trial_days > 0 ? $startsAt->addDays($plan->trial_days) : null;
+            $status = $trialEndsAt !== null ? SubscriptionStatus::Trialing : SubscriptionStatus::Active;
+            $subscription = WorkspaceSubscription::query()->create([
+                'workspace_id' => $workspace->getKey(),
+                'pricing_plan_id' => $plan->getKey(),
+                'created_by_admin_id' => $admin->getKey(),
+                'status' => $status,
+                'billing_interval' => $interval,
+                'currency' => strtoupper($plan->billing_currency),
+                'price_minor' => $this->priceFor($plan, $interval),
+                'entitlement_snapshot' => $this->snapshot($plan, $interval),
+                'activation_source' => 'admin_grant',
+                'starts_at' => $startsAt,
+                'current_period_starts_at' => $startsAt,
+                'current_period_ends_at' => $periodEndsAt,
+                'renews_at' => $interval === BillingInterval::Manual ? null : $periodEndsAt,
+                'trial_ends_at' => $trialEndsAt,
+            ]);
+            $this->record($subscription, 'admin_granted', null, $status, null, $admin, [
+                'pricing_plan_id' => $plan->getKey(),
+                'billing_version' => $plan->billing_version,
+            ]);
+
+            return $subscription;
+        }, 3);
+    }
+
+    public function changePlan(
+        WorkspaceSubscription $subscription,
+        PricingPlan $plan,
+        Admin $admin,
+        BillingInterval $interval,
+        int $expectedVersion,
+    ): WorkspaceSubscription {
+        $this->ensureBillable($plan, $interval);
+
+        return DB::transaction(function () use ($admin, $expectedVersion, $interval, $plan, $subscription): WorkspaceSubscription {
+            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($subscription->getKey());
+            $this->ensureVersion($locked, $expectedVersion);
+            $previousPlanId = $locked->pricing_plan_id;
+            $locked->update([
+                'pricing_plan_id' => $plan->getKey(),
+                'billing_interval' => $interval,
+                'currency' => strtoupper($plan->billing_currency),
+                'price_minor' => $this->priceFor($plan, $interval),
+                'entitlement_snapshot' => $this->snapshot($plan, $interval),
+                'lock_version' => $locked->lock_version + 1,
+            ]);
+            $this->record($locked, 'plan_changed', $locked->status, $locked->status, null, $admin, [
+                'previous_pricing_plan_id' => $previousPlanId,
+                'pricing_plan_id' => $plan->getKey(),
+                'billing_version' => $plan->billing_version,
+            ]);
+
+            return $locked->refresh();
+        }, 3);
+    }
+
+    public function requestPlanChange(
+        WorkspaceSubscription $subscription,
+        PricingPlan $plan,
+        User $user,
+        BillingInterval $interval,
+    ): void {
+        $this->ensureBillable($plan, $interval);
+
+        DB::transaction(function () use ($interval, $plan, $subscription, $user): void {
+            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($subscription->getKey());
+            $this->record($locked, 'plan_change_requested', $locked->status, $locked->status, $user, null, [
+                'requested_pricing_plan_id' => $plan->getKey(),
+                'requested_billing_interval' => $interval->value,
+            ]);
+        });
+    }
+
+    public function requestCancellation(WorkspaceSubscription $subscription, User $user, string $reason): void
+    {
+        DB::transaction(function () use ($reason, $subscription, $user): void {
+            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($subscription->getKey());
+            $this->record($locked, 'cancellation_requested', $locked->status, $locked->status, $user, null, [
+                'reason' => $reason,
+            ]);
+        });
+    }
+
+    public function cancel(
+        WorkspaceSubscription $subscription,
+        Admin $admin,
+        int $expectedVersion,
+        bool $atPeriodEnd,
+    ): WorkspaceSubscription {
+        return DB::transaction(function () use ($admin, $atPeriodEnd, $expectedVersion, $subscription): WorkspaceSubscription {
+            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($subscription->getKey());
+            $this->ensureVersion($locked, $expectedVersion);
+            $from = $locked->status;
+
+            if ($atPeriodEnd) {
+                if ($locked->current_period_ends_at === null) {
+                    throw ValidationException::withMessages(['cancel_at_period_end' => 'This subscription has no billing-period end.']);
+                }
+
+                $locked->update([
+                    'cancel_at_period_end' => true,
+                    'cancelled_at' => now(),
+                    'renews_at' => null,
+                    'lock_version' => $locked->lock_version + 1,
+                ]);
+                $action = 'cancellation_scheduled';
+            } else {
+                $locked->update([
+                    'status' => SubscriptionStatus::Cancelled,
+                    'cancel_at_period_end' => false,
+                    'cancelled_at' => now(),
+                    'ended_at' => now(),
+                    'renews_at' => null,
+                    'lock_version' => $locked->lock_version + 1,
+                ]);
+                $action = 'cancelled_immediately';
+            }
+
+            $this->record($locked, $action, $from, $locked->status, null, $admin);
+
+            return $locked->refresh();
+        }, 3);
+    }
+
+    public function activateFromPayment(PaymentTransaction $payment): WorkspaceSubscription
+    {
+        if ($payment->status !== PaymentStatus::Succeeded) {
+            throw ValidationException::withMessages(['payment' => 'Only a verified successful payment can activate a subscription.']);
+        }
+
+        return DB::transaction(function () use ($payment): WorkspaceSubscription {
+            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($payment->workspace_subscription_id);
+            $from = $locked->status;
+
+            if (! in_array($from, [SubscriptionStatus::PendingActivation, SubscriptionStatus::PastDue], true)) {
+                return $locked;
+            }
+
+            $locked->update([
+                'status' => SubscriptionStatus::Active,
+                'activation_source' => 'verified_payment',
+                'lock_version' => $locked->lock_version + 1,
+            ]);
+            $this->record($locked, 'payment_activated', $from, SubscriptionStatus::Active, null, null, [
+                'payment_transaction_id' => $payment->getKey(),
+            ]);
+
+            return $locked->refresh();
+        }, 3);
+    }
+
+    /** @return array<string, mixed> */
+    public function snapshot(PricingPlan $plan, BillingInterval $interval): array
+    {
+        $plan->loadMissing('entitlements');
+
+        return [
+            'plan' => [
+                'id' => $plan->getKey(),
+                'code' => $plan->code,
+                'name' => $plan->name,
+                'version' => $plan->billing_version,
+                'currency' => strtoupper($plan->billing_currency),
+                'billing_interval' => $interval->value,
+                'price_minor' => $this->priceFor($plan, $interval),
+            ],
+            'entitlements' => $plan->entitlements->mapWithKeys(fn ($entitlement): array => [
+                $entitlement->key => [
+                    'enabled' => $entitlement->is_enabled,
+                    'limit' => $entitlement->limit,
+                    'unlimited' => $entitlement->is_unlimited,
+                    'unit' => $entitlement->unit,
+                ],
+            ])->all(),
+        ];
+    }
+
+    private function ensureBillable(PricingPlan $plan, BillingInterval $interval): void
+    {
+        if (! $plan->is_active || ! $plan->is_billable) {
+            throw ValidationException::withMessages(['pricing_plan_id' => 'This pricing plan is not enabled for subscriptions.']);
+        }
+
+        if ($interval !== BillingInterval::Manual && $this->configuredPriceFor($plan, $interval) === null) {
+            throw ValidationException::withMessages(['billing_interval' => 'This plan has no configured price for the selected interval.']);
+        }
+    }
+
+    private function priceFor(PricingPlan $plan, BillingInterval $interval): int
+    {
+        return (int) ($this->configuredPriceFor($plan, $interval) ?? 0);
+    }
+
+    private function configuredPriceFor(PricingPlan $plan, BillingInterval $interval): ?int
+    {
+        return match ($interval) {
+            BillingInterval::Monthly => $plan->monthly_price_minor,
+            BillingInterval::Annual => $plan->annual_price_minor,
+            BillingInterval::Manual => 0,
+        };
+    }
+
+    private function periodEnd(CarbonImmutable $startsAt, BillingInterval $interval): CarbonImmutable
+    {
+        return match ($interval) {
+            BillingInterval::Annual => $startsAt->addYear(),
+            BillingInterval::Monthly, BillingInterval::Manual => $startsAt->addMonthNoOverflow(),
+        };
+    }
+
+    private function ensureVersion(WorkspaceSubscription $subscription, int $expectedVersion): void
+    {
+        if ($subscription->lock_version !== $expectedVersion) {
+            throw ValidationException::withMessages(['lock_version' => 'The subscription changed. Refresh and review the latest state.']);
+        }
+    }
+
+    /** @param array<string, mixed> $context */
+    private function record(
+        WorkspaceSubscription $subscription,
+        string $action,
+        ?SubscriptionStatus $from,
+        SubscriptionStatus $to,
+        ?User $user,
+        ?Admin $admin,
+        array $context = [],
+    ): void {
+        SubscriptionHistory::query()->create([
+            'workspace_subscription_id' => $subscription->getKey(),
+            'workspace_id' => $subscription->workspace_id,
+            'actor_user_id' => $user?->getKey(),
+            'actor_admin_id' => $admin?->getKey(),
+            'action' => $action,
+            'from_status' => $from?->value,
+            'to_status' => $to->value,
+            'lock_version' => $subscription->lock_version,
+            'context' => $context,
+        ]);
+    }
+}

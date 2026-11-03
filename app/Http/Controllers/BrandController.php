@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
 use App\Models\Workspace;
+use App\Services\Subscriptions\EntitlementService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class BrandController extends Controller
 {
+    public function __construct(private readonly EntitlementService $entitlements) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -43,6 +46,8 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request, Workspace $workspace): RedirectResponse
     {
+        $this->entitlements->assertBrandCreationAllowed($workspace);
+
         $brand = $workspace->brands()->create($request->brandData());
 
         if ($request->routeIs('onboarding.brand.store')) {

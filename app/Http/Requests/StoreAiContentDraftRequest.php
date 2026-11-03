@@ -26,6 +26,7 @@ class StoreAiContentDraftRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'idempotency_key' => ['required', 'uuid'],
             'content_type' => ['required', Rule::enum(AiContentType::class)],
             'topic' => ['required', 'string', 'max:240'],
             'primary_keyword' => ['required', 'string', 'max:160'],
@@ -73,6 +74,11 @@ class StoreAiContentDraftRequest extends FormRequest
             'suggested_slug', 'outline', 'content', 'faq_entries', 'internal_link_opportunities',
             'external_research_topics', 'verification_notes',
         ]);
+    }
+
+    public function idempotencyKey(): string
+    {
+        return $this->string('idempotency_key')->toString();
     }
 
     protected function prepareForValidation(): void

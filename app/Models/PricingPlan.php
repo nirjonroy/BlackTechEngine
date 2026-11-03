@@ -3,25 +3,39 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PricingPlan extends Model
 {
+    use HasFactory;
+
     protected $attributes = [
         'display_order' => 0,
         'is_active' => true,
+        'billing_currency' => 'USD',
+        'billing_version' => 1,
+        'trial_days' => 0,
+        'is_billable' => false,
     ];
 
     protected $fillable = [
         'name',
+        'code',
         'badge',
         'title',
         'description',
         'monthly_price',
         'annual_price',
+        'billing_currency',
+        'monthly_price_minor',
+        'annual_price_minor',
+        'billing_version',
+        'trial_days',
         'display_order',
         'is_active',
+        'is_billable',
         'is_popular',
         'popular_label',
         'button_text',
@@ -48,6 +62,18 @@ class PricingPlan extends Model
             ->orderBy('id');
     }
 
+    /** @return HasMany<PricingPlanEntitlement, $this> */
+    public function entitlements(): HasMany
+    {
+        return $this->hasMany(PricingPlanEntitlement::class)->orderBy('key');
+    }
+
+    /** @return HasMany<WorkspaceSubscription, $this> */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(WorkspaceSubscription::class);
+    }
+
     public function scopePubliclyVisible(Builder $query): Builder
     {
         return $query->where('is_active', true);
@@ -69,8 +95,13 @@ class PricingPlan extends Model
         return [
             'monthly_price' => 'decimal:2',
             'annual_price' => 'decimal:2',
+            'monthly_price_minor' => 'integer',
+            'annual_price_minor' => 'integer',
+            'billing_version' => 'integer',
+            'trial_days' => 'integer',
             'display_order' => 'integer',
             'is_active' => 'boolean',
+            'is_billable' => 'boolean',
             'is_popular' => 'boolean',
         ];
     }

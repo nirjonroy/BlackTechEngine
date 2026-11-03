@@ -22,13 +22,17 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
 use App\Http\Controllers\Admin\FrontendNavigationController;
 use App\Http\Controllers\Admin\HomepageSettingController;
+use App\Http\Controllers\Admin\PlanEntitlementController;
 use App\Http\Controllers\Admin\PricingPageSettingController;
 use App\Http\Controllers\Admin\PricingPlanController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\SubscriptionAdjustmentController as AdminSubscriptionAdjustmentController;
+use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AiContentGenerationController;
+use App\Http\Controllers\BillingInvoiceController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ContentApprovalController;
 use App\Http\Controllers\ContentChangeRequestController;
@@ -50,6 +54,8 @@ use App\Http\Controllers\SocialCalendarController;
 use App\Http\Controllers\SocialPostController;
 use App\Http\Controllers\SocialPostExportController;
 use App\Http\Controllers\SocialPostWorkflowController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionRequestController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -67,6 +73,16 @@ Route::get('/robots.txt', RobotsController::class)->name('robots');
 if (config('customer.workspaces_enabled')) {
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', CustomerDashboardController::class)->name('dashboard');
+
+        if (config('subscriptions.management_enabled')) {
+            Route::get('/subscription', SubscriptionController::class)->name('subscriptions.index');
+            Route::post('/workspaces/{workspace}/subscription/change-requests', [SubscriptionRequestController::class, 'change'])
+                ->name('subscriptions.change-requests.store');
+            Route::post('/workspaces/{workspace}/subscription/cancellation-requests', [SubscriptionRequestController::class, 'cancel'])
+                ->name('subscriptions.cancellation-requests.store');
+            Route::get('/workspaces/{workspace}/billing/invoices/{billingInvoice}', BillingInvoiceController::class)
+                ->scopeBindings()->name('subscriptions.invoices.show');
+        }
 
         Route::get('/onboarding', [OnboardingController::class, 'start'])->name('onboarding.start');
         Route::get('/onboarding/workspace', [WorkspaceController::class, 'create'])->name('onboarding.workspace.create');
@@ -157,6 +173,17 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', DashboardController::class)
         ->middleware(PermissionMiddleware::using('view dashboard', 'admin'))
         ->name('admin.dashboard');
+
+    if (config('subscriptions.management_enabled')) {
+        Route::middleware(PermissionMiddleware::using('manage subscriptions', 'admin'))->group(function () {
+            Route::get('/admin/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions.index');
+            Route::get('/admin/subscriptions/{workspaceSubscription}', [AdminSubscriptionController::class, 'show'])->name('admin.subscriptions.show');
+            Route::get('/admin/pricing-plans/{pricingPlan}/entitlements', [PlanEntitlementController::class, 'edit'])->name('admin.pricing.entitlements.edit');
+            Route::patch('/admin/pricing-plans/{pricingPlan}/entitlements', [PlanEntitlementController::class, 'update'])->name('admin.pricing.entitlements.update');
+            Route::post('/admin/workspaces/{workspace}/subscription-adjustments', AdminSubscriptionAdjustmentController::class)
+                ->name('admin.subscriptions.adjustments.store');
+        });
+    }
 
     Route::middleware(PermissionMiddleware::using('manage users', 'admin'))->group(function () {
         Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');

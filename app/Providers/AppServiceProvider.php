@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Models\Admin;
 use App\Models\AiProvider;
 use App\Models\Workspace;
+use App\Services\Billing\Contracts\PaymentGateway;
+use App\Services\Billing\FakePaymentGateway;
+use App\Services\Billing\UnavailablePaymentGateway;
 use App\View\Composers\CustomerLayoutComposer;
 use App\View\Composers\FrontendLayoutComposer;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -22,7 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            PaymentGateway::class,
+            $this->app->environment('testing') ? FakePaymentGateway::class : UnavailablePaymentGateway::class,
+        );
     }
 
     /**

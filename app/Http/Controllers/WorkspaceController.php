@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreWorkspaceRequest;
 use App\Http\Requests\UpdateWorkspaceRequest;
 use App\Models\Workspace;
+use App\Services\Subscriptions\EntitlementService;
 use DateTimeZone;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class WorkspaceController extends Controller
 {
+    public function __construct(private readonly EntitlementService $entitlements) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -46,6 +49,8 @@ class WorkspaceController extends Controller
      */
     public function store(StoreWorkspaceRequest $request): RedirectResponse
     {
+        $this->entitlements->assertWorkspaceCreationAllowed($request->user());
+
         $workspace = DB::transaction(function () use ($request): Workspace {
             $user = $request->user();
             $workspace = $user->ownedWorkspaces()->create($request->workspaceData());

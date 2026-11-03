@@ -31,6 +31,12 @@
                     <span>AI Models &amp; Routing</span>
                 </a>
             @endif
+            @if(config('subscriptions.management_enabled') && $admin?->can('manage subscriptions'))
+                <a href="{{ route('admin.subscriptions.index') }}" class="{{ $baseClasses }} {{ request()->routeIs('admin.subscriptions.*', 'admin.pricing.entitlements.*') ? $activeClasses : $inactiveClasses }}" @if(request()->routeIs('admin.subscriptions.*', 'admin.pricing.entitlements.*')) aria-current="page" @endif>
+                    <i data-lucide="credit-card" class="h-4 w-4" aria-hidden="true"></i>
+                    <span>Subscriptions</span>
+                </a>
+            @endif
             @foreach([
                 ['icon' => 'building-2', 'label' => 'Workspace Management'],
                 ['icon' => 'server', 'label' => 'Job Queues & Latency'],
