@@ -106,6 +106,9 @@ test('the designated non-billable Free plan is assigned once with an audit histo
     $plan = PricingPlan::factory()->create([
         'code' => 'free',
         'is_billable' => false,
+        'show_on_pricing_page' => false,
+        'monthly_price' => 0,
+        'annual_price' => 0,
         'monthly_price_minor' => 0,
         'annual_price_minor' => 0,
     ]);
@@ -123,6 +126,7 @@ test('the designated non-billable Free plan is assigned once with an audit histo
         ->and($subscription->billing_interval)->toBe(BillingInterval::Monthly)
         ->and($subscription->price_minor)->toBe(0)
         ->and($subscription->activation_source)->toBe('complimentary_free')
+        ->and($plan->refresh()->show_on_pricing_page)->toBeFalse()
         ->and(data_get($subscription->entitlement_snapshot, 'plan.code'))->toBe('free')
         ->and($subscription->histories()->where('action', 'complimentary_free_assigned')->count())->toBe(1);
 });

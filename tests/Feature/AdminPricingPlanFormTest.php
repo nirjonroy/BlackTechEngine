@@ -97,6 +97,7 @@ test('create form uses the shared admin layout and the existing csrf protected s
         ->assertSee('href="'.route('admin.pricing.index').'"', false)
         ->assertSee('name="monthly_price"', false)
         ->assertSee('name="annual_price"', false)
+        ->assertSee('name="show_on_pricing_page"', false)
         ->assertSee('name="features_present" value="1"', false)
         ->assertSee('name="meta_image"', false)
         ->assertDontSee('Stripe price ID')
@@ -219,6 +220,7 @@ test('update persists unchecked states and replaces features in their configured
         'monthly_price' => 50,
         'annual_price' => 500,
         'is_active' => true,
+        'show_on_pricing_page' => true,
         'is_popular' => true,
     ]);
     $oldFeature = $plan->features()->create(['name' => 'Old feature', 'is_included' => true, 'order_by' => 0]);
@@ -231,6 +233,7 @@ test('update persists unchecked states and replaces features in their configured
             'annual_price' => '550.00',
             'display_order' => 8,
             'is_active' => '0',
+            'show_on_pricing_page' => '0',
             'is_popular' => '0',
             'features_present' => '1',
             'features' => [
@@ -244,8 +247,34 @@ test('update persists unchecked states and replaces features in their configured
     $plan->refresh()->load('features');
 
     expect($plan->is_active)->toBeFalse()
+        ->and($plan->show_on_pricing_page)->toBeFalse()
         ->and($plan->is_popular)->toBeFalse()
         ->and($plan->features->pluck('name')->all())->toBe(['Displayed first', 'Displayed second'])
         ->and($plan->features[1]->is_included)->toBeFalse()
         ->and($oldFeature->fresh())->toBeNull();
+});
+
+test('an unauthorized admin cannot change pricing page visibility', function () {
+    $plan = PricingPlan::create([
+        'name' => 'Protected visibility plan',
+        'monthly_price' => 25,
+        'annual_price' => 250,
+        'show_on_pricing_page' => true,
+    ]);
+    $admin = createPricingFormAdmin(false);
+
+    $this->actingAs($admin, 'admin')
+        ->post(route('admin.pricing.update', $plan), [
+            'name' => 'Forged visibility change',
+            'monthly_price' => 25,
+            'annual_price' => 250,
+            'display_order' => 0,
+            'is_active' => '1',
+            'show_on_pricing_page' => '0',
+            'is_popular' => '0',
+        ])
+        ->assertForbidden();
+
+    expect($plan->refresh()->show_on_pricing_page)->toBeTrue()
+        ->and($plan->name)->toBe('Protected visibility plan');
 });

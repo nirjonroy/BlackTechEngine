@@ -91,6 +91,33 @@ test('the pricing page is public and handles missing records without fake plans'
         ->assertDontSee('Agency Matrix');
 });
 
+test('active plans remain publicly visible by default while hidden active plans are excluded', function () {
+    $marketingPlan = PricingPlan::create([
+        'name' => 'Public Marketing Plan',
+        'monthly_price' => 29,
+        'annual_price' => 290,
+        'is_active' => true,
+    ]);
+    $hiddenFreePlan = PricingPlan::create([
+        'name' => 'Complimentary Free Plan',
+        'code' => 'free',
+        'monthly_price' => 0,
+        'annual_price' => 0,
+        'is_active' => true,
+        'show_on_pricing_page' => false,
+        'is_billable' => false,
+    ]);
+
+    $response = $this->get(route('pricing'));
+
+    $response->assertOk()
+        ->assertSee('Public Marketing Plan')
+        ->assertDontSee('Complimentary Free Plan');
+
+    expect($marketingPlan->refresh()->show_on_pricing_page)->toBeTrue()
+        ->and($hiddenFreePlan->refresh()->is_active)->toBeTrue();
+});
+
 test('pricing database content is escaped and unsafe legacy CTA and icon values are rejected', function () {
     $script = '<script>alert("pricing")</script>';
     PricingPageSetting::create([

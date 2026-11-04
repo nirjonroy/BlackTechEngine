@@ -28,6 +28,7 @@ class PricingPlanFactory extends Factory
             'billing_version' => 1,
             'trial_days' => 0,
             'is_active' => true,
+            'show_on_pricing_page' => true,
             'is_billable' => true,
         ];
     }

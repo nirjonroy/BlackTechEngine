@@ -97,13 +97,21 @@
                 @error('popular_label')<p class="mt-1 text-xs font-semibold text-rose-600 dark:text-rose-400">{{ $message }}</p>@enderror
             </div>
 
-            <div class="sm:col-span-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div class="sm:col-span-2 grid grid-cols-1 gap-3 lg:grid-cols-3">
                 <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" value="1" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" @checked((bool) old('is_active', $plan->exists ? $plan->is_active : true))>
                     <span>
-                        <span class="block text-xs font-bold text-slate-800 dark:text-slate-200">Publicly visible</span>
-                        <span class="mt-1 block text-[11px] leading-5 text-slate-500 dark:text-slate-400">Active plans may appear on the public Pricing page.</span>
+                        <span class="block text-xs font-bold text-slate-800 dark:text-slate-200">Subscription eligible</span>
+                        <span class="mt-1 block text-[11px] leading-5 text-slate-500 dark:text-slate-400">Active plans may be selected by approved subscription workflows.</span>
+                    </span>
+                </label>
+                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700">
+                    <input type="hidden" name="show_on_pricing_page" value="0">
+                    <input type="checkbox" name="show_on_pricing_page" value="1" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500" @checked((bool) old('show_on_pricing_page', $plan->exists ? $plan->show_on_pricing_page : true))>
+                    <span>
+                        <span class="block text-xs font-bold text-slate-800 dark:text-slate-200">Show on Pricing page</span>
+                        <span class="mt-1 block text-[11px] leading-5 text-slate-500 dark:text-slate-400">Only active plans with this setting appear in public marketing.</span>
                     </span>
                 </label>
                 <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500 dark:border-slate-700">

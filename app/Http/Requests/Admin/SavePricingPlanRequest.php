@@ -28,6 +28,10 @@ class SavePricingPlanRequest extends AdminFormRequest
             'display_order' => $this->input('display_order', 0),
         ];
 
+        if ($this->has('show_on_pricing_page')) {
+            $prepared['show_on_pricing_page'] = $this->boolean('show_on_pricing_page');
+        }
+
         if ($hasFeatures) {
             $prepared['features'] = $features;
         }
@@ -49,6 +53,7 @@ class SavePricingPlanRequest extends AdminFormRequest
             'annual_price' => ['required', 'numeric', 'min:0', 'max:999999.99', 'decimal:0,2'],
             'display_order' => ['required', 'integer', 'between:0,10000'],
             'is_active' => ['required', 'boolean'],
+            'show_on_pricing_page' => ['sometimes', 'boolean'],
             'is_popular' => ['required', 'boolean'],
             'popular_label' => ['nullable', 'string', 'max:255'],
             'button_text' => ['nullable', 'string', 'max:255'],

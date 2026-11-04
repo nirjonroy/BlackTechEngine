@@ -14,6 +14,7 @@ class PricingPlan extends Model
     protected $attributes = [
         'display_order' => 0,
         'is_active' => true,
+        'show_on_pricing_page' => true,
         'billing_currency' => 'USD',
         'billing_version' => 1,
         'trial_days' => 0,
@@ -35,6 +36,7 @@ class PricingPlan extends Model
         'trial_days',
         'display_order',
         'is_active',
+        'show_on_pricing_page',
         'is_billable',
         'is_popular',
         'popular_label',
@@ -76,7 +78,9 @@ class PricingPlan extends Model
 
     public function scopePubliclyVisible(Builder $query): Builder
     {
-        return $query->where('is_active', true);
+        return $query
+            ->where('is_active', true)
+            ->where('show_on_pricing_page', true);
     }
 
     public function scopeInDisplayOrder(Builder $query): Builder
@@ -101,6 +105,7 @@ class PricingPlan extends Model
             'trial_days' => 'integer',
             'display_order' => 'integer',
             'is_active' => 'boolean',
+            'show_on_pricing_page' => 'boolean',
             'is_billable' => 'boolean',
             'is_popular' => 'boolean',
         ];
