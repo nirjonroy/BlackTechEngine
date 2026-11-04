@@ -2,6 +2,7 @@
 
 namespace App\Services\Subscriptions;
 
+use App\Enums\BillingInterval;
 use App\Enums\EntitlementKey;
 use App\Enums\UsageEventStatus;
 use App\Models\UsageCounter;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceSubscription;
 use App\Services\Subscriptions\Exceptions\EntitlementDeniedException;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -75,7 +77,7 @@ class UsageMeter
             $decision = $this->entitlements->decision($workspace, $key, $counter->consumed());
 
             if (! $decision->allowed || ($decision->remaining !== null && $quantity > $decision->remaining)) {
-                throw new EntitlementDeniedException('quota_exhausted', 'The usage allowance for this billing period has been reached.');
+                throw new EntitlementDeniedException('quota_exhausted', 'The allowance for this monthly usage period has been reached.');
             }
 
             $counter->increment('reserved', $quantity, ['lock_version' => $counter->lock_version + 1]);
@@ -243,10 +245,32 @@ class UsageMeter
         return $this->entitlements->decision($workspace, $key, $used)->remaining;
     }
 
-    /** @return array{0: mixed, 1: mixed} */
+    /** @return array{0: CarbonImmutable, 1: CarbonImmutable|null} */
     private function periodBounds(WorkspaceSubscription $subscription): array
     {
-        return [$subscription->current_period_starts_at, $subscription->current_period_ends_at];
+        $periodStartsAt = CarbonImmutable::instance($subscription->current_period_starts_at);
+        $billingPeriodEndsAt = $subscription->current_period_ends_at === null
+            ? null
+            : CarbonImmutable::instance($subscription->current_period_ends_at);
+
+        if ($subscription->billing_interval !== BillingInterval::Annual) {
+            return [$periodStartsAt, $billingPeriodEndsAt];
+        }
+
+        $now = CarbonImmutable::now('UTC');
+        $quotaPeriodEndsAt = $periodStartsAt->addMonthNoOverflow();
+
+        while (! $quotaPeriodEndsAt->isAfter($now)
+            && ($billingPeriodEndsAt === null || $quotaPeriodEndsAt->isBefore($billingPeriodEndsAt))) {
+            $periodStartsAt = $quotaPeriodEndsAt;
+            $quotaPeriodEndsAt = $periodStartsAt->addMonthNoOverflow();
+        }
+
+        if ($billingPeriodEndsAt !== null && $quotaPeriodEndsAt->isAfter($billingPeriodEndsAt)) {
+            $quotaPeriodEndsAt = $billingPeriodEndsAt;
+        }
+
+        return [$periodStartsAt, $quotaPeriodEndsAt];
     }
 
     private function releaseExpiredReservations(UsageCounter $counter): void

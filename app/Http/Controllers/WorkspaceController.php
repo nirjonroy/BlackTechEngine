@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkspaceRequest;
 use App\Http\Requests\UpdateWorkspaceRequest;
+use App\Models\User;
 use App\Models\Workspace;
 use App\Services\Subscriptions\EntitlementService;
+use App\Services\Subscriptions\SubscriptionManager;
 use DateTimeZone;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +18,10 @@ use Illuminate\Support\Facades\Redirect;
 
 class WorkspaceController extends Controller
 {
-    public function __construct(private readonly EntitlementService $entitlements) {}
+    public function __construct(
+        private readonly EntitlementService $entitlements,
+        private readonly SubscriptionManager $subscriptions,
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -49,12 +54,17 @@ class WorkspaceController extends Controller
      */
     public function store(StoreWorkspaceRequest $request): RedirectResponse
     {
-        $this->entitlements->assertWorkspaceCreationAllowed($request->user());
-
         $workspace = DB::transaction(function () use ($request): Workspace {
-            $user = $request->user();
+            $user = User::query()->lockForUpdate()->findOrFail($request->user()->getKey());
+            $this->entitlements->assertWorkspaceCreationAllowed($user);
+            $isFirstWorkspace = ! $user->ownedWorkspaces()->exists();
             $workspace = $user->ownedWorkspaces()->create($request->workspaceData());
             $workspace->members()->attach($user, ['role' => 'owner']);
+
+            if ($isFirstWorkspace && $this->entitlements->enforcementEnabled()) {
+                $this->subscriptions->assignComplimentaryFree($workspace);
+            }
+
             $user->active_workspace_id = $workspace->getKey();
             $user->save();
 

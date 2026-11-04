@@ -20,12 +20,12 @@ enum EntitlementKey: string
             self::MaximumWorkspaces => 'Maximum workspaces',
             self::MaximumBrands => 'Maximum brands per workspace',
             self::ContentStudio => 'Content Studio access',
-            self::ContentDraftsPerPeriod => 'Content drafts per billing period',
+            self::ContentDraftsPerPeriod => 'Content drafts per monthly usage period',
             self::SocialContent => 'Social Content Management access',
-            self::SocialPostsPerPeriod => 'Social posts per billing period',
+            self::SocialPostsPerPeriod => 'Social posts per monthly usage period',
             self::EditorialReview => 'Editorial Review access',
-            self::AiGenerationAttempts => 'AI generation attempts per billing period',
-            self::AiTokens => 'AI input and output tokens per billing period',
+            self::AiGenerationAttempts => 'AI generation attempts per monthly usage period',
+            self::AiTokens => 'AI input and output tokens per monthly usage period',
         };
     }
 

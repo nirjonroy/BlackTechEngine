@@ -7,6 +7,7 @@ use App\Enums\SubscriptionStatus;
 use App\Enums\UsageEventStatus;
 use App\Models\Admin;
 use App\Models\PricingPlan;
+use App\Models\PricingPlanEntitlement;
 use App\Models\Workspace;
 use App\Services\Billing\PaymentResult;
 use App\Services\Subscriptions\EntitlementService;
@@ -97,6 +98,77 @@ test('admin grants create one subscription and immutable audit history', functio
         ->and($subscription->histories()->where('action', 'admin_granted')->count())->toBe(1)
         ->and(fn () => app(SubscriptionManager::class)->grant($workspace, $plan, $admin, BillingInterval::Monthly))
         ->toThrow(ValidationException::class);
+});
+
+test('the designated non-billable Free plan is assigned once with an audit history', function () {
+    config()->set('subscriptions.free_plan_code', 'free');
+    $workspace = Workspace::factory()->create();
+    $plan = PricingPlan::factory()->create([
+        'code' => 'free',
+        'is_billable' => false,
+        'monthly_price_minor' => 0,
+        'annual_price_minor' => 0,
+    ]);
+    PricingPlanEntitlement::factory()->for($plan, 'plan')->create([
+        'key' => EntitlementKey::MaximumWorkspaces->value,
+        'limit' => 1,
+    ]);
+    $manager = app(SubscriptionManager::class);
+
+    $subscription = $manager->assignComplimentaryFree($workspace);
+    $replay = $manager->assignComplimentaryFree($workspace);
+
+    expect($replay->is($subscription))->toBeTrue()
+        ->and($subscription->status)->toBe(SubscriptionStatus::Active)
+        ->and($subscription->billing_interval)->toBe(BillingInterval::Monthly)
+        ->and($subscription->price_minor)->toBe(0)
+        ->and($subscription->activation_source)->toBe('complimentary_free')
+        ->and(data_get($subscription->entitlement_snapshot, 'plan.code'))->toBe('free')
+        ->and($subscription->histories()->where('action', 'complimentary_free_assigned')->count())->toBe(1);
+});
+
+test('the complimentary path rejects a billable plan even when its code is configured as Free', function () {
+    config()->set('subscriptions.free_plan_code', 'free');
+    PricingPlan::factory()->create(['code' => 'free', 'is_billable' => true]);
+
+    expect(fn () => app(SubscriptionManager::class)->assignComplimentaryFree(Workspace::factory()->create()))
+        ->toThrow(ValidationException::class);
+});
+
+test('annual subscriptions receive monthly usage periods without advancing billing', function () {
+    $this->travelTo('2026-01-15 12:00:00');
+    config()->set('subscriptions.enforcement_enabled', true);
+    [, $workspace, , $subscription] = subscriptionFixture([
+        EntitlementKey::ContentDraftsPerPeriod->value => 1,
+    ]);
+    $subscription->update([
+        'billing_interval' => BillingInterval::Annual,
+        'current_period_starts_at' => '2026-01-01 00:00:00',
+        'current_period_ends_at' => '2027-01-01 00:00:00',
+        'renews_at' => '2027-01-01 00:00:00',
+    ]);
+
+    $january = app(UsageMeter::class)->reserve(
+        $workspace,
+        EntitlementKey::ContentDraftsPerPeriod,
+        1,
+        fake()->uuid(),
+    );
+    $this->travelTo('2026-02-01 00:00:01');
+    $february = app(UsageMeter::class)->reserve(
+        $workspace,
+        EntitlementKey::ContentDraftsPerPeriod,
+        1,
+        fake()->uuid(),
+    );
+
+    expect($january?->counter->period_starts_at->toDateTimeString())->toBe('2026-01-01 00:00:00')
+        ->and($january?->counter->period_ends_at->toDateTimeString())->toBe('2026-02-01 00:00:00')
+        ->and($february?->counter->period_starts_at->toDateTimeString())->toBe('2026-02-01 00:00:00')
+        ->and($february?->counter->period_ends_at->toDateTimeString())->toBe('2026-03-01 00:00:00')
+        ->and($subscription->usageCounters()->count())->toBe(2)
+        ->and($subscription->fresh()->current_period_starts_at->toDateTimeString())->toBe('2026-01-01 00:00:00')
+        ->and($subscription->fresh()->current_period_ends_at->toDateTimeString())->toBe('2027-01-01 00:00:00');
 });
 
 test('unpriced billing intervals cannot be granted', function () {

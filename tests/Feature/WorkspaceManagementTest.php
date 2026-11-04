@@ -1,7 +1,11 @@
 <?php
 
+use App\Enums\EntitlementKey;
+use App\Models\PricingPlan;
+use App\Models\PricingPlanEntitlement;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceSubscription;
 
 test('guests are redirected to customer login from workspace routes', function () {
     $this->get(route('workspaces.index'))->assertRedirectToRoute('login');
@@ -24,6 +28,55 @@ test('a customer creates an owned active workspace with future membership readin
         'workspace_id' => $workspace->id,
         'role' => 'owner',
     ]);
+});
+
+test('first-workspace onboarding atomically assigns Free access and permits the initial brand', function () {
+    config()->set('subscriptions.enforcement_enabled', true);
+    config()->set('subscriptions.free_plan_code', 'free');
+    $plan = PricingPlan::factory()->create([
+        'code' => 'free',
+        'is_billable' => false,
+        'monthly_price_minor' => 0,
+        'annual_price_minor' => 0,
+    ]);
+
+    foreach ([EntitlementKey::MaximumWorkspaces->value => 1, EntitlementKey::MaximumBrands->value => 1] as $key => $limit) {
+        PricingPlanEntitlement::factory()->for($plan, 'plan')->create([
+            'key' => $key,
+            'limit' => $limit,
+        ]);
+    }
+
+    $user = User::factory()->create();
+    $this->actingAs($user)->post(route('onboarding.workspace.store'), validWorkspacePayload())
+        ->assertRedirect();
+    $workspace = Workspace::query()->sole();
+
+    $this->actingAs($user)->post(route('onboarding.brand.store', $workspace), validBrandPayload())
+        ->assertRedirectToRoute('onboarding.confirm', [$workspace, $workspace->brands()->sole()]);
+    $this->actingAs($user)->from(route('workspaces.create'))
+        ->post(route('workspaces.store'), validWorkspacePayload(['name' => 'Second Workspace']))
+        ->assertSessionHasErrors('subscription');
+
+    expect(WorkspaceSubscription::query()->count())->toBe(1)
+        ->and($workspace->subscription?->activation_source)->toBe('complimentary_free')
+        ->and($workspace->brands()->count())->toBe(1)
+        ->and($user->ownedWorkspaces()->count())->toBe(1)
+        ->and($workspace->members()->whereKey($user)->exists())->toBeTrue();
+});
+
+test('first-workspace onboarding rolls back when the designated Free plan is unavailable', function () {
+    config()->set('subscriptions.enforcement_enabled', true);
+    config()->set('subscriptions.free_plan_code', 'missing-free');
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->from(route('onboarding.workspace.create'))
+        ->post(route('onboarding.workspace.store'), validWorkspacePayload())
+        ->assertSessionHasErrors('subscription');
+
+    expect(Workspace::query()->count())->toBe(0)
+        ->and(WorkspaceSubscription::query()->count())->toBe(0)
+        ->and($user->fresh()->active_workspace_id)->toBeNull();
 });
 
 test('workspace index includes owned and authorized memberships but excludes other customers', function () {

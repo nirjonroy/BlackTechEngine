@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Enums\AiContentDraftStatus;
+use App\Enums\EntitlementKey;
 use App\Models\AiContentDraft;
 use App\Models\AiContentDraftEvent;
 use App\Models\AiContentDraftRevision;
 use App\Models\User;
+use App\Models\Workspace;
+use App\Services\Subscriptions\EntitlementService;
 use BackedEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +40,10 @@ class ContentEditorialWorkflow
         'verification_notes',
     ];
 
-    public function __construct(private readonly ContentReviewGate $gate) {}
+    public function __construct(
+        private readonly ContentReviewGate $gate,
+        private readonly EntitlementService $entitlements,
+    ) {}
 
     public function recordCreation(AiContentDraft $draft, User $actor, string $action = 'created'): void
     {
@@ -105,6 +111,7 @@ class ContentEditorialWorkflow
 
         return DB::transaction(function () use ($actor, $draft, $expectedVersion, $notes): AiContentDraft {
             $lockedDraft = $this->lockedDraft($draft);
+            $this->assertEditorialReviewAllowed($lockedDraft);
             $this->ensureVersion($lockedDraft, $expectedVersion);
 
             if ($lockedDraft->status !== AiContentDraftStatus::Draft) {
@@ -141,6 +148,7 @@ class ContentEditorialWorkflow
 
         return DB::transaction(function () use ($actor, $draft, $expectedVersion, $notes): AiContentDraft {
             $lockedDraft = $this->lockedDraft($draft);
+            $this->assertEditorialReviewAllowed($lockedDraft);
             $this->ensureVersion($lockedDraft, $expectedVersion);
 
             if ($lockedDraft->status !== AiContentDraftStatus::NeedsReview) {
@@ -173,6 +181,7 @@ class ContentEditorialWorkflow
 
         return DB::transaction(function () use ($actor, $draft, $expectedVersion, $notes): AiContentDraft {
             $lockedDraft = $this->lockedDraft($draft);
+            $this->assertEditorialReviewAllowed($lockedDraft);
             $this->ensureVersion($lockedDraft, $expectedVersion);
 
             if ($lockedDraft->status !== AiContentDraftStatus::NeedsReview) {
@@ -207,6 +216,7 @@ class ContentEditorialWorkflow
 
         return DB::transaction(function () use ($actor, $draft, $expectedVersion, $format): AiContentDraft {
             $lockedDraft = $this->lockedDraft($draft);
+            $this->assertEditorialReviewAllowed($lockedDraft);
             $this->ensureVersion($lockedDraft, $expectedVersion);
 
             if (! in_array($lockedDraft->status, [AiContentDraftStatus::Approved, AiContentDraftStatus::ExportReady], true)) {
@@ -330,5 +340,11 @@ class ContentEditorialWorkflow
     private function ensureEnabled(): void
     {
         abort_unless($this->gate->enabled(), 404);
+    }
+
+    private function assertEditorialReviewAllowed(AiContentDraft $draft): void
+    {
+        $workspace = Workspace::query()->findOrFail($draft->workspace_id);
+        $this->entitlements->assertFeature($workspace, EntitlementKey::EditorialReview);
     }
 }

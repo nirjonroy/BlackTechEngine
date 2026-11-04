@@ -21,6 +21,68 @@ use RuntimeException;
 
 class SubscriptionManager
 {
+    public function assignComplimentaryFree(Workspace $workspace): WorkspaceSubscription
+    {
+        return DB::transaction(function () use ($workspace): WorkspaceSubscription {
+            $lockedWorkspace = Workspace::query()->lockForUpdate()->findOrFail($workspace->getKey());
+            $existing = WorkspaceSubscription::query()->whereBelongsTo($lockedWorkspace)->first();
+
+            if ($existing !== null) {
+                if ($existing->activation_source === 'complimentary_free'
+                    && data_get($existing->entitlement_snapshot, 'plan.code') === config('subscriptions.free_plan_code')) {
+                    return $existing;
+                }
+
+                throw ValidationException::withMessages(['workspace' => 'This workspace already has a subscription record.']);
+            }
+
+            $planCode = config('subscriptions.free_plan_code');
+
+            if (! is_string($planCode) || trim($planCode) === '') {
+                throw ValidationException::withMessages(['subscription' => 'The complimentary Free plan is not configured.']);
+            }
+
+            $plan = PricingPlan::query()->where('code', $planCode)->lockForUpdate()->first();
+
+            if ($plan === null
+                || $plan->code !== $planCode
+                || ! $plan->is_active
+                || $plan->is_billable
+                || ($plan->monthly_price_minor !== null && $plan->monthly_price_minor !== 0)
+                || ($plan->annual_price_minor !== null && $plan->annual_price_minor !== 0)) {
+                throw ValidationException::withMessages(['subscription' => 'The designated complimentary Free plan is unavailable.']);
+            }
+
+            $startsAt = CarbonImmutable::now('UTC')->startOfSecond();
+            $periodEndsAt = $this->periodEnd($startsAt, BillingInterval::Monthly);
+            $subscription = WorkspaceSubscription::query()->create([
+                'workspace_id' => $lockedWorkspace->getKey(),
+                'pricing_plan_id' => $plan->getKey(),
+                'status' => SubscriptionStatus::Active,
+                'billing_interval' => BillingInterval::Monthly,
+                'currency' => strtoupper($plan->billing_currency),
+                'price_minor' => 0,
+                'entitlement_snapshot' => $this->snapshot($plan, BillingInterval::Monthly),
+                'activation_source' => 'complimentary_free',
+                'starts_at' => $startsAt,
+                'current_period_starts_at' => $startsAt,
+                'current_period_ends_at' => $periodEndsAt,
+                'renews_at' => $periodEndsAt,
+            ]);
+            $this->record(
+                $subscription,
+                'complimentary_free_assigned',
+                null,
+                SubscriptionStatus::Active,
+                null,
+                null,
+                ['pricing_plan_id' => $plan->getKey(), 'billing_version' => $plan->billing_version],
+            );
+
+            return $subscription;
+        }, 3);
+    }
+
     public function grant(
         Workspace $workspace,
         PricingPlan $plan,
@@ -262,7 +324,7 @@ class SubscriptionManager
 
             if ($from === SubscriptionStatus::Active
                 && $subscription->price_minor === 0
-                && $subscription->activation_source === 'admin_grant') {
+                && in_array($subscription->activation_source, ['admin_grant', 'complimentary_free'], true)) {
                 return $this->advanceComplimentaryPeriod($subscription, $asOf);
             }
 

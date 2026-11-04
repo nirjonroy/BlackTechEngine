@@ -2,10 +2,16 @@
 
 use App\Enums\AiContentDraftStatus;
 use App\Enums\AiContentType;
+use App\Enums\BillingInterval;
+use App\Enums\EntitlementKey;
 use App\Models\AiContentDraft;
 use App\Models\AiContentDraftEvent;
 use App\Models\AiContentDraftRevision;
+use App\Models\PricingPlan;
+use App\Models\PricingPlanEntitlement;
 use App\Models\User;
+use App\Models\WorkspaceSubscription;
+use App\Services\Subscriptions\SubscriptionManager;
 
 test('each content type follows the owner-approved review lifecycle', function (AiContentType $contentType) {
     $this->freezeTime();
@@ -69,6 +75,101 @@ test('a workspace member can request review but cannot approve it', function () 
     expect($draft->fresh()->status)->toBe(AiContentDraftStatus::NeedsReview)
         ->and($workspace->fresh()->owner_id)->toBe($owner->id);
 });
+
+test('editorial workflow transitions require the editorial review entitlement when enforcement is enabled', function () {
+    config()->set('subscriptions.enforcement_enabled', true);
+    [$owner, $workspace, $brand] = contentStudioTenant();
+    $plan = PricingPlan::factory()->create();
+    WorkspaceSubscription::factory()->for($workspace)->for($plan, 'plan')->create([
+        'entitlement_snapshot' => app(SubscriptionManager::class)->snapshot($plan, BillingInterval::Monthly),
+    ]);
+    $draft = AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $owner->id,
+        'content' => 'Review-ready content.',
+    ]);
+
+    $this->actingAs($owner)->from(route('content-studio.drafts.show', [$workspace, $brand, $draft]))->post(
+        route('content-studio.drafts.review-requests.store', [$workspace, $brand, $draft]),
+        ['lock_version' => 0],
+    )->assertSessionHasErrors('subscription');
+
+    expect($draft->fresh()->status)->toBe(AiContentDraftStatus::Draft)
+        ->and(AiContentDraftEvent::query()->count())->toBe(0);
+
+    $awaitingReview = AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $owner->id,
+        'content' => 'Awaiting a decision.',
+        'status' => AiContentDraftStatus::NeedsReview,
+    ]);
+
+    $this->actingAs($owner)->from(route('content-studio.drafts.show', [$workspace, $brand, $awaitingReview]))->post(
+        route('content-studio.drafts.approval.store', [$workspace, $brand, $awaitingReview]),
+        ['lock_version' => 0],
+    )->assertSessionHasErrors('subscription');
+    $this->actingAs($owner)->from(route('content-studio.drafts.show', [$workspace, $brand, $awaitingReview]))->post(
+        route('content-studio.drafts.change-requests.store', [$workspace, $brand, $awaitingReview]),
+        ['lock_version' => 0, 'notes' => 'Add a source.'],
+    )->assertSessionHasErrors('subscription');
+
+    $approved = AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $owner->id,
+        'status' => AiContentDraftStatus::Approved,
+        'approved_at' => now(),
+        'approved_by_user_id' => $owner->id,
+    ]);
+    $this->actingAs($owner)->from(route('content-studio.drafts.show', [$workspace, $brand, $approved]))->post(
+        route('content-studio.drafts.exports.store', [$workspace, $brand, $approved]),
+        ['lock_version' => 0, 'format' => 'html'],
+    )->assertSessionHasErrors('subscription');
+
+    expect($awaitingReview->fresh()->status)->toBe(AiContentDraftStatus::NeedsReview)
+        ->and($approved->fresh()->status)->toBe(AiContentDraftStatus::Approved)
+        ->and(AiContentDraftEvent::query()->count())->toBe(0);
+});
+
+test('editorial workflow transitions remain available with the entitlement or disabled enforcement', function (bool $enforcementEnabled) {
+    config()->set('subscriptions.enforcement_enabled', $enforcementEnabled);
+    [$owner, $workspace, $brand] = contentStudioTenant();
+    $plan = PricingPlan::factory()->create();
+
+    if ($enforcementEnabled) {
+        PricingPlanEntitlement::factory()->for($plan, 'plan')->create([
+            'key' => EntitlementKey::EditorialReview->value,
+            'is_enabled' => true,
+            'limit' => null,
+        ]);
+    }
+
+    WorkspaceSubscription::factory()->for($workspace)->for($plan, 'plan')->create([
+        'entitlement_snapshot' => app(SubscriptionManager::class)->snapshot($plan, BillingInterval::Monthly),
+    ]);
+    $draft = AiContentDraft::factory()->create([
+        'workspace_id' => $workspace->id,
+        'brand_id' => $brand->id,
+        'created_by_user_id' => $owner->id,
+        'content' => 'Review-ready content.',
+    ]);
+
+    $this->actingAs($owner)->post(
+        route('content-studio.drafts.review-requests.store', [$workspace, $brand, $draft]),
+        ['lock_version' => 0],
+    )->assertSessionHasNoErrors();
+    $this->actingAs($owner)->post(
+        route('content-studio.drafts.approval.store', [$workspace, $brand, $draft]),
+        ['lock_version' => 1],
+    )->assertSessionHasNoErrors();
+
+    expect($draft->fresh()->status)->toBe(AiContentDraftStatus::Approved);
+})->with([
+    'enforcement disabled' => false,
+    'entitled subscription' => true,
+]);
 
 test('only the workspace owner has the approval abilities', function () {
     $owner = User::factory()->create();
