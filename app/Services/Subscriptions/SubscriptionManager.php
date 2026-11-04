@@ -3,7 +3,9 @@
 namespace App\Services\Subscriptions;
 
 use App\Enums\BillingInterval;
+use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\ReconciliationStatus;
 use App\Enums\SubscriptionStatus;
 use App\Models\Admin;
 use App\Models\PaymentTransaction;
@@ -15,6 +17,7 @@ use App\Models\WorkspaceSubscription;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 
 class SubscriptionManager
 {
@@ -164,28 +167,124 @@ class SubscriptionManager
 
     public function activateFromPayment(PaymentTransaction $payment): WorkspaceSubscription
     {
-        if ($payment->status !== PaymentStatus::Succeeded) {
-            throw ValidationException::withMessages(['payment' => 'Only a verified successful payment can activate a subscription.']);
-        }
-
         return DB::transaction(function () use ($payment): WorkspaceSubscription {
-            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($payment->workspace_subscription_id);
+            $lockedPayment = PaymentTransaction::query()->lockForUpdate()->findOrFail($payment->getKey());
+            $invoice = $lockedPayment->invoice()->lockForUpdate()->firstOrFail();
+
+            if ($lockedPayment->status !== PaymentStatus::Succeeded
+                || $lockedPayment->reconciliation_status !== ReconciliationStatus::Matched
+                || $invoice->status !== InvoiceStatus::Paid
+                || $invoice->workspace_subscription_id !== $lockedPayment->workspace_subscription_id
+                || $invoice->workspace_id !== $lockedPayment->workspace_id
+                || $invoice->currency !== $lockedPayment->currency
+                || $invoice->total_minor !== $lockedPayment->amount_minor) {
+                throw ValidationException::withMessages(['payment' => 'Only a reconciled successful payment can activate a subscription.']);
+            }
+
+            $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($lockedPayment->workspace_subscription_id);
             $from = $locked->status;
 
             if (! in_array($from, [SubscriptionStatus::PendingActivation, SubscriptionStatus::PastDue], true)) {
                 return $locked;
             }
 
-            $locked->update([
+            $changes = [
                 'status' => SubscriptionStatus::Active,
                 'activation_source' => 'verified_payment',
                 'lock_version' => $locked->lock_version + 1,
-            ]);
-            $this->record($locked, 'payment_activated', $from, SubscriptionStatus::Active, null, null, [
-                'payment_transaction_id' => $payment->getKey(),
+            ];
+            $action = 'payment_activated';
+
+            if ($from === SubscriptionStatus::PastDue
+                && $locked->current_period_ends_at !== null
+                && $locked->current_period_ends_at->isPast()) {
+                $periodStartsAt = CarbonImmutable::instance($locked->current_period_ends_at);
+                $periodEndsAt = $this->periodEnd($periodStartsAt, $locked->billing_interval);
+                $changes += [
+                    'current_period_starts_at' => $periodStartsAt,
+                    'current_period_ends_at' => $periodEndsAt,
+                    'renews_at' => $locked->billing_interval === BillingInterval::Manual ? null : $periodEndsAt,
+                    'ended_at' => null,
+                ];
+                $action = 'payment_renewed';
+            }
+
+            $locked->update($changes);
+            $this->record($locked, $action, $from, SubscriptionStatus::Active, null, null, [
+                'payment_transaction_id' => $lockedPayment->getKey(),
             ]);
 
             return $locked->refresh();
+        }, 3);
+    }
+
+    public function processDuePeriod(int $subscriptionId, CarbonImmutable $asOf): ?string
+    {
+        return DB::transaction(function () use ($asOf, $subscriptionId): ?string {
+            $subscription = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($subscriptionId);
+
+            if (! in_array($subscription->status, [
+                SubscriptionStatus::Active,
+                SubscriptionStatus::Trialing,
+                SubscriptionStatus::PastDue,
+            ], true)) {
+                return null;
+            }
+
+            $periodEnded = $subscription->current_period_ends_at !== null
+                && ! $subscription->current_period_ends_at->isAfter($asOf);
+            $trialEnded = $subscription->status === SubscriptionStatus::Trialing
+                && $subscription->trial_ends_at !== null
+                && ! $subscription->trial_ends_at->isAfter($asOf);
+
+            if (! $periodEnded && ! $trialEnded) {
+                return null;
+            }
+
+            $from = $subscription->status;
+
+            if ($periodEnded && $subscription->cancel_at_period_end) {
+                $subscription->update([
+                    'status' => SubscriptionStatus::Cancelled,
+                    'cancel_at_period_end' => false,
+                    'ended_at' => $subscription->current_period_ends_at,
+                    'renews_at' => null,
+                    'lock_version' => $subscription->lock_version + 1,
+                ]);
+                $this->record($subscription, 'period_end_cancelled', $from, SubscriptionStatus::Cancelled, null, null);
+
+                return 'cancelled';
+            }
+
+            if ($trialEnded || $subscription->billing_interval === BillingInterval::Manual) {
+                return $this->expire($subscription, $from, $asOf, $trialEnded ? 'trial_expired' : 'manual_period_expired');
+            }
+
+            if ($from === SubscriptionStatus::Active
+                && $subscription->price_minor === 0
+                && $subscription->activation_source === 'admin_grant') {
+                return $this->advanceComplimentaryPeriod($subscription, $asOf);
+            }
+
+            if ($from === SubscriptionStatus::Active) {
+                $subscription->update([
+                    'status' => SubscriptionStatus::PastDue,
+                    'renews_at' => null,
+                    'lock_version' => $subscription->lock_version + 1,
+                ]);
+                $this->record($subscription, 'payment_became_due', $from, SubscriptionStatus::PastDue, null, null);
+
+                return 'past_due';
+            }
+
+            $graceDays = max(0, (int) config('subscriptions.past_due_grace_days', 7));
+            $expiresAt = CarbonImmutable::instance($subscription->current_period_ends_at)->addDays($graceDays);
+
+            if ($expiresAt->isAfter($asOf)) {
+                return null;
+            }
+
+            return $this->expire($subscription, $from, $asOf, 'past_due_expired');
         }, 3);
     }
 
@@ -213,6 +312,60 @@ class SubscriptionManager
                 ],
             ])->all(),
         ];
+    }
+
+    private function advanceComplimentaryPeriod(
+        WorkspaceSubscription $subscription,
+        CarbonImmutable $asOf,
+    ): string {
+        $previousPeriodStartsAt = CarbonImmutable::instance($subscription->current_period_starts_at);
+        $previousPeriodEndsAt = CarbonImmutable::instance($subscription->current_period_ends_at);
+        $periodStartsAt = $previousPeriodEndsAt;
+        $periodEndsAt = $this->periodEnd($periodStartsAt, $subscription->billing_interval);
+        $advancedPeriods = 1;
+
+        while (! $periodEndsAt->isAfter($asOf) && $advancedPeriods < 1200) {
+            $periodStartsAt = $periodEndsAt;
+            $periodEndsAt = $this->periodEnd($periodStartsAt, $subscription->billing_interval);
+            $advancedPeriods++;
+        }
+
+        if (! $periodEndsAt->isAfter($asOf)) {
+            throw new RuntimeException('Subscription period advancement exceeded the safety bound.');
+        }
+
+        $subscription->update([
+            'current_period_starts_at' => $periodStartsAt,
+            'current_period_ends_at' => $periodEndsAt,
+            'renews_at' => $periodEndsAt,
+            'lock_version' => $subscription->lock_version + 1,
+        ]);
+        $this->record($subscription, 'period_advanced', $subscription->status, $subscription->status, null, null, [
+            'previous_period_starts_at' => $previousPeriodStartsAt->toIso8601String(),
+            'previous_period_ends_at' => $previousPeriodEndsAt->toIso8601String(),
+            'period_starts_at' => $periodStartsAt->toIso8601String(),
+            'period_ends_at' => $periodEndsAt->toIso8601String(),
+            'advanced_periods' => $advancedPeriods,
+        ]);
+
+        return 'advanced';
+    }
+
+    private function expire(
+        WorkspaceSubscription $subscription,
+        SubscriptionStatus $from,
+        CarbonImmutable $asOf,
+        string $action,
+    ): string {
+        $subscription->update([
+            'status' => SubscriptionStatus::Expired,
+            'ended_at' => $asOf,
+            'renews_at' => null,
+            'lock_version' => $subscription->lock_version + 1,
+        ]);
+        $this->record($subscription, $action, $from, SubscriptionStatus::Expired, null, null);
+
+        return 'expired';
     }
 
     private function ensureBillable(PricingPlan $plan, BillingInterval $interval): void

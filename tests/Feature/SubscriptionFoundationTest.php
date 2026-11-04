@@ -64,6 +64,28 @@ test('usage limits reject over reservation and release restores capacity', funct
     expect($meter->remaining($workspace, EntitlementKey::SocialPostsPerPeriod))->toBe(1);
 });
 
+test('multiple usage reservations reconcile in one transaction', function () {
+    config()->set('subscriptions.enforcement_enabled', true);
+    [, $workspace] = subscriptionFixture([
+        EntitlementKey::AiGenerationAttempts->value => 2,
+        EntitlementKey::AiTokens->value => 100,
+    ]);
+    $meter = app(UsageMeter::class);
+    $key = fake()->uuid();
+    $attempt = $meter->reserve($workspace, EntitlementKey::AiGenerationAttempts, 1, $key);
+    $tokens = $meter->reserve($workspace, EntitlementKey::AiTokens, 100, $key);
+
+    expect(fn () => $meter->commitMany([
+        ['event' => $attempt, 'actual_quantity' => 1],
+        ['event' => $tokens, 'actual_quantity' => 101],
+    ]))->toThrow(InvalidArgumentException::class);
+
+    expect($attempt?->fresh()->status)->toBe(UsageEventStatus::Reserved)
+        ->and($tokens?->fresh()->status)->toBe(UsageEventStatus::Reserved)
+        ->and($attempt?->counter->fresh()->used)->toBe(0)
+        ->and($tokens?->counter->fresh()->used)->toBe(0);
+});
+
 test('admin grants create one subscription and immutable audit history', function () {
     $admin = Admin::query()->create(['name' => 'Billing Admin', 'email' => 'billing@example.test', 'password' => bcrypt('password')]);
     $workspace = Workspace::factory()->create();

@@ -101,40 +101,64 @@ class UsageMeter
             return;
         }
 
-        DB::transaction(function () use ($actualQuantity, $event, $referenceId, $referenceType): void {
-            $locked = UsageEvent::query()->lockForUpdate()->findOrFail($event->getKey());
+        $this->commitMany([[
+            'event' => $event,
+            'reference_type' => $referenceType,
+            'reference_id' => $referenceId,
+            'actual_quantity' => $actualQuantity,
+        ]]);
+    }
 
-            if ($locked->status === UsageEventStatus::Committed) {
-                return;
+    /**
+     * @param  list<array{event: UsageEvent|null, reference_type?: string|null, reference_id?: int|null, actual_quantity?: int|null}>  $commits
+     */
+    public function commitMany(array $commits): void
+    {
+        $commits = collect($commits)
+            ->filter(fn (array $commit): bool => $commit['event'] instanceof UsageEvent)
+            ->sortBy(fn (array $commit): int => $commit['event']->getKey())
+            ->values();
+
+        if ($commits->isEmpty()) {
+            return;
+        }
+
+        DB::transaction(function () use ($commits): void {
+            foreach ($commits as $commit) {
+                $locked = UsageEvent::query()->lockForUpdate()->findOrFail($commit['event']->getKey());
+
+                if ($locked->status === UsageEventStatus::Committed) {
+                    continue;
+                }
+
+                if ($locked->status === UsageEventStatus::Released) {
+                    throw new EntitlementDeniedException('reservation_released', 'This usage reservation is no longer available.');
+                }
+
+                $committedQuantity = $commit['actual_quantity'] ?? $locked->quantity;
+
+                if ($committedQuantity < 0 || $committedQuantity > $locked->quantity) {
+                    throw new InvalidArgumentException('Committed usage cannot exceed its reservation.');
+                }
+
+                $counter = UsageCounter::query()->lockForUpdate()->findOrFail($locked->usage_counter_id);
+                $counter->update([
+                    'reserved' => max(0, $counter->reserved - $locked->quantity),
+                    'used' => $counter->used + $committedQuantity,
+                    'lock_version' => $counter->lock_version + 1,
+                ]);
+                $metadata = $locked->metadata ?? [];
+                $metadata['reserved_quantity'] = $locked->quantity;
+                $locked->update([
+                    'quantity' => $committedQuantity,
+                    'status' => UsageEventStatus::Committed,
+                    'reference_type' => $commit['reference_type'] ?? null,
+                    'reference_id' => $commit['reference_id'] ?? null,
+                    'metadata' => $metadata,
+                    'committed_at' => now(),
+                    'expires_at' => null,
+                ]);
             }
-
-            if ($locked->status === UsageEventStatus::Released) {
-                throw new EntitlementDeniedException('reservation_released', 'This usage reservation is no longer available.');
-            }
-
-            $committedQuantity = $actualQuantity ?? $locked->quantity;
-
-            if ($committedQuantity < 0 || $committedQuantity > $locked->quantity) {
-                throw new InvalidArgumentException('Committed usage cannot exceed its reservation.');
-            }
-
-            $counter = UsageCounter::query()->lockForUpdate()->findOrFail($locked->usage_counter_id);
-            $counter->update([
-                'reserved' => max(0, $counter->reserved - $locked->quantity),
-                'used' => $counter->used + $committedQuantity,
-                'lock_version' => $counter->lock_version + 1,
-            ]);
-            $metadata = $locked->metadata ?? [];
-            $metadata['reserved_quantity'] = $locked->quantity;
-            $locked->update([
-                'quantity' => $committedQuantity,
-                'status' => UsageEventStatus::Committed,
-                'reference_type' => $referenceType,
-                'reference_id' => $referenceId,
-                'metadata' => $metadata,
-                'committed_at' => now(),
-                'expires_at' => null,
-            ]);
         }, 3);
     }
 
@@ -144,24 +168,56 @@ class UsageMeter
             return;
         }
 
-        DB::transaction(function () use ($event, $reason): void {
-            $locked = UsageEvent::query()->lockForUpdate()->findOrFail($event->getKey());
+        $this->releaseMany([$event], $reason);
+    }
 
-            if ($locked->status !== UsageEventStatus::Reserved) {
-                return;
+    public function commitAndRelease(
+        ?UsageEvent $committedEvent,
+        ?UsageEvent $releasedEvent,
+        string $releaseReason,
+        ?string $referenceType = null,
+        ?int $referenceId = null,
+    ): void {
+        DB::transaction(function () use ($committedEvent, $referenceId, $referenceType, $releaseReason, $releasedEvent): void {
+            $this->commit($committedEvent, $referenceType, $referenceId);
+            $this->release($releasedEvent, $releaseReason);
+        }, 3);
+    }
+
+    /** @param list<UsageEvent|null> $events */
+    public function releaseMany(array $events, string $reason = 'operation_failed'): void
+    {
+        $eventIds = collect($events)
+            ->filter(fn (?UsageEvent $event): bool => $event instanceof UsageEvent)
+            ->map(fn (UsageEvent $event): int => $event->getKey())
+            ->unique()
+            ->sort()
+            ->values();
+
+        if ($eventIds->isEmpty()) {
+            return;
+        }
+
+        DB::transaction(function () use ($eventIds, $reason): void {
+            foreach ($eventIds as $eventId) {
+                $locked = UsageEvent::query()->lockForUpdate()->findOrFail($eventId);
+
+                if ($locked->status !== UsageEventStatus::Reserved) {
+                    continue;
+                }
+
+                $counter = UsageCounter::query()->lockForUpdate()->findOrFail($locked->usage_counter_id);
+                $counter->update([
+                    'reserved' => max(0, $counter->reserved - $locked->quantity),
+                    'lock_version' => $counter->lock_version + 1,
+                ]);
+                $locked->update([
+                    'status' => UsageEventStatus::Released,
+                    'metadata' => [...($locked->metadata ?? []), 'release_reason' => $reason],
+                    'released_at' => now(),
+                    'expires_at' => null,
+                ]);
             }
-
-            $counter = UsageCounter::query()->lockForUpdate()->findOrFail($locked->usage_counter_id);
-            $counter->update([
-                'reserved' => max(0, $counter->reserved - $locked->quantity),
-                'lock_version' => $counter->lock_version + 1,
-            ]);
-            $locked->update([
-                'status' => UsageEventStatus::Released,
-                'metadata' => [...($locked->metadata ?? []), 'release_reason' => $reason],
-                'released_at' => now(),
-                'expires_at' => null,
-            ]);
         }, 3);
     }
 

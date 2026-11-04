@@ -16,12 +16,15 @@ use App\Models\AiModel;
 use App\Models\AiProvider;
 use App\Models\AiWorkloadRoute;
 use App\Models\Brand;
+use App\Models\UsageEvent;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Services\Ai\Exceptions\AiContentGenerationException;
 use App\Services\Ai\Exceptions\AiProviderException;
 use App\Services\ContentEditorialWorkflow;
 use App\Services\Subscriptions\EntitlementService;
+use App\Services\Subscriptions\Exceptions\EntitlementDeniedException;
+use App\Services\Subscriptions\UsageMeter;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
@@ -45,6 +48,7 @@ class AiContentGenerationManager
         private readonly AiProviderAdapterRegistry $adapterRegistry,
         private readonly ContentEditorialWorkflow $editorialWorkflow,
         private readonly EntitlementService $entitlements,
+        private readonly UsageMeter $usageMeter,
     ) {}
 
     /** @param array<string, mixed> $input */
@@ -71,13 +75,14 @@ class AiContentGenerationManager
         $attempt = $reservation['attempt'];
         /** @var AiModel $model */
         $model = $reservation['model'];
+        /** @var UsageEvent|null $attemptUsage */
+        $attemptUsage = $reservation['attempt_usage'];
+        /** @var UsageEvent|null $tokenUsage */
+        $tokenUsage = $reservation['token_usage'];
 
-        $inputTokenLimit = min(self::MAXIMUM_INPUT_TOKENS, $model->input_token_limit ?? self::MAXIMUM_INPUT_TOKENS);
-        $outputTokenLimit = min(
-            self::MAXIMUM_OUTPUT_TOKENS,
-            $model->output_token_limit ?? self::MAXIMUM_OUTPUT_TOKENS,
-            AiContentLength::from($input['content_length'])->maximumOutputTokens(),
-        );
+        $inputTokenLimit = $this->inputTokenLimit($model);
+        $outputTokenLimit = $this->outputTokenLimit($model, $input);
+        $generationRequested = false;
 
         try {
             $adapter = $this->adapterRegistry->resolve((string) $model->provider->adapter_type);
@@ -89,6 +94,7 @@ class AiContentGenerationManager
 
             if ($countedInputTokens > $inputTokenLimit) {
                 $this->failAttempt($attempt, 'input_token_limit_exceeded');
+                $this->usageMeter->releaseMany([$attemptUsage, $tokenUsage], 'input_token_limit_exceeded');
 
                 throw new AiContentGenerationException(
                     'input_token_limit_exceeded',
@@ -96,6 +102,7 @@ class AiContentGenerationManager
                 );
             }
 
+            $generationRequested = true;
             $result = $adapter->generateStructuredContent(
                 $model->provider_model_id,
                 $reservation['prompt'],
@@ -110,6 +117,12 @@ class AiContentGenerationManager
                     $result->inputTokens,
                     $result->outputTokens,
                 );
+                $this->commitProviderUsage(
+                    $attemptUsage,
+                    $tokenUsage,
+                    $attempt,
+                    min($tokenUsage?->quantity ?? 0, ($result->inputTokens ?? $countedInputTokens) + ($result->outputTokens ?? $outputTokenLimit)),
+                );
 
                 throw new AiContentGenerationException(
                     'provider_token_limit_mismatch',
@@ -118,16 +131,42 @@ class AiContentGenerationManager
             }
         } catch (InvalidArgumentException) {
             $this->failAttempt($attempt, 'invalid_configuration');
+            $this->usageMeter->releaseMany([$attemptUsage, $tokenUsage], 'invalid_configuration');
 
             throw new AiContentGenerationException('missing_configuration', 'AI generation is not configured yet.');
         } catch (AiProviderException $exception) {
             $this->failAttempt($attempt, $exception->category->value);
+
+            if ($generationRequested) {
+                $this->usageMeter->commitAndRelease(
+                    $attemptUsage,
+                    $tokenUsage,
+                    'provider_generation_failed',
+                    'ai_generation_attempt',
+                    $attempt->getKey(),
+                );
+            } else {
+                $this->usageMeter->releaseMany([$attemptUsage, $tokenUsage], 'provider_preflight_failed');
+            }
 
             $message = $exception->category === AiProviderErrorCategory::MissingCredentials
                 ? 'AI generation is not configured yet.'
                 : 'AI generation could not be completed. Please try again later.';
 
             throw new AiContentGenerationException($exception->category->value, $message);
+        }
+
+        $actualTokens = ($result->inputTokens ?? $countedInputTokens) + ($result->outputTokens ?? $outputTokenLimit);
+
+        try {
+            $this->commitProviderUsage($attemptUsage, $tokenUsage, $attempt, $actualTokens);
+        } catch (Throwable) {
+            $this->failAttempt($attempt, 'usage_reconciliation_failure', $result->inputTokens, $result->outputTokens);
+
+            throw new AiContentGenerationException(
+                'usage_reconciliation_failure',
+                'AI usage could not be recorded safely, so no draft was saved.',
+            );
         }
 
         try {
@@ -176,7 +215,7 @@ class AiContentGenerationManager
 
     /**
      * @param  array<string, mixed>  $input
-     * @return array{attempt: AiGenerationAttempt|null, model: AiModel|null, prompt: string, draft: AiContentDraft|null}
+     * @return array{attempt: AiGenerationAttempt|null, model: AiModel|null, prompt: string, draft: AiContentDraft|null, attempt_usage: UsageEvent|null, token_usage: UsageEvent|null}
      */
     private function reserve(User $user, Workspace $workspace, Brand $brand, array $input): array
     {
@@ -193,7 +232,14 @@ class AiContentGenerationManager
 
         if ($existing !== null) {
             if ($existing->status === AiGenerationAttemptStatus::Completed && $existing->draft !== null) {
-                return ['attempt' => null, 'model' => null, 'prompt' => '', 'draft' => $existing->draft];
+                return [
+                    'attempt' => null,
+                    'model' => null,
+                    'prompt' => '',
+                    'draft' => $existing->draft,
+                    'attempt_usage' => null,
+                    'token_usage' => null,
+                ];
             }
 
             throw new AiContentGenerationException('duplicate_request', 'This generation request has already been submitted.');
@@ -211,7 +257,26 @@ class AiContentGenerationManager
 
         $model = $this->eligibleModel();
         $prompt = $this->promptBuilder->build($brand, $input);
+        $attemptUsage = null;
+        $tokenUsage = null;
+
         try {
+            $attemptUsage = $this->usageMeter->reserve(
+                $workspace,
+                EntitlementKey::AiGenerationAttempts,
+                1,
+                $input['idempotency_key'],
+                $user,
+                ['workload_key' => self::WORKLOAD_KEY],
+            );
+            $tokenUsage = $this->usageMeter->reserve(
+                $workspace,
+                EntitlementKey::AiTokens,
+                $this->inputTokenLimit($model) + $this->outputTokenLimit($model, $input),
+                $input['idempotency_key'],
+                $user,
+                ['workload_key' => self::WORKLOAD_KEY],
+            );
             $attempt = AiGenerationAttempt::query()->create([
                 'correlation_id' => (string) Str::uuid(),
                 'idempotency_key' => $input['idempotency_key'],
@@ -223,7 +288,16 @@ class AiContentGenerationManager
                 'status' => AiGenerationAttemptStatus::Pending,
                 'prompt_hash' => hash('sha256', $prompt),
             ]);
+        } catch (EntitlementDeniedException $exception) {
+            $this->usageMeter->releaseMany([$attemptUsage, $tokenUsage], 'quota_reservation_failed');
+
+            throw new AiContentGenerationException(
+                $exception->reason,
+                'The AI generation allowance for this billing period has been reached.',
+            );
         } catch (QueryException $exception) {
+            $this->usageMeter->releaseMany([$attemptUsage, $tokenUsage], 'generation_reservation_failed');
+
             if ($firstGenerationTest && preg_match('/single_use_key|ai_generation_attempts_single_use_key_unique/i', $exception->getMessage()) === 1) {
                 throw new AiContentGenerationException(
                     'single_use_consumed',
@@ -232,9 +306,17 @@ class AiContentGenerationManager
             }
 
             throw $exception;
+        } catch (Throwable $exception) {
+            $this->usageMeter->releaseMany([$attemptUsage, $tokenUsage], 'generation_reservation_failed');
+
+            throw $exception;
         }
 
-        return compact('attempt', 'model', 'prompt') + ['draft' => null];
+        return compact('attempt', 'model', 'prompt') + [
+            'draft' => null,
+            'attempt_usage' => $attemptUsage,
+            'token_usage' => $tokenUsage,
+        ];
     }
 
     private function eligibleModel(): AiModel
@@ -264,6 +346,43 @@ class AiContentGenerationManager
         }
 
         return $model;
+    }
+
+    /** @param array<string, mixed> $input */
+    private function outputTokenLimit(AiModel $model, array $input): int
+    {
+        return min(
+            self::MAXIMUM_OUTPUT_TOKENS,
+            $model->output_token_limit ?? self::MAXIMUM_OUTPUT_TOKENS,
+            AiContentLength::from($input['content_length'])->maximumOutputTokens(),
+        );
+    }
+
+    private function inputTokenLimit(AiModel $model): int
+    {
+        return min(self::MAXIMUM_INPUT_TOKENS, $model->input_token_limit ?? self::MAXIMUM_INPUT_TOKENS);
+    }
+
+    private function commitProviderUsage(
+        ?UsageEvent $attemptUsage,
+        ?UsageEvent $tokenUsage,
+        AiGenerationAttempt $attempt,
+        int $actualTokens,
+    ): void {
+        $this->usageMeter->commitMany([
+            [
+                'event' => $attemptUsage,
+                'reference_type' => 'ai_generation_attempt',
+                'reference_id' => $attempt->getKey(),
+                'actual_quantity' => 1,
+            ],
+            [
+                'event' => $tokenUsage,
+                'reference_type' => 'ai_generation_attempt',
+                'reference_id' => $attempt->getKey(),
+                'actual_quantity' => $actualTokens,
+            ],
+        ]);
     }
 
     private function failAttempt(
