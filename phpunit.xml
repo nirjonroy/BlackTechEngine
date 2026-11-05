@@ -28,6 +28,7 @@
         <env name="AI_CONTENT_REVIEW_ENABLED" value="true"/>
         <env name="AI_CONTENT_GENERATION_ENABLED" value="false"/>
         <env name="SOCIAL_CONTENT_MANAGEMENT_ENABLED" value="true"/>
+        <env name="SUBSCRIPTION_ENFORCEMENT_ENABLED" value="false" force="true"/>
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="DB_URL" value=""/>

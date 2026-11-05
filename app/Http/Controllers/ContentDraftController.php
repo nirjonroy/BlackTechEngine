@@ -6,6 +6,7 @@ use App\Enums\AiContentDraftStatus;
 use App\Enums\AiContentLength;
 use App\Enums\AiContentType;
 use App\Enums\EntitlementKey;
+use App\Enums\UsageEventStatus;
 use App\Http\Requests\AiContentDraftIndexRequest;
 use App\Http\Requests\StoreAiContentDraftRequest;
 use App\Http\Requests\UpdateAiContentDraftRequest;
@@ -103,6 +104,16 @@ class ContentDraftController extends Controller
                 $request->idempotencyKey(),
                 $request->user(),
             );
+
+            if ($reservation?->status === UsageEventStatus::Committed
+                && $reservation->reference_type === AiContentDraft::class
+                && $reservation->reference_id !== null) {
+                return AiContentDraft::query()
+                    ->whereBelongsTo($workspace)
+                    ->whereBelongsTo($brand)
+                    ->findOrFail($reservation->reference_id);
+            }
+
             $draft = AiContentDraft::query()->create([
                 ...$request->draftData(),
                 'workspace_id' => $workspace->getKey(),

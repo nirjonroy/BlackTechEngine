@@ -1,8 +1,12 @@
 <?php
 
 use App\Enums\AiContentDraftStatus;
+use App\Enums\EntitlementKey;
 use App\Models\Admin;
 use App\Models\AiContentDraft;
+use App\Models\Brand;
+use App\Models\UsageCounter;
+use App\Models\UsageEvent;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +56,26 @@ test('an authorized customer saves views and edits an unpublished draft', functi
     )->assertRedirectToRoute('content-studio.drafts.show', [$workspace, $brand, $draft]);
 
     expect($draft->fresh()->seo_title)->toBe('Updated Human-Reviewed Title');
+});
+
+test('replaying a manual draft request returns the original draft without consuming quota twice', function () {
+    config()->set('subscriptions.enforcement_enabled', true);
+    [$user, $workspace] = subscriptionFixture([
+        EntitlementKey::ContentStudio->value => null,
+        EntitlementKey::ContentDraftsPerPeriod->value => 10,
+    ]);
+    $brand = Brand::factory()->for($workspace)->create();
+    $payload = contentDraftPayload();
+
+    $first = $this->actingAs($user)->post(route('content-studio.drafts.store', [$workspace, $brand]), $payload);
+    $draft = AiContentDraft::query()->sole();
+    $second = $this->actingAs($user)->post(route('content-studio.drafts.store', [$workspace, $brand]), $payload);
+
+    $first->assertRedirectToRoute('content-studio.drafts.show', [$workspace, $brand, $draft]);
+    $second->assertRedirectToRoute('content-studio.drafts.show', [$workspace, $brand, $draft]);
+    expect(AiContentDraft::query()->count())->toBe(1)
+        ->and(UsageEvent::query()->count())->toBe(1)
+        ->and(UsageCounter::query()->sole()->used)->toBe(1);
 });
 
 test('nested bindings hide drafts and brands belonging to another tenant', function () {
