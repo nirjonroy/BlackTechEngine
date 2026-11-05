@@ -3,7 +3,7 @@
         <div class="min-w-0">
             <p class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Platform overview</p>
             <h1 class="mt-1 font-heading text-2xl font-extrabold tracking-tight sm:text-3xl">Admin Mission Control</h1>
-            <p class="mt-1 max-w-2xl text-xs leading-5 text-slate-500 dark:text-slate-400">Verified account, publishing, and pricing data from the current BlackTechEngine database.</p>
+            <p class="mt-1 max-w-2xl text-xs leading-5 text-slate-500 dark:text-slate-400">Verified customer, subscription, content, and AI activity from the current BlackTechEngine database.</p>
         </div>
         <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
@@ -13,12 +13,13 @@
 
     <section aria-labelledby="dashboard-metrics-heading">
         <h2 id="dashboard-metrics-heading" class="sr-only">Current platform metrics</h2>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-6">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6">
             @foreach([
-                ['key' => 'registered_users', 'label' => 'Registered Users', 'icon' => 'users', 'accent' => 'text-indigo-500', 'note' => 'Web user accounts'],
-                ['key' => 'active_pricing_plans', 'label' => 'Active Plans', 'icon' => 'layers-3', 'accent' => 'text-emerald-500', 'note' => 'Public pricing tiers'],
-                ['key' => 'published_blogs', 'label' => 'Published Articles', 'icon' => 'file-check-2', 'accent' => 'text-cyan-500', 'note' => 'Currently public posts'],
-                ['key' => 'admin_accounts', 'label' => 'Admin Accounts', 'icon' => 'shield-check', 'accent' => 'text-violet-500', 'note' => 'Admin guard identities'],
+                ['key' => 'customers', 'label' => 'Customers', 'icon' => 'users', 'accent' => 'text-indigo-500', 'note' => 'Web user accounts'],
+                ['key' => 'workspaces', 'label' => 'Workspaces', 'icon' => 'blocks', 'accent' => 'text-cyan-500', 'note' => 'Customer workspaces'],
+                ['key' => 'brands', 'label' => 'Brands', 'icon' => 'badge-check', 'accent' => 'text-violet-500', 'note' => 'Brand profiles'],
+                ['key' => 'subscriptions', 'label' => 'Subscriptions', 'icon' => 'receipt-text', 'accent' => 'text-emerald-500', 'note' => 'All lifecycle states'],
+                ['key' => 'plans', 'label' => 'Plans', 'icon' => 'layers-3', 'accent' => 'text-amber-500', 'note' => 'Configured plans'],
             ] as $metric)
                 <article class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-6" data-metric="{{ $metric['key'] }}">
                     <div class="flex items-center justify-between gap-3 text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -32,27 +33,83 @@
         </div>
     </section>
 
-    <section class="bte-card overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800" aria-labelledby="telemetry-heading">
-        <div class="flex flex-col gap-3 border-b border-slate-200 p-5 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between sm:p-7">
-            <div>
-                <h2 id="telemetry-heading" class="font-heading text-lg font-bold">Revenue and AI cost telemetry</h2>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">The reference chart is retained as an honest unavailable state.</p>
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-12 xl:gap-8">
+        <section class="bte-card overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800 xl:col-span-7" aria-labelledby="subscription-distribution-heading">
+            <div class="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-7">
+                <h2 id="subscription-distribution-heading" class="flex items-center gap-2 font-heading text-lg font-bold">
+                    <i data-lucide="chart-no-axes-combined" class="h-5 w-5 text-emerald-500" aria-hidden="true"></i>
+                    Subscription distribution
+                </h2>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Real subscription records grouped by plan and lifecycle status.</p>
             </div>
-            <span class="inline-flex w-fit items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                <i data-lucide="database-zap" class="h-3.5 w-3.5" aria-hidden="true"></i>
-                Data source unavailable
-            </span>
-        </div>
-        <div class="relative flex min-h-64 items-center justify-center overflow-hidden bg-gradient-to-b from-slate-50 to-white p-6 dark:from-slate-950/30 dark:to-slate-900/10 sm:p-8">
-            <div class="admin-chart-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"></div>
-            <div class="relative max-w-lg text-center">
-                <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                    <i data-lucide="chart-no-axes-combined" class="h-6 w-6" aria-hidden="true"></i>
-                </span>
-                <h3 class="mt-4 font-heading text-base font-bold">No billing or AI-usage backend is connected</h3>
-                <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">Revenue, subscriptions, token spend, growth, and margin are intentionally not estimated or fabricated.</p>
+            @if ($subscriptionDistribution->isEmpty())
+                <div class="p-5 sm:p-7">
+                    <div class="rounded-2xl border border-dashed border-slate-300 px-4 py-8 text-center dark:border-slate-700">
+                        <i data-lucide="receipt-text" class="mx-auto h-6 w-6 text-slate-400" aria-hidden="true"></i>
+                        <p class="mt-2 text-xs font-bold text-slate-700 dark:text-slate-300">No subscriptions yet</p>
+                        <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Plan distribution will appear after a workspace receives a subscription.</p>
+                    </div>
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[30rem] text-left text-xs">
+                        <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 dark:bg-slate-900/40 dark:text-slate-400">
+                            <tr><th class="px-5 py-3 font-bold sm:px-7">Plan</th><th class="px-5 py-3 font-bold">Status</th><th class="px-5 py-3 text-right font-bold sm:px-7">Subscriptions</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                            @foreach ($subscriptionDistribution as $distribution)
+                                <tr><th class="px-5 py-4 font-bold sm:px-7">{{ $distribution['plan'] }}</th><td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $distribution['status'] }}</td><td class="px-5 py-4 text-right font-mono font-bold sm:px-7">{{ number_format($distribution['count']) }}</td></tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </section>
+
+        <section class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7 xl:col-span-5" aria-labelledby="activity-heading">
+            <h2 id="activity-heading" class="flex items-center gap-2 font-heading text-lg font-bold">
+                <i data-lucide="activity" class="h-5 w-5 text-cyan-500" aria-hidden="true"></i>
+                Content and AI activity
+            </h2>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Recorded platform totals without revenue or cost estimates.</p>
+            <div class="mt-5 grid grid-cols-2 gap-3">
+                @foreach([
+                    ['key' => 'content_drafts', 'label' => 'Content drafts', 'icon' => 'file-text'],
+                    ['key' => 'social_posts', 'label' => 'Social posts', 'icon' => 'calendar-days'],
+                    ['key' => 'ai_attempts', 'label' => 'AI attempts', 'icon' => 'sparkles'],
+                    ['key' => 'ai_tokens', 'label' => 'AI tokens', 'icon' => 'binary'],
+                ] as $activity)
+                    <article class="min-w-0 rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+                        <div class="flex items-center justify-between gap-2"><p class="truncate text-[10px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $activity['label'] }}</p><i data-lucide="{{ $activity['icon'] }}" class="h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true"></i></div>
+                        <p class="mt-2 font-heading text-2xl font-black">{{ number_format($contentActivity[$activity['key']]) }}</p>
+                    </article>
+                @endforeach
             </div>
+            @if (array_sum($contentActivity) === 0)
+                <p class="mt-4 rounded-xl border border-dashed border-slate-300 px-4 py-3 text-center text-[11px] text-slate-500 dark:border-slate-700 dark:text-slate-400">No platform content activity has been recorded yet.</p>
+            @endif
+        </section>
+    </div>
+
+    <section class="bte-card overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800" aria-labelledby="monthly-trends-heading">
+        <div class="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-7">
+            <h2 id="monthly-trends-heading" class="flex items-center gap-2 font-heading text-lg font-bold"><i data-lucide="chart-no-axes-combined" class="h-5 w-5 text-indigo-500" aria-hidden="true"></i>Six-month content trend</h2>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Drafts, social posts, and AI generation attempts created each month.</p>
         </div>
+        @if ($monthlyTrends->sum('drafts') + $monthlyTrends->sum('social_posts') + $monthlyTrends->sum('ai_attempts') === 0)
+            <div class="p-5 sm:p-7"><div class="rounded-2xl border border-dashed border-slate-300 px-4 py-8 text-center dark:border-slate-700"><p class="text-xs font-bold text-slate-700 dark:text-slate-300">No monthly activity yet</p><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Six-month trends will populate as customers create content.</p></div></div>
+        @else
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[38rem] text-left text-xs">
+                    <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 dark:bg-slate-900/40 dark:text-slate-400"><tr><th class="px-5 py-3 font-bold sm:px-7">Month</th><th class="px-5 py-3 text-right font-bold">Drafts</th><th class="px-5 py-3 text-right font-bold">Social posts</th><th class="px-5 py-3 text-right font-bold sm:px-7">AI attempts</th></tr></thead>
+                    <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                        @foreach ($monthlyTrends as $month)
+                            <tr><th class="px-5 py-4 font-bold sm:px-7">{{ $month['label'] }}</th><td class="px-5 py-4 text-right font-mono">{{ number_format($month['drafts']) }}</td><td class="px-5 py-4 text-right font-mono">{{ number_format($month['social_posts']) }}</td><td class="px-5 py-4 text-right font-mono sm:px-7">{{ number_format($month['ai_attempts']) }}</td></tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </section>
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-12 xl:gap-8">
@@ -136,11 +193,10 @@
         </section>
     </div>
 
-    <section class="grid grid-cols-1 gap-4 md:grid-cols-3" aria-label="Unavailable operational modules">
+    <section class="grid grid-cols-1 gap-4 md:grid-cols-2" aria-label="Unavailable operational modules">
         @foreach([
-            ['icon' => 'cpu', 'title' => 'AI models', 'text' => 'No AI routing or usage source exists.'],
             ['icon' => 'server', 'title' => 'Queue telemetry', 'text' => 'No operational monitoring source exists.'],
-            ['icon' => 'badge-dollar-sign', 'title' => 'Billing analytics', 'text' => 'No subscription or transaction source exists.'],
+            ['icon' => 'badge-dollar-sign', 'title' => 'Revenue analytics', 'text' => 'Verified payment revenue is not available and is not estimated.'],
         ] as $unavailable)
             <div class="rounded-2xl border border-dashed border-slate-300 p-4 dark:border-slate-700">
                 <div class="flex items-start gap-3">

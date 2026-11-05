@@ -18,9 +18,9 @@
         <div class="space-y-6">
             <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-violet-600 to-cyan-600 p-6 text-white shadow-2xl shadow-indigo-600/20 sm:p-8">
                 <div class="relative z-10 max-w-3xl">
-                    <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-indigo-100">Build trusted brand context first</p>
+                    <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-indigo-100">Workspace analytics</p>
                     <h2 class="mt-3 font-heading text-3xl font-black sm:text-4xl">Welcome back, {{ auth()->user()->name }}</h2>
-                    <p class="mt-3 max-w-2xl text-sm leading-6 text-indigo-50 sm:text-base">Organize each brand in a secure workspace now. Content generation, approval, and publishing will be connected in later phases.</p>
+                    <p class="mt-3 max-w-2xl text-sm leading-6 text-indigo-50 sm:text-base">Track your plan, quota availability, and content activity for the active workspace from one tenant-safe overview.</p>
                     <div class="mt-6 flex flex-wrap gap-3">
                         @if ($activeWorkspace)
                             <a href="{{ route('workspaces.brands.create', $activeWorkspace) }}" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-black text-indigo-700 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
@@ -45,29 +45,90 @@
                     <a href="{{ route('onboarding.start') }}" class="mt-5 inline-flex rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">Continue onboarding</a>
                 </section>
             @else
-                <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Real account usage overview">
-                    @foreach ([
-                        ['label' => 'Accessible workspaces', 'value' => $workspaces->count(), 'icon' => 'blocks'],
-                        ['label' => 'Brands in active workspace', 'value' => $activeWorkspace->brands_count, 'icon' => 'badge-check'],
-                        ['label' => 'Active brand profiles', 'value' => $activeWorkspace->active_brands_count, 'icon' => 'circle-check-big'],
-                    ] as $metric)
-                        <article class="bte-card rounded-2xl p-5">
-                            <div class="flex items-center justify-between gap-3"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $metric['label'] }}</p><i data-lucide="{{ $metric['icon'] }}" class="h-5 w-5 text-indigo-500" aria-hidden="true"></i></div>
-                            <p class="mt-3 font-heading text-3xl font-black">{{ $metric['value'] }}</p>
-                        </article>
-                    @endforeach
-                    <article class="bte-card rounded-2xl p-5">
-                        <div class="flex items-center justify-between gap-3"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Generated drafts</p><i data-lucide="file-clock" class="h-5 w-5 text-slate-400" aria-hidden="true"></i></div>
-                        <p class="mt-3 text-sm font-bold text-slate-600 dark:text-slate-300">AI generation is not configured yet</p>
-                    </article>
+                <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="subscription-heading">
+                    <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Current subscription</p>
+                            <h2 id="subscription-heading" class="mt-1 font-heading text-2xl font-black">{{ $subscription?->plan?->name ?? 'No active subscription' }}</h2>
+                            @if ($subscription)
+                                <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                                    {{ $subscription->status->label() }} · {{ str($subscription->billing_interval->value)->title() }} billing
+                                </p>
+                                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                    Usage period {{ $subscription->current_period_starts_at?->format('M j, Y') ?? 'not scheduled' }}–{{ $subscription->current_period_ends_at?->format('M j, Y') ?? 'open ended' }}
+                                </p>
+                            @else
+                                <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Complete onboarding or contact an administrator to establish plan access.</p>
+                            @endif
+                        </div>
+                        @if (config('subscriptions.management_enabled'))
+                            <a href="{{ route('subscriptions.index', ['workspace' => $activeWorkspace->id]) }}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-200 px-4 py-2.5 text-sm font-bold text-indigo-700 hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/40">
+                                Subscription details <i data-lucide="arrow-right" class="h-4 w-4" aria-hidden="true"></i>
+                            </a>
+                        @endif
+                    </div>
                 </section>
 
-                @if (config('customer.workspaces_enabled') && config('social.enabled') && $socialStats)
-                    <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="social-overview-heading">
-                        <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Manual publishing workflow</p><h2 id="social-overview-heading" class="mt-1 font-heading text-xl font-black">Social content</h2></div><a href="{{ route('social-content.index') }}" class="text-sm font-bold text-indigo-600 dark:text-indigo-300">Open social studio</a></div>
-                        <div class="mt-5 grid gap-3 sm:grid-cols-3">@foreach([['Drafts',$socialStats['drafts']],['Needs review',$socialStats['review']],['Planned',$socialStats['planned']]] as [$label,$value])<div class="rounded-xl border border-slate-200 p-4 dark:border-slate-700"><p class="text-xs font-bold uppercase text-slate-500">{{ $label }}</p><p class="mt-2 font-heading text-2xl font-black">{{ $value }}</p></div>@endforeach</div>
-                    </section>
-                @endif
+                <section aria-labelledby="quota-heading">
+                    <div class="flex flex-wrap items-end justify-between gap-3">
+                        <div><p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Current allowance</p><h2 id="quota-heading" class="mt-1 font-heading text-xl font-black">Quota usage</h2></div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Reserved usage is included</p>
+                    </div>
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                        @foreach ($quotaUsage as $quota)
+                            <article class="bte-card rounded-2xl p-5">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $quota['label'] }}</p><p class="mt-3 font-heading text-3xl font-black">{{ number_format($quota['used']) }}</p></div>
+                                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-300"><i data-lucide="{{ $quota['icon'] }}" class="h-5 w-5" aria-hidden="true"></i></span>
+                                </div>
+                                <p class="mt-3 text-sm font-semibold {{ $quota['enabled'] ? 'text-slate-600 dark:text-slate-300' : 'text-rose-600 dark:text-rose-300' }}">
+                                    @if (! $quota['enabled'])
+                                        Not included in this plan
+                                    @elseif ($quota['remaining'] === null)
+                                        Unlimited remaining
+                                    @else
+                                        {{ number_format($quota['remaining']) }} remaining of {{ number_format($quota['limit'] ?? 0) }}
+                                    @endif
+                                </p>
+                            </article>
+                        @endforeach
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    @foreach ([['heading' => 'Content drafts', 'items' => $contentStats['drafts']], ['heading' => 'Social posts', 'items' => $contentStats['social']]] as $statusGroup)
+                        <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="{{ str($statusGroup['heading'])->slug() }}-heading">
+                            <h2 id="{{ str($statusGroup['heading'])->slug() }}-heading" class="font-heading text-xl font-black">{{ $statusGroup['heading'] }} by status</h2>
+                            @if ($statusGroup['items']->sum('count') === 0)
+                                <div class="mt-5 rounded-xl border border-dashed border-slate-300 p-5 text-center dark:border-slate-700"><p class="text-sm font-bold">No {{ str($statusGroup['heading'])->lower() }} yet</p><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Activity will appear here when content is created in this workspace.</p></div>
+                            @else
+                                <dl class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                                    @foreach ($statusGroup['items'] as $item)
+                                        <div class="rounded-xl border border-slate-200 p-4 dark:border-slate-700"><dt class="text-xs font-bold text-slate-500 dark:text-slate-400">{{ $item['label'] }}</dt><dd class="mt-2 font-heading text-2xl font-black">{{ number_format($item['count']) }}</dd></div>
+                                    @endforeach
+                                </dl>
+                            @endif
+                        </section>
+                    @endforeach
+                </div>
+
+                <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="monthly-trends-heading">
+                    <div><p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Last six months</p><h2 id="monthly-trends-heading" class="mt-1 font-heading text-xl font-black">Content activity</h2></div>
+                    @if ($monthlyTrends->sum('drafts') + $monthlyTrends->sum('social_posts') === 0)
+                        <div class="mt-5 rounded-xl border border-dashed border-slate-300 p-6 text-center dark:border-slate-700"><p class="text-sm font-bold">No monthly activity yet</p><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Draft and social-post totals will build as your team creates content.</p></div>
+                    @else
+                        <div class="mt-5 overflow-x-auto">
+                            <table class="w-full min-w-[34rem] text-left text-sm">
+                                <thead class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400"><tr><th class="pb-3 font-bold">Month</th><th class="pb-3 text-right font-bold">Drafts</th><th class="pb-3 text-right font-bold">Social posts</th><th class="pb-3 text-right font-bold">Total</th></tr></thead>
+                                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                                    @foreach ($monthlyTrends as $month)
+                                        <tr><th class="py-3 font-semibold">{{ $month['label'] }}</th><td class="py-3 text-right">{{ number_format($month['drafts']) }}</td><td class="py-3 text-right">{{ number_format($month['social_posts']) }}</td><td class="py-3 text-right font-black">{{ number_format($month['drafts'] + $month['social_posts']) }}</td></tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </section>
 
                 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
                     <section class="bte-card rounded-2xl p-5 sm:p-6 xl:col-span-2" aria-labelledby="brands-heading">
@@ -106,20 +167,6 @@
                     </section>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="workflow-heading">
-                        <h2 id="workflow-heading" class="font-heading text-xl font-black">Content workflow</h2>
-                        <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                            @foreach (['Brand context', 'Briefs', 'Drafts', 'Publishing'] as $index => $stage)
-                                <div class="rounded-xl border border-slate-200 p-3 text-center dark:border-slate-700"><span class="mx-auto flex h-7 w-7 items-center justify-center rounded-full text-xs font-black {{ $index === 0 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400' }}">{{ $index + 1 }}</span><p class="mt-2 text-xs font-bold">{{ $stage }}</p><p class="mt-1 text-[10px] text-slate-500">{{ $index === 0 ? 'Available' : 'Later phase' }}</p></div>
-                            @endforeach
-                        </div>
-                    </section>
-                    <section class="bte-card rounded-2xl p-5 sm:p-6" aria-labelledby="drafts-heading">
-                        <h2 id="drafts-heading" class="font-heading text-xl font-black">Recent drafts</h2>
-                        <div class="mt-5 rounded-xl border border-dashed border-slate-300 p-5 text-center dark:border-slate-700"><i data-lucide="file-text" class="mx-auto h-6 w-6 text-slate-400" aria-hidden="true"></i><p class="mt-3 text-sm font-bold">No drafts are available</p><p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">Draft creation has not been implemented, so no generated content is shown here.</p></div>
-                    </section>
-                </div>
             @endif
         </div>
     @endif

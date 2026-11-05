@@ -1,9 +1,17 @@
 <?php
 
+use App\Enums\AiGenerationAttemptStatus;
+use App\Enums\SubscriptionStatus;
 use App\Models\Admin;
+use App\Models\AiContentDraft;
+use App\Models\AiGenerationAttempt;
 use App\Models\Blog;
+use App\Models\Brand;
 use App\Models\PricingPlan;
+use App\Models\SocialPost;
 use App\Models\User;
+use App\Models\Workspace;
+use App\Models\WorkspaceSubscription;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -70,6 +78,16 @@ test('an admin without dashboard permission receives 403', function () {
         ->assertForbidden();
 });
 
+test('a regular customer cannot use web authentication to access the admin dashboard', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('admin.dashboard'))
+        ->assertRedirectToRoute('admin.login');
+
+    $this->assertGuest('admin');
+});
+
 test('a super admin can view the dashboard without direct permissions', function () {
     $admin = createDashboardAdmin([]);
     $superAdminRole = Role::create(['name' => 'Super Admin', 'guard_name' => 'admin']);
@@ -82,12 +100,60 @@ test('a super admin can view the dashboard without direct permissions', function
 });
 
 test('the dashboard renders accurate database aggregates and publication states', function () {
+    $this->travelTo('2026-11-15 12:00:00');
     $admin = createDashboardAdmin();
     createDashboardAdmin([], ['email' => 'second-admin@example.com']);
-    User::factory()->count(3)->create();
-    PricingPlan::create(['name' => 'Active One', 'is_active' => true]);
-    PricingPlan::create(['name' => 'Active Two', 'is_active' => true]);
+    $users = User::factory()->count(3)->create();
+    $firstWorkspace = Workspace::factory()->for($users[0], 'owner')->create();
+    $secondWorkspace = Workspace::factory()->for($users[1], 'owner')->create();
+    $firstBrand = Brand::factory()->for($firstWorkspace)->create();
+    Brand::factory()->count(2)->for($secondWorkspace)->create();
+    $activeOne = PricingPlan::create(['name' => 'Active One', 'is_active' => true]);
+    $activeTwo = PricingPlan::create(['name' => 'Active Two', 'is_active' => true]);
     PricingPlan::create(['name' => 'Hidden Plan', 'is_active' => false]);
+    WorkspaceSubscription::factory()->for($firstWorkspace)->for($activeOne, 'plan')->create([
+        'status' => SubscriptionStatus::Active,
+    ]);
+    WorkspaceSubscription::factory()->for($secondWorkspace)->for($activeTwo, 'plan')->create([
+        'status' => SubscriptionStatus::Cancelled,
+    ]);
+    AiContentDraft::factory()->create([
+        'workspace_id' => $firstWorkspace->id,
+        'brand_id' => $firstBrand->id,
+        'created_by_user_id' => $users[0]->id,
+        'created_at' => '2026-09-10 09:00:00',
+    ]);
+    AiContentDraft::factory()->count(2)->create([
+        'workspace_id' => $firstWorkspace->id,
+        'brand_id' => $firstBrand->id,
+        'created_by_user_id' => $users[0]->id,
+        'created_at' => '2026-11-02 09:00:00',
+    ]);
+    SocialPost::factory()->create([
+        'workspace_id' => $firstWorkspace->id,
+        'brand_id' => $firstBrand->id,
+        'owner_user_id' => $users[0]->id,
+        'created_by_user_id' => $users[0]->id,
+        'created_at' => '2026-10-08 09:00:00',
+    ]);
+    AiGenerationAttempt::factory()->create([
+        'workspace_id' => $firstWorkspace->id,
+        'brand_id' => $firstBrand->id,
+        'user_id' => $users[0]->id,
+        'status' => AiGenerationAttemptStatus::Completed,
+        'input_tokens' => 100,
+        'output_tokens' => 50,
+        'created_at' => '2026-11-03 09:00:00',
+    ]);
+    AiGenerationAttempt::factory()->create([
+        'workspace_id' => $firstWorkspace->id,
+        'brand_id' => $firstBrand->id,
+        'user_id' => $users[0]->id,
+        'status' => AiGenerationAttemptStatus::Failed,
+        'input_tokens' => 25,
+        'output_tokens' => 5,
+        'created_at' => '2026-11-04 09:00:00',
+    ]);
     Blog::create(['title' => 'Published One', 'slug' => 'published-one', 'published_at' => now()->subDay()]);
     Blog::create(['title' => 'Published Two', 'slug' => 'published-two', 'published_at' => now()->subHour()]);
     Blog::create(['title' => 'Draft Article', 'slug' => 'draft-article']);
@@ -98,7 +164,11 @@ test('the dashboard renders accurate database aggregates and publication states'
     $response
         ->assertOk()
         ->assertViewHas('metrics', [
-            'registered_users' => 3,
+            'customers' => 3,
+            'workspaces' => 2,
+            'brands' => 3,
+            'subscriptions' => 2,
+            'plans' => 3,
             'active_pricing_plans' => 2,
             'published_blogs' => 2,
             'admin_accounts' => 2,
@@ -107,8 +177,26 @@ test('the dashboard renders accurate database aggregates and publication states'
             'draft_blogs' => 2,
             'inactive_pricing_plans' => 1,
         ])
+        ->assertViewHas('contentActivity', [
+            'content_drafts' => 3,
+            'social_posts' => 1,
+            'ai_attempts' => 2,
+            'ai_tokens' => 180,
+        ])
+        ->assertSee('Subscription distribution')
+        ->assertSee('Active One')
+        ->assertSee('Cancelled')
+        ->assertSee('Sep 2026')
+        ->assertSee('Nov 2026')
         ->assertSee('Published Two')
         ->assertDontSee('Scheduled Article');
+    expect($response->viewData('subscriptionDistribution')->all())->toBe([
+        ['plan' => 'Active One', 'status' => 'Active', 'count' => 1],
+        ['plan' => 'Active Two', 'status' => 'Cancelled', 'count' => 1],
+    ]);
+    expect($response->viewData('monthlyTrends')->firstWhere('label', 'Sep 2026'))->toMatchArray(['drafts' => 1, 'social_posts' => 0, 'ai_attempts' => 0]);
+    expect($response->viewData('monthlyTrends')->firstWhere('label', 'Oct 2026'))->toMatchArray(['drafts' => 0, 'social_posts' => 1, 'ai_attempts' => 0]);
+    expect($response->viewData('monthlyTrends')->firstWhere('label', 'Nov 2026'))->toMatchArray(['drafts' => 2, 'social_posts' => 0, 'ai_attempts' => 2]);
 });
 
 test('the dashboard renders honest zero and empty states', function () {
@@ -119,13 +207,19 @@ test('the dashboard renders honest zero and empty states', function () {
     $response
         ->assertOk()
         ->assertViewHas('metrics', [
-            'registered_users' => 0,
+            'customers' => 0,
+            'workspaces' => 0,
+            'brands' => 0,
+            'subscriptions' => 0,
+            'plans' => 0,
             'active_pricing_plans' => 0,
             'published_blogs' => 0,
             'admin_accounts' => 1,
         ])
         ->assertSee('No published articles yet')
-        ->assertSee('No billing or AI-usage backend is connected');
+        ->assertSee('No subscriptions yet')
+        ->assertSee('No platform content activity has been recorded yet')
+        ->assertSee('No monthly activity yet');
 });
 
 test('sidebar links are limited to the authenticated admin permissions', function () {
