@@ -184,6 +184,7 @@ test('the dashboard renders accurate database aggregates and publication states'
             'ai_tokens' => 180,
         ])
         ->assertSee('Subscription distribution')
+        ->assertSee('href="'.route('admin.dashboard.analytics.export').'"', false)
         ->assertSee('Active One')
         ->assertSee('Cancelled')
         ->assertSee('Sep 2026')

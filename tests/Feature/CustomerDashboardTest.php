@@ -41,6 +41,7 @@ test('the dashboard renders only real workspace and brand counts', function () {
         ->assertSee('Growth Lab')
         ->assertSee('Active Brand')
         ->assertSee('No active subscription')
+        ->assertSee('href="'.route('dashboard.analytics.export').'"', false)
         ->assertSee('No content drafts yet')
         ->assertSee('No monthly activity yet');
     expect($response->viewData('activeWorkspace')->brands_count)->toBe(2)

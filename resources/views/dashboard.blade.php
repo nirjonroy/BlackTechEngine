@@ -32,6 +32,9 @@
                             </a>
                         @endif
                         <a href="{{ route('workspaces.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Manage workspaces</a>
+                        <a href="{{ route('dashboard.analytics.export') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                            <i data-lucide="download" class="h-4 w-4" aria-hidden="true"></i> Export CSV
+                        </a>
                     </div>
                 </div>
                 <div class="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-white/10 blur-3xl" aria-hidden="true"></div>

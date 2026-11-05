@@ -5,10 +5,15 @@
             <h1 class="mt-1 font-heading text-2xl font-extrabold tracking-tight sm:text-3xl">Admin Mission Control</h1>
             <p class="mt-1 max-w-2xl text-xs leading-5 text-slate-500 dark:text-slate-400">Verified customer, subscription, content, and AI activity from the current BlackTechEngine database.</p>
         </div>
-        <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-            Application available
-        </span>
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('admin.dashboard.analytics.export') }}" class="inline-flex items-center gap-2 rounded-xl border border-cyan-500/30 px-4 py-2 text-xs font-bold text-cyan-600 hover:bg-cyan-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-cyan-400">
+                <i data-lucide="download" class="h-4 w-4" aria-hidden="true"></i> Export CSV
+            </a>
+            <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                Application available
+            </span>
+        </div>
     </div>
 
     <section aria-labelledby="dashboard-metrics-heading">

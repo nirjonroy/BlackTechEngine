@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AiProviderModelDiscoveryController;
 use App\Http\Controllers\Admin\AiProviderVerificationController;
 use App\Http\Controllers\Admin\AiWorkloadActivationController;
 use App\Http\Controllers\Admin\AiWorkloadDraftController;
+use App\Http\Controllers\Admin\AnalyticsExportController as AdminAnalyticsExportController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\Admin\SubscriptionAdjustmentController as AdminSubscrip
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AiContentGenerationController;
+use App\Http\Controllers\AnalyticsExportController;
 use App\Http\Controllers\BillingInvoiceController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ContentApprovalController;
@@ -73,6 +75,7 @@ Route::get('/robots.txt', RobotsController::class)->name('robots');
 if (config('customer.workspaces_enabled')) {
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', CustomerDashboardController::class)->name('dashboard');
+        Route::get('/dashboard/analytics.csv', AnalyticsExportController::class)->name('dashboard.analytics.export');
 
         if (config('subscriptions.management_enabled')) {
             Route::get('/subscription', SubscriptionController::class)->name('subscriptions.index');
@@ -173,6 +176,9 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', DashboardController::class)
         ->middleware(PermissionMiddleware::using('view dashboard', 'admin'))
         ->name('admin.dashboard');
+    Route::get('/admin/dashboard/analytics.csv', AdminAnalyticsExportController::class)
+        ->middleware(PermissionMiddleware::using('view dashboard', 'admin'))
+        ->name('admin.dashboard.analytics.export');
 
     if (config('subscriptions.management_enabled')) {
         Route::middleware(PermissionMiddleware::using('manage subscriptions', 'admin'))->group(function () {
