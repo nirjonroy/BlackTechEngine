@@ -1,4 +1,4 @@
-<form method="POST" action="{{ $action }}" class="space-y-6">
+<form method="POST" action="{{ $action }}" class="space-y-6" x-data="{ submitting: false, generating: false }" x-on:submit="submitting = true; generating = $event.submitter?.dataset.action === 'generate'" x-bind:aria-busy="generating">
     @csrf
     @if ($method !== 'POST') @method($method) @endif
     @if ($mode === 'create')
@@ -58,11 +58,34 @@
         </section>
     @endif
 
+    @if ($mode === 'create')
+        <section id="generation-availability" class="rounded-2xl border p-4 {{ $generationUi['allowed'] ? 'border-indigo-200 bg-indigo-50 text-indigo-900 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-200' : 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200' }}" aria-live="polite">
+            <div class="flex items-start gap-3">
+                <i data-lucide="{{ $generationUi['allowed'] ? 'sparkles' : 'circle-alert' }}" class="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true"></i>
+                <div class="min-w-0">
+                    <h2 class="text-sm font-black">AI generation</h2>
+                    <p class="mt-1 text-sm leading-6">{{ $generationUi['message'] }}</p>
+                    @if ($generationUi['enabled'] && ($generationUi['attempts_remaining'] !== null || $generationUi['tokens_remaining'] !== null))
+                        <dl class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold">
+                            <div class="flex gap-1"><dt>Attempts:</dt><dd>{{ $generationUi['attempts_remaining'] === null ? 'Unlimited' : number_format($generationUi['attempts_remaining']) . ' remaining' }}</dd></div>
+                            <div class="flex gap-1"><dt>Tokens:</dt><dd>{{ $generationUi['tokens_remaining'] === null ? 'Unlimited' : number_format($generationUi['tokens_remaining']) . ' remaining' }}</dd></div>
+                        </dl>
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
+
     <div class="flex flex-wrap gap-3">
         @if ($mode === 'create')
-            <button type="submit" formaction="{{ route('content-studio.generations.store', [$workspace, $brand]) }}" @disabled(! config('ai.content_generation_enabled')) class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-50"><i data-lucide="sparkles" class="h-4 w-4" aria-hidden="true"></i>Generate with AI</button>
-            <button type="submit" formaction="{{ route('content-studio.drafts.store', [$workspace, $brand]) }}" class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-black hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800">Save brief as draft</button>
-            @unless(config('ai.content_generation_enabled'))<p class="basis-full text-xs font-semibold text-amber-600 dark:text-amber-300">AI generation is disabled. You can save the brief without generating content.</p>@endunless
+            <button type="submit" data-action="generate" formaction="{{ route('content-studio.generations.store', [$workspace, $brand]) }}" aria-describedby="generation-availability" @disabled(! $generationUi['allowed']) x-bind:disabled="submitting || {{ $generationUi['allowed'] ? 'false' : 'true' }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                <i x-show="!generating" data-lucide="sparkles" class="h-4 w-4" aria-hidden="true"></i>
+                <span x-cloak x-show="generating" class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true"></span>
+                <span x-show="!generating">Generate with AI</span>
+                <span x-cloak x-show="generating">Generating&hellip;</span>
+            </button>
+            <button type="submit" data-action="save" formaction="{{ route('content-studio.drafts.store', [$workspace, $brand]) }}" x-bind:disabled="submitting" class="rounded-xl border border-slate-300 px-5 py-3 text-sm font-black hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:hover:bg-slate-800">Save brief as draft</button>
+            <p x-cloak x-show="generating" class="basis-full text-xs font-semibold text-indigo-600 dark:text-indigo-300" role="status">Counting tokens and generating a private draft. Keep this page open.</p>
         @else
             <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white"><i data-lucide="save" class="h-4 w-4" aria-hidden="true"></i>Save draft</button>
         @endif

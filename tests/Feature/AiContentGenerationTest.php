@@ -258,7 +258,7 @@ test('token quota failure releases the attempt reservation before any provider c
     Http::assertNothingSent();
 });
 
-test('provider generation failure consumes one attempt and releases reserved tokens', function () {
+test('provider generation failure consumes one attempt and releases reserved tokens', function (int $status, string $providerCode, string $expectedCategory) {
     [$user, $workspace, $brand] = contentStudioTenant();
     configuredContentModel();
     enableGenerationEntitlements($workspace);
@@ -267,12 +267,12 @@ test('provider generation failure consumes one attempt and releases reserved tok
     config()->set('services.gemini.api_key', 'synthetic-test-key');
     Http::preventStrayRequests();
     Http::fake([
-        GeminiHttpTransport::BASE_URL.'/*' => function (Request $request) {
+        GeminiHttpTransport::BASE_URL.'/*' => function (Request $request) use ($providerCode, $status) {
             if (str_ends_with(parse_url($request->url(), PHP_URL_PATH), ':countTokens')) {
                 return Http::response(['totalTokens' => 321]);
             }
 
-            return Http::response(['error' => ['code' => 'service_unavailable']], 503);
+            return Http::response(['error' => ['code' => $providerCode]], $status);
         },
     ]);
 
@@ -283,7 +283,40 @@ test('provider generation failure consumes one attempt and releases reserved tok
     $tokenUsage = UsageEvent::query()->where('entitlement_key', EntitlementKey::AiTokens->value)->sole();
     expect($attemptUsage->status)->toBe(UsageEventStatus::Committed)
         ->and($tokenUsage->status)->toBe(UsageEventStatus::Released)
-        ->and($tokenUsage->counter->reserved)->toBe(0);
+        ->and($tokenUsage->counter->reserved)->toBe(0)
+        ->and(AiGenerationAttempt::query()->sole()->error_category)->toBe($expectedCategory);
+    $this->assertDatabaseCount('ai_content_drafts', 0);
+    Http::assertSentCount(2);
+})->with([
+    'rate limited' => [429, 'too_many_requests', 'rate_limited'],
+    'provider error' => [500, 'api_error', 'provider_unavailable'],
+    'service unavailable' => [503, 'service_unavailable', 'provider_unavailable'],
+]);
+
+test('provider timeout consumes one attempt and releases reserved tokens without retrying', function () {
+    [$user, $workspace, $brand] = contentStudioTenant();
+    configuredContentModel();
+    enableGenerationEntitlements($workspace);
+    config()->set('subscriptions.enforcement_enabled', true);
+    config()->set('ai.content_generation_enabled', true);
+    config()->set('services.gemini.api_key', 'synthetic-test-key');
+    Http::preventStrayRequests();
+    Http::fake([
+        GeminiHttpTransport::BASE_URL.'/*' => Http::sequence()
+            ->push(['totalTokens' => 321])
+            ->pushFailedConnection('cURL error 28: Operation timed out'),
+    ]);
+
+    $this->actingAs($user)->post(route('content-studio.generations.store', [$workspace, $brand]), generationPayload())
+        ->assertSessionHasErrors(['generation' => 'AI generation could not be completed. Please try again later.']);
+
+    $attemptUsage = UsageEvent::query()->where('entitlement_key', EntitlementKey::AiGenerationAttempts->value)->sole();
+    $tokenUsage = UsageEvent::query()->where('entitlement_key', EntitlementKey::AiTokens->value)->sole();
+    expect($attemptUsage->status)->toBe(UsageEventStatus::Committed)
+        ->and($tokenUsage->status)->toBe(UsageEventStatus::Released)
+        ->and($tokenUsage->counter->reserved)->toBe(0)
+        ->and(AiGenerationAttempt::query()->sole()->error_category)->toBe('timeout');
+    $this->assertDatabaseCount('ai_content_drafts', 0);
     Http::assertSentCount(2);
 });
 

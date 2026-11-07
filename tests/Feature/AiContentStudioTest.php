@@ -58,6 +58,42 @@ test('an authorized customer saves views and edits an unpublished draft', functi
     expect($draft->fresh()->seo_title)->toBe('Updated Human-Reviewed Title');
 });
 
+test('the generation form shows live entitlement availability and loading feedback', function () {
+    config()->set('ai.content_generation_enabled', true);
+    config()->set('subscriptions.enforcement_enabled', true);
+    [$user, $workspace] = subscriptionFixture([
+        EntitlementKey::ContentStudio->value => null,
+        EntitlementKey::AiGenerationAttempts->value => 2,
+        EntitlementKey::AiTokens->value => 10000,
+    ]);
+    $brand = Brand::factory()->for($workspace)->create();
+
+    $this->actingAs($user)->get(route('content-studio.drafts.create', [$workspace, $brand]))
+        ->assertOk()
+        ->assertSee('AI generation is available.')
+        ->assertSee('2 remaining')
+        ->assertSee('10,000 remaining')
+        ->assertSee('Generating&hellip;', false)
+        ->assertSee('Counting tokens and generating a private draft.');
+});
+
+test('a free plan without ai quota receives clear feedback and cannot use the generation control', function () {
+    config()->set('ai.content_generation_enabled', true);
+    config()->set('subscriptions.enforcement_enabled', true);
+    [$user, $workspace, $plan] = subscriptionFixture([
+        EntitlementKey::ContentStudio->value => null,
+        EntitlementKey::AiGenerationAttempts->value => 0,
+        EntitlementKey::AiTokens->value => 0,
+    ]);
+    $plan->update(['code' => 'free', 'is_billable' => false]);
+    $brand = Brand::factory()->for($workspace)->create();
+
+    $this->actingAs($user)->get(route('content-studio.drafts.create', [$workspace, $brand]))
+        ->assertOk()
+        ->assertSee('Your AI generation quota for this monthly usage period is exhausted.')
+        ->assertSee('disabled x-bind:disabled="submitting || true"', false);
+});
+
 test('replaying a manual draft request returns the original draft without consuming quota twice', function () {
     config()->set('subscriptions.enforcement_enabled', true);
     [$user, $workspace] = subscriptionFixture([

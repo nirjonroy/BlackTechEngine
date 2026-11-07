@@ -89,6 +89,7 @@ class ContentDraftController extends Controller
             'contentTypes' => AiContentType::cases(),
             'contentLengths' => AiContentLength::cases(),
             'idempotencyKey' => (string) Str::uuid(),
+            'generationUi' => $this->generationUi($workspace),
         ]);
     }
 
@@ -183,5 +184,37 @@ class ContentDraftController extends Controller
 
         return Redirect::route('content-studio.drafts.show', [$workspace, $brand, $aiContentDraft])
             ->with('status', 'Draft changes saved. Nothing has been published.');
+    }
+
+    /** @return array{allowed: bool, enabled: bool, attempts_remaining: int|null, tokens_remaining: int|null, message: string} */
+    private function generationUi(Workspace $workspace): array
+    {
+        $enabled = (bool) config('ai.content_generation_enabled');
+        $contentStudio = $this->entitlements->decision($workspace, EntitlementKey::ContentStudio);
+        $attempts = $this->entitlements->decision($workspace, EntitlementKey::AiGenerationAttempts);
+        $tokens = $this->entitlements->decision($workspace, EntitlementKey::AiTokens);
+        $attemptsRemaining = $this->usage->remaining($workspace, EntitlementKey::AiGenerationAttempts);
+        $tokensRemaining = $this->usage->remaining($workspace, EntitlementKey::AiTokens);
+        $quotaAvailable = $attempts->allowed
+            && $tokens->allowed
+            && $attemptsRemaining !== 0
+            && $tokensRemaining !== 0;
+        $allowed = $enabled && $contentStudio->allowed && $quotaAvailable;
+
+        $message = match (true) {
+            ! $enabled => 'AI generation is disabled. You can still save the brief as a manual draft.',
+            ! $contentStudio->allowed => 'Your current plan does not include Content Studio access.',
+            ! $attempts->enabled || ! $tokens->enabled => 'Your current plan does not include AI generation.',
+            $attemptsRemaining === 0 || $tokensRemaining === 0 => 'Your AI generation quota for this monthly usage period is exhausted.',
+            default => 'AI generation is available. Usage is reserved before the provider request and settled from actual token usage.',
+        };
+
+        return [
+            'allowed' => $allowed,
+            'enabled' => $enabled,
+            'attempts_remaining' => $attemptsRemaining,
+            'tokens_remaining' => $tokensRemaining,
+            'message' => $message,
+        ];
     }
 }
