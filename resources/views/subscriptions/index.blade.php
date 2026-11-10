@@ -5,6 +5,7 @@
 
     <div class="mx-auto max-w-6xl space-y-6">
         @if(session('status'))<div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200">{{ session('status') }}</div>@endif
+        @if($errors->has('payment'))<div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-800 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200">{{ $errors->first('payment') }}</div>@endif
         @if($workspaces->isEmpty())
             <div class="bte-card rounded-2xl p-8 text-center"><h2 class="font-heading text-xl font-black">No workspace yet</h2><p class="mt-2 text-sm text-slate-500">Complete onboarding before managing a subscription.</p></div>
         @else
@@ -16,6 +17,29 @@
             </section>
 
             @if($subscription)
+                @if(config('subscriptions.checkout_enabled'))
+                    <section class="bte-card rounded-2xl p-6">
+                        <div class="max-w-2xl"><p class="text-xs font-bold uppercase tracking-wider text-indigo-500">Secure checkout</p><h2 class="mt-2 font-heading text-lg font-black">Choose a paid plan</h2><p class="mt-1 text-sm text-slate-500">Access changes only after the payment provider confirms the payment server-side.</p></div>
+                        <div class="mt-5 grid gap-4 md:grid-cols-2">
+                            @forelse($plans as $plan)
+                                <form method="POST" action="{{ route('subscriptions.checkout.store', $workspace) }}" class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                                    @csrf
+                                    <input type="hidden" name="pricing_plan_id" value="{{ $plan->id }}">
+                                    <input type="hidden" name="idempotency_key" value="{{ (string) Illuminate\Support\Str::uuid() }}">
+                                    <h3 class="font-heading font-black">{{ $plan->name }}</h3>
+                                    <label class="mt-3 block text-sm font-bold" for="billing_interval_{{ $plan->id }}">Billing interval</label>
+                                    <select id="billing_interval_{{ $plan->id }}" name="billing_interval" required class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-900">
+                                        @if($plan->monthly_price_minor !== null)<option value="monthly">Monthly — {{ $plan->billing_currency }} {{ number_format($plan->monthly_price_minor / 100, 2) }}</option>@endif
+                                        @if($plan->annual_price_minor !== null)<option value="annual">Annual — {{ $plan->billing_currency }} {{ number_format($plan->annual_price_minor / 100, 2) }}</option>@endif
+                                    </select>
+                                    <button class="mt-4 w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white hover:bg-indigo-700">Continue to secure checkout</button>
+                                </form>
+                            @empty
+                                <p class="text-sm text-slate-500">No paid plans are currently available.</p>
+                            @endforelse
+                        </div>
+                    </section>
+                @endif
                 <section class="grid gap-5 lg:grid-cols-2">
                     <form method="POST" action="{{ route('subscriptions.change-requests.store', $workspace) }}" class="bte-card rounded-2xl p-6">@csrf<h2 class="font-heading text-lg font-black">Request a plan change</h2><p class="mt-1 text-sm text-slate-500">An Admin must review this request. No payment is collected here.</p><select name="pricing_plan_id" required class="mt-4 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-900">@foreach($plans as $plan)<option value="{{ $plan->id }}">{{ $plan->name }}</option>@endforeach</select><select name="billing_interval" required class="mt-3 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-900"><option value="monthly">Monthly</option><option value="annual">Annual</option></select><button class="mt-4 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white">Submit request</button></form>
                     <form method="POST" action="{{ route('subscriptions.cancellation-requests.store', $workspace) }}" class="bte-card rounded-2xl p-6">@csrf<h2 class="font-heading text-lg font-black">Request cancellation</h2><p class="mt-1 text-sm text-slate-500">This records a request; it does not immediately cancel service.</p><textarea name="reason" required maxlength="1000" rows="4" class="mt-4 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-900" placeholder="Reason for cancellation"></textarea><button class="mt-4 rounded-xl border border-rose-300 px-4 py-2.5 text-sm font-black text-rose-700 dark:border-rose-800 dark:text-rose-300">Submit cancellation request</button></form>

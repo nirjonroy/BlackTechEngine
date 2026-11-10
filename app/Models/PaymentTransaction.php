@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'billing_invoice_id', 'workspace_subscription_id', 'workspace_id', 'provider',
-    'provider_reference', 'provider_event_id', 'idempotency_key', 'type', 'status',
+    'provider_reference', 'provider_payment_reference', 'provider_event_id', 'idempotency_key', 'type', 'status',
     'reconciliation_status', 'currency', 'amount_minor', 'failure_code', 'metadata', 'processed_at',
 ])]
 class PaymentTransaction extends Model
@@ -40,6 +41,11 @@ class PaymentTransaction extends Model
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
+    }
+
+    public function webhookEvents(): HasMany
+    {
+        return $this->hasMany(PaymentWebhookEvent::class)->latest('id');
     }
 
     protected function casts(): array

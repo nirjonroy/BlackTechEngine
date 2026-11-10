@@ -20,8 +20,9 @@ class InvoiceService
 
     /**
      * @param  list<array{description: string, quantity: int, unit_amount_minor: int, metadata?: array<string, mixed>}>  $items
+     * @param  array<string, mixed>  $metadata
      */
-    public function create(WorkspaceSubscription $subscription, array $items): BillingInvoice
+    public function create(WorkspaceSubscription $subscription, array $items, array $metadata = []): BillingInvoice
     {
         if ($items === []) {
             throw ValidationException::withMessages(['items' => 'An invoice requires at least one item.']);
@@ -45,7 +46,7 @@ class InvoiceService
         });
         $subtotal = (int) $normalized->sum('total_amount_minor');
 
-        return DB::transaction(function () use ($normalized, $subtotal, $subscription): BillingInvoice {
+        return DB::transaction(function () use ($metadata, $normalized, $subtotal, $subscription): BillingInvoice {
             $locked = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($subscription->getKey());
             $invoice = BillingInvoice::query()->create([
                 'workspace_subscription_id' => $locked->getKey(),
@@ -58,6 +59,7 @@ class InvoiceService
                 'period_starts_at' => $locked->current_period_starts_at,
                 'period_ends_at' => $locked->current_period_ends_at,
                 'due_at' => now('UTC')->addDays((int) config('subscriptions.invoice_due_days', 7)),
+                'metadata' => $metadata === [] ? null : $metadata,
             ]);
             $invoice->items()->createMany($normalized->all());
 

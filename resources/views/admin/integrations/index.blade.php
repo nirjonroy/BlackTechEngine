@@ -1,0 +1,75 @@
+<x-admin.layout title="Integrations & Settings" :breadcrumbs="[['label' => 'Mission Control', 'route' => 'admin.dashboard'], ['label' => 'Integrations & Settings']]">
+    <div class="space-y-6">
+        <header>
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Protected platform configuration</p>
+            <h1 class="mt-1 font-heading text-2xl font-black tracking-tight sm:text-3xl">Integrations &amp; Settings</h1>
+            <p class="mt-2 max-w-3xl text-sm text-slate-500 dark:text-slate-400">Credentials are encrypted at rest and never redisplayed. Operational feature gates remain independent safety controls.</p>
+        </header>
+
+        @if(session('status'))
+            <div class="rounded-2xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200" role="status">{{ session('status') }}</div>
+        @endif
+        @if($errors->any())
+            <div class="rounded-2xl border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-800 dark:bg-red-950/40 dark:text-red-200" role="alert">
+                <p class="font-bold">The settings were not saved.</p>
+                <ul class="mt-2 list-disc space-y-1 pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+        @endif
+
+        <nav class="flex gap-2 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 dark:border-slate-800 dark:bg-slate-900" aria-label="Integration settings tabs">
+            @foreach(['gemini' => 'Gemini AI', 'stripe' => 'Stripe Payments', 'mail' => 'Email / SMTP'] as $key => $label)
+                <a href="{{ route('admin.integrations.index', ['tab' => $key]) }}" class="whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-bold transition {{ $tab === $key ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}" @if($tab === $key) aria-current="page" @endif>{{ $label }}</a>
+            @endforeach
+        </nav>
+
+        @if($tab === 'gemini')
+            <section class="grid gap-6 xl:grid-cols-3">
+                <form method="POST" action="{{ route('admin.integrations.gemini.update') }}" class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7 xl:col-span-2">
+                    @csrf @method('PATCH')
+                    <input type="hidden" name="lock_version" value="{{ $setting->lock_version }}">
+                    <input type="hidden" name="workload_lock_version" value="{{ $generationWorkload?->lock_version }}">
+                    <h2 class="font-heading text-xl font-black">Gemini credentials and model</h2>
+                    <div class="mt-5 grid gap-5 md:grid-cols-2">
+                        <label class="block md:col-span-2"><span class="text-xs font-bold">API key</span><input type="password" name="api_key" autocomplete="new-password" maxlength="4096" placeholder="{{ $secretStatus['gemini'] ? 'Configured •••••••• — leave blank to preserve' : 'Enter a server-side Gemini API key' }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                        <label class="block"><span class="text-xs font-bold">SEO/GEO generation model</span><select name="ai_model_id" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"><option value="">Keep current selection</option>@foreach($geminiModels as $model)<option value="{{ $model->id }}" @selected(old('ai_model_id', $generationWorkload?->primary_ai_model_id) === $model->id)>{{ $model->display_name }} · {{ $model->provider_model_id }}</option>@endforeach</select></label>
+                        <div class="space-y-3 rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+                            <input type="hidden" name="enabled" value="0"><label class="flex items-center gap-3"><input type="checkbox" name="enabled" value="1" @checked(old('enabled', $setting->gemini_enabled)) class="rounded border-slate-300 text-indigo-600"><span class="text-sm font-bold">Allow stored credential use</span></label>
+                            <input type="hidden" name="clear_api_key" value="0"><label class="flex items-center gap-3"><input type="checkbox" name="clear_api_key" value="1" class="rounded border-slate-300 text-red-600"><span class="text-sm font-bold text-red-600">Clear stored API key</span></label>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end"><button class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white hover:bg-indigo-500">Save Gemini settings</button></div>
+                </form>
+                <aside class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7">
+                    <h2 class="font-heading text-lg font-black">Operational state</h2>
+                    <dl class="mt-4 space-y-3 text-sm"><div class="flex justify-between gap-3"><dt class="text-slate-500">Credential</dt><dd class="font-bold">{{ $secretStatus['gemini'] ? 'Configured ••••••••' : 'Not configured' }}</dd></div><div class="flex justify-between gap-3"><dt class="text-slate-500">Generation gate</dt><dd class="font-bold">{{ config('ai.content_generation_enabled') ? 'ON' : 'OFF' }}</dd></div><div class="flex justify-between gap-3"><dt class="text-slate-500">Provider</dt><dd class="font-bold">{{ $geminiProvider?->is_enabled ? 'Enabled' : 'Disabled' }}</dd></div><div class="flex justify-between gap-3"><dt class="text-slate-500">Workload</dt><dd class="font-bold">{{ $generationWorkload?->is_enabled ? 'Enabled' : 'Disabled' }}</dd></div></dl>
+                    @if($geminiProvider)
+                        <form method="POST" action="{{ route('admin.ai-configuration.providers.verification.store', $geminiProvider) }}" class="mt-5">@csrf<input type="hidden" name="lock_version" value="{{ $geminiProvider->lock_version }}"><input type="hidden" name="confirm_verification" value="1"><button class="w-full rounded-xl border border-cyan-500 px-4 py-2.5 text-sm font-black text-cyan-600 hover:bg-cyan-500/10">Test connection</button></form>
+                    @endif
+                    <a href="{{ route('admin.ai-configuration.index') }}" class="mt-3 inline-flex w-full justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-bold dark:border-slate-700">Manage activation sequence</a>
+                </aside>
+            </section>
+        @elseif($tab === 'stripe')
+            <section class="grid gap-6 xl:grid-cols-3">
+                <form method="POST" action="{{ route('admin.integrations.stripe.update') }}" class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7 xl:col-span-2">@csrf @method('PATCH')<input type="hidden" name="lock_version" value="{{ $setting->lock_version }}"><h2 class="font-heading text-xl font-black">Stripe Checkout</h2><div class="mt-5 grid gap-5 md:grid-cols-2">
+                    <label class="block"><span class="text-xs font-bold">Mode</span><select name="mode" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"><option value="test" @selected(old('mode', $setting->stripe_mode) === 'test')>Test</option><option value="live" @selected(old('mode', $setting->stripe_mode) === 'live')>Live</option></select></label>
+                    <label class="block"><span class="text-xs font-bold">Publishable key</span><input name="publishable_key" value="{{ old('publishable_key', $setting->stripe_publishable_key) }}" maxlength="255" autocomplete="off" class="mt-2 w-full rounded-xl border-slate-300 font-mono text-xs dark:border-slate-700 dark:bg-slate-950"></label>
+                    <label class="block"><span class="text-xs font-bold">Secret key</span><input type="password" name="secret_key" autocomplete="new-password" placeholder="{{ $secretStatus['stripe_key'] ? 'Configured •••••••• — leave blank to preserve' : 'sk_test_…' }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                    <label class="block"><span class="text-xs font-bold">Webhook signing secret</span><input type="password" name="webhook_secret" autocomplete="new-password" placeholder="{{ $secretStatus['stripe_webhook'] ? 'Configured •••••••• — leave blank to preserve' : 'whsec_…' }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                    <div class="space-y-3 rounded-2xl border border-slate-200 p-4 dark:border-slate-800 md:col-span-2"><input type="hidden" name="enabled" value="0"><label class="flex items-center gap-3"><input type="checkbox" name="enabled" value="1" @checked(old('enabled', $setting->stripe_enabled)) class="rounded text-indigo-600"><span class="text-sm font-bold">Enable configured Stripe adapter</span></label><input type="hidden" name="clear_secrets" value="0"><label class="flex items-center gap-3"><input type="checkbox" name="clear_secrets" value="1" class="rounded text-red-600"><span class="text-sm font-bold text-red-600">Clear both Stripe secrets</span></label></div>
+                </div><div class="mt-6 flex justify-end"><button class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white">Save Stripe settings</button></div></form>
+                <aside class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7"><h2 class="font-heading text-lg font-black">Webhook &amp; safety</h2><p class="mt-3 break-all rounded-xl bg-slate-100 p-3 font-mono text-xs dark:bg-slate-950">{{ $webhookUrl }}</p><dl class="mt-4 space-y-3 text-sm"><div class="flex justify-between"><dt class="text-slate-500">Secrets</dt><dd class="font-bold">{{ $secretStatus['stripe_key'] && $secretStatus['stripe_webhook'] ? 'Configured ••••••••' : 'Incomplete' }}</dd></div><div class="flex justify-between"><dt class="text-slate-500">Checkout gate</dt><dd class="font-bold">{{ config('subscriptions.checkout_enabled') ? 'ON' : 'OFF' }}</dd></div></dl><p class="mt-4 text-xs leading-5 text-amber-600">Paid access is granted only after a signed webhook matches the server-side invoice, amount, currency, workspace, and subscription.</p></aside>
+            </section>
+        @else
+            <section class="grid gap-6 xl:grid-cols-3">
+                <form method="POST" action="{{ route('admin.integrations.mail.update') }}" class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7 xl:col-span-2">@csrf @method('PATCH')<input type="hidden" name="lock_version" value="{{ $setting->lock_version }}"><h2 class="font-heading text-xl font-black">SMTP transport</h2><div class="mt-5 grid gap-5 md:grid-cols-2">
+                    <label class="block"><span class="text-xs font-bold">Host</span><input name="host" value="{{ old('host', $setting->mail_host) }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label><label class="block"><span class="text-xs font-bold">Port</span><input type="number" name="port" min="1" max="65535" value="{{ old('port', $setting->mail_port) }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                    <label class="block"><span class="text-xs font-bold">Encryption</span><select name="encryption" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"><option value="">Automatic / none</option><option value="tls" @selected(old('encryption', $setting->mail_encryption) === 'tls')>TLS / STARTTLS</option><option value="ssl" @selected(old('encryption', $setting->mail_encryption) === 'ssl')>SSL / SMTPS</option></select></label><label class="block"><span class="text-xs font-bold">Username</span><input name="username" value="{{ old('username', $setting->mail_username) }}" autocomplete="off" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                    <label class="block md:col-span-2"><span class="text-xs font-bold">Password</span><input type="password" name="password" autocomplete="new-password" placeholder="{{ $secretStatus['mail'] ? 'Configured •••••••• — leave blank to preserve' : 'Enter SMTP password' }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                    <label class="block"><span class="text-xs font-bold">From Name</span><input name="from_name" value="{{ old('from_name', $setting->mail_from_name) }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label><label class="block"><span class="text-xs font-bold">From Email</span><input type="email" name="from_address" value="{{ old('from_address', $setting->mail_from_address) }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label><label class="block md:col-span-2"><span class="text-xs font-bold">Reply-To</span><input type="email" name="reply_to" value="{{ old('reply_to', $setting->mail_reply_to) }}" class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label>
+                    <div class="space-y-3 rounded-2xl border border-slate-200 p-4 dark:border-slate-800 md:col-span-2"><input type="hidden" name="enabled" value="0"><label class="flex items-center gap-3"><input type="checkbox" name="enabled" value="1" @checked(old('enabled', $setting->mail_enabled)) class="rounded text-indigo-600"><span class="text-sm font-bold">Use database SMTP settings</span></label><input type="hidden" name="clear_password" value="0"><label class="flex items-center gap-3"><input type="checkbox" name="clear_password" value="1" class="rounded text-red-600"><span class="text-sm font-bold text-red-600">Clear stored SMTP password</span></label></div>
+                </div><div class="mt-6 flex justify-end"><button class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white">Save email settings</button></div></form>
+                <aside class="bte-card rounded-3xl border border-slate-200 p-5 shadow-xl dark:border-slate-800 sm:p-7"><h2 class="font-heading text-lg font-black">Send test email</h2><p class="mt-2 text-xs leading-5 text-slate-500">Uses the same runtime transport as verification, password reset, and notifications. Queue workers refresh settings before each job.</p><form method="POST" action="{{ route('admin.integrations.mail.test') }}" class="mt-4 space-y-3">@csrf<label class="block"><span class="text-xs font-bold">Recipient</span><input type="email" name="recipient" value="{{ auth('admin')->user()?->email }}" required class="mt-2 w-full rounded-xl border-slate-300 dark:border-slate-700 dark:bg-slate-950"></label><button class="w-full rounded-xl border border-cyan-500 px-4 py-2.5 text-sm font-black text-cyan-600">Send test email</button></form></aside>
+            </section>
+        @endif
+    </div>
+</x-admin.layout>

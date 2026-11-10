@@ -280,6 +280,118 @@ class SubscriptionManager
         }, 3);
     }
 
+    public function activateCheckoutFromPayment(PaymentTransaction $payment): WorkspaceSubscription
+    {
+        return DB::transaction(function () use ($payment): WorkspaceSubscription {
+            $lockedPayment = PaymentTransaction::query()->lockForUpdate()->findOrFail($payment->getKey());
+            $invoice = $lockedPayment->invoice()->lockForUpdate()->firstOrFail();
+            $checkout = data_get($invoice->metadata, 'checkout');
+
+            if (! is_array($checkout)
+                || $lockedPayment->status !== PaymentStatus::Succeeded
+                || $lockedPayment->reconciliation_status !== ReconciliationStatus::Matched
+                || $invoice->status !== InvoiceStatus::Paid
+                || $invoice->workspace_subscription_id !== $lockedPayment->workspace_subscription_id
+                || $invoice->workspace_id !== $lockedPayment->workspace_id
+                || $invoice->currency !== $lockedPayment->currency
+                || $invoice->total_minor !== $lockedPayment->amount_minor) {
+                throw ValidationException::withMessages(['payment' => 'Only a verified checkout payment can activate a paid subscription.']);
+            }
+
+            $alreadyActivated = SubscriptionHistory::query()
+                ->where('workspace_subscription_id', $lockedPayment->workspace_subscription_id)
+                ->whereIn('action', ['payment_checkout_activated', 'payment_checkout_plan_changed', 'payment_checkout_renewed'])
+                ->where('context->payment_transaction_id', $lockedPayment->getKey())
+                ->exists();
+            $subscription = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($lockedPayment->workspace_subscription_id);
+
+            if ($alreadyActivated) {
+                return $subscription;
+            }
+
+            $plan = PricingPlan::query()->lockForUpdate()->findOrFail((int) ($checkout['pricing_plan_id'] ?? 0));
+            $interval = BillingInterval::tryFrom((string) ($checkout['billing_interval'] ?? ''));
+            $expectedVersion = (int) ($checkout['subscription_lock_version'] ?? -1);
+
+            if ($subscription->workspace_id !== $lockedPayment->workspace_id
+                || $subscription->lock_version !== $expectedVersion
+                || $subscription->status === SubscriptionStatus::Cancelled
+                || $interval === null
+                || $interval === BillingInterval::Manual
+                || ! $plan->is_active
+                || ! $plan->is_billable
+                || strtoupper($plan->billing_currency) !== $lockedPayment->currency
+                || $this->priceFor($plan, $interval) !== $lockedPayment->amount_minor) {
+                throw ValidationException::withMessages(['payment' => 'The paid plan or subscription changed before payment confirmation.']);
+            }
+
+            $from = $subscription->status;
+            $previousPlanId = $subscription->pricing_plan_id;
+            $startsAt = $from === SubscriptionStatus::PastDue
+                && $subscription->current_period_ends_at !== null
+                && $subscription->current_period_ends_at->isPast()
+                    ? CarbonImmutable::instance($subscription->current_period_ends_at)
+                    : CarbonImmutable::now('UTC')->startOfSecond();
+            $endsAt = $this->periodEnd($startsAt, $interval);
+            $subscription->update([
+                'pricing_plan_id' => $plan->getKey(),
+                'status' => SubscriptionStatus::Active,
+                'billing_interval' => $interval,
+                'currency' => strtoupper($plan->billing_currency),
+                'price_minor' => $lockedPayment->amount_minor,
+                'entitlement_snapshot' => $this->snapshot($plan, $interval),
+                'activation_source' => 'verified_payment',
+                'lock_version' => $subscription->lock_version + 1,
+                'starts_at' => $startsAt,
+                'current_period_starts_at' => $startsAt,
+                'current_period_ends_at' => $endsAt,
+                'renews_at' => $endsAt,
+                'trial_ends_at' => null,
+                'cancel_at_period_end' => false,
+                'cancelled_at' => null,
+                'ended_at' => null,
+            ]);
+            $action = $previousPlanId !== $plan->getKey()
+                ? 'payment_checkout_plan_changed'
+                : ($from === SubscriptionStatus::PastDue ? 'payment_checkout_renewed' : 'payment_checkout_activated');
+            $this->record($subscription, $action, $from, SubscriptionStatus::Active, null, null, [
+                'payment_transaction_id' => $lockedPayment->getKey(),
+                'previous_pricing_plan_id' => $previousPlanId,
+                'pricing_plan_id' => $plan->getKey(),
+                'billing_interval' => $interval->value,
+            ]);
+
+            return $subscription->refresh();
+        }, 3);
+    }
+
+    public function suspendPaidAccess(PaymentTransaction $payment, string $action): WorkspaceSubscription
+    {
+        return DB::transaction(function () use ($action, $payment): WorkspaceSubscription {
+            $lockedPayment = PaymentTransaction::query()->lockForUpdate()->findOrFail($payment->getKey());
+            $subscription = WorkspaceSubscription::query()->lockForUpdate()->findOrFail($lockedPayment->workspace_subscription_id);
+            $latestActivation = $subscription->histories()
+                ->whereIn('action', ['payment_checkout_activated', 'payment_checkout_plan_changed', 'payment_checkout_renewed'])
+                ->first();
+
+            if ((int) data_get($latestActivation?->context, 'payment_transaction_id') !== $lockedPayment->getKey()
+                || $subscription->status !== SubscriptionStatus::Active) {
+                return $subscription;
+            }
+
+            $subscription->update([
+                'status' => SubscriptionStatus::PastDue,
+                'renews_at' => null,
+                'lock_version' => $subscription->lock_version + 1,
+            ]);
+            $this->record($subscription, $action, SubscriptionStatus::Active, SubscriptionStatus::PastDue, null, null, [
+                'payment_transaction_id' => $lockedPayment->getKey(),
+            ]);
+
+            return $subscription->refresh();
+        }, 3);
+    }
+
     public function processDuePeriod(int $subscriptionId, CarbonImmutable $asOf): ?string
     {
         return DB::transaction(function () use ($asOf, $subscriptionId): ?string {

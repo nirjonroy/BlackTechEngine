@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ApplyIntegrationMailConfiguration;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+        $middleware->append(ApplyIntegrationMailConfiguration::class);
+        $middleware->validateCsrfTokens(except: ['billing/webhooks/payment']);
         $middleware->redirectGuestsTo(function (Request $request): string {
             $usesAdminGuard = in_array('auth:admin', $request->route()?->gatherMiddleware() ?? [], true);
 

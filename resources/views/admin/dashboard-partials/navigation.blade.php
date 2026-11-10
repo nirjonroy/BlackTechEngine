@@ -37,6 +37,12 @@
                     <span>Subscriptions</span>
                 </a>
             @endif
+            @if($admin?->hasRole('Super Admin', 'admin'))
+                <a href="{{ route('admin.integrations.index') }}" class="{{ $baseClasses }} {{ request()->routeIs('admin.integrations.*') ? $activeClasses : $inactiveClasses }}" @if(request()->routeIs('admin.integrations.*')) aria-current="page" @endif>
+                    <i data-lucide="plug-zap" class="h-4 w-4" aria-hidden="true"></i>
+                    <span>Integrations &amp; Settings</span>
+                </a>
+            @endif
             @foreach([
                 ['icon' => 'building-2', 'label' => 'Workspace Management'],
                 ['icon' => 'server', 'label' => 'Job Queues & Latency'],

@@ -7,13 +7,15 @@ use App\Models\AiProvider;
 use App\Models\Workspace;
 use App\Services\Billing\Contracts\PaymentGateway;
 use App\Services\Billing\FakePaymentGateway;
-use App\Services\Billing\UnavailablePaymentGateway;
+use App\Services\Billing\StripePaymentGateway;
+use App\Services\Integrations\RuntimeIntegrationConfigurator;
 use App\View\Composers\CustomerLayoutComposer;
 use App\View\Composers\FrontendLayoutComposer;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -25,9 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(RuntimeIntegrationConfigurator::class);
         $this->app->bind(
             PaymentGateway::class,
-            $this->app->environment('testing') ? FakePaymentGateway::class : UnavailablePaymentGateway::class,
+            $this->app->environment('testing') ? FakePaymentGateway::class : StripePaymentGateway::class,
         );
     }
 
@@ -36,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Queue::before(function (): void {
+            app(RuntimeIntegrationConfigurator::class)->applyMailConfiguration();
+        });
+
         RateLimiter::for('ai-provider-verification', function (Request $request): array {
             $adminIdentifier = $request->user('admin')?->getAuthIdentifier() ?? $request->ip();
             $provider = $request->route('aiProvider');

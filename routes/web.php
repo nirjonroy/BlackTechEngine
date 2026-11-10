@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeaturePageSettingController;
 use App\Http\Controllers\Admin\FrontendNavigationController;
 use App\Http\Controllers\Admin\HomepageSettingController;
+use App\Http\Controllers\Admin\IntegrationSettingController;
 use App\Http\Controllers\Admin\PlanEntitlementController;
 use App\Http\Controllers\Admin\PricingPageSettingController;
 use App\Http\Controllers\Admin\PricingPlanController;
@@ -51,6 +52,8 @@ use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageCo
 use App\Http\Controllers\Frontend\RobotsController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\PaymentCheckoutController;
+use App\Http\Controllers\PaymentWebhookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialCalendarController;
 use App\Http\Controllers\SocialPostController;
@@ -61,6 +64,7 @@ use App\Http\Controllers\SubscriptionRequestController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', FrontendAboutPageController::class)->name('about');
@@ -71,6 +75,9 @@ Route::get('/blog', [FrontendBlogController::class, 'index'])->name('blog.index'
 Route::get('/blog/{slug}', [FrontendBlogController::class, 'show'])->name('blog.show');
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
+Route::post('/billing/webhooks/payment', PaymentWebhookController::class)
+    ->middleware('throttle:60,1')
+    ->name('billing.webhooks.payment');
 
 if (config('customer.workspaces_enabled')) {
     Route::middleware(['auth', 'verified'])->group(function () {
@@ -81,6 +88,8 @@ if (config('customer.workspaces_enabled')) {
             Route::get('/subscription', SubscriptionController::class)->name('subscriptions.index');
             Route::post('/workspaces/{workspace}/subscription/change-requests', [SubscriptionRequestController::class, 'change'])
                 ->name('subscriptions.change-requests.store');
+            Route::post('/workspaces/{workspace}/subscription/checkout', PaymentCheckoutController::class)
+                ->name('subscriptions.checkout.store');
             Route::post('/workspaces/{workspace}/subscription/cancellation-requests', [SubscriptionRequestController::class, 'cancel'])
                 ->name('subscriptions.cancellation-requests.store');
             Route::get('/workspaces/{workspace}/billing/invoices/{billingInvoice}', BillingInvoiceController::class)
@@ -179,6 +188,20 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard/analytics.csv', AdminAnalyticsExportController::class)
         ->middleware(PermissionMiddleware::using('view dashboard', 'admin'))
         ->name('admin.dashboard.analytics.export');
+
+    Route::middleware(RoleMiddleware::using('Super Admin', 'admin'))->group(function () {
+        Route::get('/admin/integrations', [IntegrationSettingController::class, 'index'])
+            ->name('admin.integrations.index');
+        Route::patch('/admin/integrations/gemini', [IntegrationSettingController::class, 'updateGemini'])
+            ->name('admin.integrations.gemini.update');
+        Route::patch('/admin/integrations/stripe', [IntegrationSettingController::class, 'updateStripe'])
+            ->name('admin.integrations.stripe.update');
+        Route::patch('/admin/integrations/mail', [IntegrationSettingController::class, 'updateMail'])
+            ->name('admin.integrations.mail.update');
+        Route::post('/admin/integrations/mail/test', [IntegrationSettingController::class, 'sendTestMail'])
+            ->middleware('throttle:3,1')
+            ->name('admin.integrations.mail.test');
+    });
 
     if (config('subscriptions.management_enabled')) {
         Route::middleware(PermissionMiddleware::using('manage subscriptions', 'admin'))->group(function () {
