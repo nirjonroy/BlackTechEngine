@@ -246,10 +246,12 @@ class GeminiProviderAdapter implements AiProviderAdapter
             ? $this->stringList($rawModel['supportedGenerationMethods'])
             : [];
 
+        $providerModelId = substr($resourceName, strlen('models/'));
+
         return new DiscoveredAiModel(
             resourceName: $resourceName,
-            providerModelId: substr($resourceName, strlen('models/')),
-            baseModelId: $this->requiredString($rawModel, 'baseModelId', 255),
+            providerModelId: $providerModelId,
+            baseModelId: $this->optionalString($rawModel, 'baseModelId', 255) ?? $providerModelId,
             version: $this->requiredString($rawModel, 'version', 64),
             displayName: $this->optionalString($rawModel, 'displayName', 128),
             description: $this->optionalString($rawModel, 'description', 4000),
