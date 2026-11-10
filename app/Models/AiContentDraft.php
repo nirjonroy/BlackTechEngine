@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'workspace_id', 'brand_id', 'created_by_user_id', 'ai_provider_id', 'ai_model_id',
@@ -90,6 +91,18 @@ class AiContentDraft extends Model
     public function editorialEvents(): HasMany
     {
         return $this->hasMany(AiContentDraftEvent::class)->latest('id');
+    }
+
+    /** @return HasMany<WordPressPublishedPost, $this> */
+    public function wordPressPublications(): HasMany
+    {
+        return $this->hasMany(WordPressPublishedPost::class, 'ai_content_draft_id')->latest('id');
+    }
+
+    /** @return HasOne<WordPressPublishedPost, $this> */
+    public function latestWordPressPublication(): HasOne
+    {
+        return $this->hasOne(WordPressPublishedPost::class, 'ai_content_draft_id')->latestOfMany();
     }
 
     /** @return array<string, string> */

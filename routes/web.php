@@ -61,6 +61,8 @@ use App\Http\Controllers\SocialPostExportController;
 use App\Http\Controllers\SocialPostWorkflowController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionRequestController;
+use App\Http\Controllers\WordPressConnectionController;
+use App\Http\Controllers\WordPressPublishController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -114,6 +116,13 @@ if (config('customer.workspaces_enabled')) {
             ->except('destroy')
             ->scoped();
 
+        Route::post('/workspaces/{workspace}/brands/{brand}/wordpress/connect', [WordPressConnectionController::class, 'connect'])
+            ->scopeBindings()->name('workspaces.brands.wordpress.connect');
+        Route::post('/workspaces/{workspace}/brands/{brand}/wordpress/verify', [WordPressConnectionController::class, 'verify'])
+            ->scopeBindings()->name('workspaces.brands.wordpress.verify');
+        Route::delete('/workspaces/{workspace}/brands/{brand}/wordpress/disconnect', [WordPressConnectionController::class, 'disconnect'])
+            ->scopeBindings()->name('workspaces.brands.wordpress.disconnect');
+
         if (config('ai.content_studio_enabled')) {
             Route::get('/content-studio', [ContentDraftController::class, 'index'])->name('content-studio.index');
             Route::get('/workspaces/{workspace}/brands/{brand}/content-drafts/create', [ContentDraftController::class, 'create'])
@@ -135,6 +144,8 @@ if (config('customer.workspaces_enabled')) {
                     ->scopeBindings()->name('content-studio.drafts.change-requests.store');
                 Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/exports', ContentDraftExportController::class)
                     ->scopeBindings()->name('content-studio.drafts.exports.store');
+                Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/wordpress/dispatch', [WordPressPublishController::class, 'store'])
+                    ->scopeBindings()->name('content-studio.drafts.wordpress.publish');
             }
             Route::post('/workspaces/{workspace}/brands/{brand}/content-generations', AiContentGenerationController::class)
                 ->scopeBindings()->middleware('throttle:ai-content-generation')->name('content-studio.generations.store');

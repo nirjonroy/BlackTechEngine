@@ -79,6 +79,59 @@
                         </select>
                         <button type="submit" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white"><i data-lucide="download" class="h-4 w-4" aria-hidden="true"></i>Download export</button>
                     </form>
+
+                    @php
+                        $wpConn = $brand->wordPressConnection;
+                        $latestWpPost = $aiContentDraft->latestWordPressPublication;
+                    @endphp
+                    <div class="bte-card rounded-2xl p-5 sm:p-6">
+                        <div class="flex items-center justify-between gap-2">
+                            <h2 class="font-heading text-lg font-black">WordPress Publishing</h2>
+                            @if($wpConn && $wpConn->isConnected())
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Connected
+                                </span>
+                            @endif
+                        </div>
+
+                        @if($wpConn && $wpConn->isConnected())
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Directly publish this approved article to <strong>{{ $wpConn->site_name ?: $wpConn->site_url }}</strong>.</p>
+
+                            @if($latestWpPost && $latestWpPost->wordpress_post_id)
+                                <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs dark:border-emerald-900/50 dark:bg-emerald-950/30">
+                                    <p class="font-bold text-emerald-800 dark:text-emerald-300">Published to WordPress (Post #{{ $latestWpPost->wordpress_post_id }})</p>
+                                    <p class="mt-1 text-slate-600 dark:text-slate-400">Status: <span class="font-bold uppercase">{{ $latestWpPost->status->label() }}</span> &middot; {{ $latestWpPost->published_at?->toDayDateTimeString() }}</p>
+                                    @if($latestWpPost->post_url)
+                                        <a href="{{ $latestWpPost->post_url }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex items-center gap-1 font-bold text-indigo-600 hover:underline dark:text-indigo-400">
+                                            View on WordPress <i data-lucide="external-link" class="h-3 w-3"></i>
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
+
+                            <form method="POST" action="{{ route('content-studio.drafts.wordpress.publish', [$workspace, $brand, $aiContentDraft]) }}" class="mt-4 space-y-3">
+                                @csrf
+                                <div>
+                                    <label for="target_status" class="block text-sm font-bold">Publish status</label>
+                                    <select id="target_status" name="target_status" class="bte-surface mt-1.5 w-full rounded-xl border border-slate-300 text-sm dark:border-slate-700">
+                                        <option value="draft">Save as WordPress Draft (Recommended)</option>
+                                        <option value="publish">Publish Live</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-black text-white hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
+                                    <i data-lucide="send" class="h-4 w-4"></i>
+                                    {{ $latestWpPost && $latestWpPost->wordpress_post_id ? 'Update on WordPress' : 'Publish to WordPress' }}
+                                </button>
+                            </form>
+                        @else
+                            <div class="mt-4 rounded-xl border border-dashed border-slate-300 p-4 text-center dark:border-slate-700">
+                                <p class="text-sm font-semibold text-slate-600 dark:text-slate-400">No active WordPress connection found for this brand.</p>
+                                <a href="{{ route('workspaces.brands.show', [$workspace, $brand]) }}" class="mt-3 inline-flex items-center gap-2 text-xs font-bold text-indigo-600 hover:underline dark:text-indigo-400">
+                                    Connect WordPress in Brand Settings <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
                 @endif
             </section>
 

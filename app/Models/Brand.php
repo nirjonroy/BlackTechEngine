@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'workspace_id',
@@ -50,6 +51,18 @@ class Brand extends Model
     public function socialPosts(): HasMany
     {
         return $this->hasMany(SocialPost::class);
+    }
+
+    /** @return HasOne<WordPressSiteConnection, $this> */
+    public function wordPressConnection(): HasOne
+    {
+        return $this->hasOne(WordPressSiteConnection::class);
+    }
+
+    /** @return HasMany<WordPressPublishedPost, $this> */
+    public function wordPressPublications(): HasMany
+    {
+        return $this->hasMany(WordPressPublishedPost::class);
     }
 
     /** @return array<string, string> */
