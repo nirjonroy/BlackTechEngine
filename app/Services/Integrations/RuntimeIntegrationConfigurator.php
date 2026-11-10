@@ -38,6 +38,11 @@ class RuntimeIntegrationConfigurator
         }
 
         try {
+            $password = $setting->mail_password;
+            if ($setting->mail_host === 'smtp.gmail.com' && is_string($password)) {
+                $password = str_replace(' ', '', $password);
+            }
+
             config()->set([
                 'mail.default' => 'smtp',
                 'mail.mailers.smtp.url' => null,
@@ -45,7 +50,7 @@ class RuntimeIntegrationConfigurator
                 'mail.mailers.smtp.host' => $setting->mail_host,
                 'mail.mailers.smtp.port' => $setting->mail_port,
                 'mail.mailers.smtp.username' => $setting->mail_username,
-                'mail.mailers.smtp.password' => $setting->mail_password,
+                'mail.mailers.smtp.password' => $password,
                 'mail.from.address' => $setting->mail_from_address,
                 'mail.from.name' => $setting->mail_from_name ?: config('app.name'),
             ]);
