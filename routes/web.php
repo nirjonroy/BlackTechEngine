@@ -51,6 +51,9 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageController;
 use App\Http\Controllers\Frontend\RobotsController;
 use App\Http\Controllers\Frontend\SitemapController;
+use App\Http\Controllers\KeywordAiSuggestionController;
+use App\Http\Controllers\KeywordClusterController;
+use App\Http\Controllers\KeywordResearchController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PaymentCheckoutController;
 use App\Http\Controllers\PaymentWebhookController;
@@ -122,6 +125,25 @@ if (config('customer.workspaces_enabled')) {
             ->scopeBindings()->name('workspaces.brands.wordpress.verify');
         Route::delete('/workspaces/{workspace}/brands/{brand}/wordpress/disconnect', [WordPressConnectionController::class, 'disconnect'])
             ->scopeBindings()->name('workspaces.brands.wordpress.disconnect');
+
+        Route::get('/workspaces/{workspace}/brands/{brand}/keywords', [KeywordResearchController::class, 'index'])
+            ->scopeBindings()->name('workspaces.brands.keywords.index');
+        Route::post('/workspaces/{workspace}/brands/{brand}/keywords', [KeywordResearchController::class, 'store'])
+            ->scopeBindings()->name('workspaces.brands.keywords.store');
+        Route::delete('/workspaces/{workspace}/brands/{brand}/keywords/{brandKeyword}', [KeywordResearchController::class, 'destroy'])
+            ->scopeBindings()->name('workspaces.brands.keywords.destroy');
+        Route::patch('/workspaces/{workspace}/brands/{brand}/keywords/{brandKeyword}/star', [KeywordResearchController::class, 'toggleStar'])
+            ->scopeBindings()->name('workspaces.brands.keywords.star');
+
+        Route::post('/workspaces/{workspace}/brands/{brand}/keyword-clusters', [KeywordClusterController::class, 'store'])
+            ->scopeBindings()->name('workspaces.brands.keyword-clusters.store');
+        Route::delete('/workspaces/{workspace}/brands/{brand}/keyword-clusters/{brandTopicCluster}', [KeywordClusterController::class, 'destroy'])
+            ->scopeBindings()->name('workspaces.brands.keyword-clusters.destroy');
+
+        Route::post('/workspaces/{workspace}/brands/{brand}/keywords/ai-suggestions', [KeywordAiSuggestionController::class, 'suggest'])
+            ->scopeBindings()->middleware('throttle:ai-content-generation')->name('workspaces.brands.keywords.ai-suggestions');
+        Route::post('/workspaces/{workspace}/brands/{brand}/keywords/import-suggestions', [KeywordAiSuggestionController::class, 'import'])
+            ->scopeBindings()->name('workspaces.brands.keywords.import-suggestions');
 
         if (config('ai.content_studio_enabled')) {
             Route::get('/content-studio', [ContentDraftController::class, 'index'])->name('content-studio.index');

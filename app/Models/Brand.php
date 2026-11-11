@@ -65,6 +65,30 @@ class Brand extends Model
         return $this->hasMany(WordPressPublishedPost::class);
     }
 
+    /** @return HasMany<BrandTopicCluster, $this> */
+    public function topicClusters(): HasMany
+    {
+        return $this->hasMany(BrandTopicCluster::class);
+    }
+
+    /** @return HasMany<BrandTopicCluster, $this> */
+    public function brandTopicClusters(): HasMany
+    {
+        return $this->topicClusters();
+    }
+
+    /** @return HasMany<BrandKeyword, $this> */
+    public function keywords(): HasMany
+    {
+        return $this->hasMany(BrandKeyword::class);
+    }
+
+    /** @return HasMany<BrandKeyword, $this> */
+    public function brandKeywords(): HasMany
+    {
+        return $this->keywords();
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

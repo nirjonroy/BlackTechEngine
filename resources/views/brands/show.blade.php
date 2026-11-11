@@ -19,7 +19,10 @@
 
         <div class="flex flex-wrap items-center justify-between gap-3">
             <a href="{{ route('workspaces.brands.index', $workspace) }}" class="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-indigo-600 dark:text-slate-300"><i data-lucide="arrow-left" class="h-4 w-4"></i>All brands</a>
-            <a href="{{ route('workspaces.brands.edit', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white"><i data-lucide="pencil" class="h-4 w-4"></i>Edit profile</a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('workspaces.brands.keywords.index', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-black text-indigo-700 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300"><i data-lucide="key-round" class="h-4 w-4"></i>Keywords &amp; Clusters</a>
+                <a href="{{ route('workspaces.brands.edit', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white"><i data-lucide="pencil" class="h-4 w-4"></i>Edit profile</a>
+            </div>
         </div>
 
         <section class="bte-card rounded-3xl p-5 sm:p-8">
@@ -56,6 +59,19 @@
                         <span class="rounded-full bg-indigo-100 px-3 py-1.5 text-xs font-bold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">{{ $topic }}</span>
                     @endforeach
                 </div>
+            </div>
+        </section>
+
+        <section class="bte-card rounded-3xl p-5 sm:p-8" aria-labelledby="keywords-explorer-heading">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">SEO Strategy</span>
+                    <h2 id="keywords-explorer-heading" class="mt-1 font-heading text-2xl font-black">Keywords &amp; Topic Clusters</h2>
+                    <p class="mt-1 text-sm text-slate-500">Discover search queries, group topics semantically, and turn keywords into article briefs.</p>
+                </div>
+                <a href="{{ route('workspaces.brands.keywords.index', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    <i data-lucide="compass" class="h-4 w-4"></i> Open Keyword Explorer
+                </a>
             </div>
         </section>
 
