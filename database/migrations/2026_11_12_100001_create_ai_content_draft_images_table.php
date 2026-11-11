@@ -33,7 +33,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->index(['ai_content_draft_id', 'is_active', 'created_at']);
+            $table->index(['ai_content_draft_id', 'is_active', 'created_at'], 'draft_images_draft_active_created_idx');
             $table->index(['workspace_id', 'brand_id']);
         });
     }
