@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\SubscriptionAdjustmentController as AdminSubscriptionAdjustmentController;
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AiContentDraftImageController;
 use App\Http\Controllers\AiContentGenerationController;
 use App\Http\Controllers\AnalyticsExportController;
 use App\Http\Controllers\ArticleCalendarController;
@@ -180,6 +181,13 @@ if (config('customer.workspaces_enabled')) {
                 ->scopeBindings()->name('content-studio.drafts.internal-links.suggest');
             Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/internal-links/apply', [InternalLinkingController::class, 'apply'])
                 ->scopeBindings()->name('content-studio.drafts.internal-links.apply');
+
+            Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/featured-image/generate', [AiContentDraftImageController::class, 'generate'])
+                ->scopeBindings()->middleware('throttle:ai-content-generation')->name('content-studio.drafts.featured-image.generate');
+            Route::patch('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/featured-image/alt-text', [AiContentDraftImageController::class, 'updateAltText'])
+                ->scopeBindings()->name('content-studio.drafts.featured-image.alt-text');
+            Route::delete('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/featured-image', [AiContentDraftImageController::class, 'destroy'])
+                ->scopeBindings()->name('content-studio.drafts.featured-image.destroy');
             if (config('ai.content_review_enabled')) {
                 Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/review-requests', ContentReviewRequestController::class)
                     ->scopeBindings()->name('content-studio.drafts.review-requests.store');

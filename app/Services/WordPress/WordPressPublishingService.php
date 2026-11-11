@@ -14,6 +14,7 @@ use App\Services\ContentDraftExporter;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -193,6 +194,33 @@ class WordPressPublishingService
         // Reuse existing remote post ID if already created on WordPress
         $existingWpPostId = $latestPublication?->wordpress_post_id;
 
+        // Check if draft has an active featured image to attach
+        $featuredMediaId = null;
+        $featuredImage = $draft->featuredImage;
+
+        if ($featuredImage !== null) {
+            if ($featuredImage->wordpress_media_id !== null) {
+                $featuredMediaId = $featuredImage->wordpress_media_id;
+            } else {
+                $disk = Storage::disk('public');
+                if ($disk->exists($featuredImage->image_path)) {
+                    $binaryData = $disk->get($featuredImage->image_path);
+                    $mediaResult = $this->client->uploadMedia(
+                        $connection->site_url,
+                        $connection->username,
+                        $connection->application_password,
+                        $binaryData,
+                        $featuredImage->file_name,
+                        $featuredImage->alt_text ?: ($draft->seo_title ?: $draft->topic),
+                    );
+                    $featuredMediaId = $mediaResult['id'];
+                    $featuredImage->update([
+                        'wordpress_media_id' => $featuredMediaId,
+                    ]);
+                }
+            }
+        }
+
         $renderedHtml = $this->renderArticleHtml($draft);
         $title = $draft->seo_title ?: $draft->topic;
         $slug = $draft->suggested_slug ?: Str::slug($title);
@@ -210,6 +238,10 @@ class WordPressPublishingService
                 'rank_math_description' => $draft->meta_description ?? '',
             ],
         ];
+
+        if ($featuredMediaId !== null) {
+            $payload['featured_media'] = $featuredMediaId;
+        }
 
         try {
             $result = $this->client->publishPost(

@@ -170,6 +170,60 @@ class WordPressClient
     }
 
     /**
+     * Upload an image file to WordPress Media Library via REST API.
+     *
+     * @return array{id: int, source_url: string}
+     *
+     * @throws ValidationException
+     */
+    public function uploadMedia(
+        string $siteUrl,
+        string $username,
+        string $applicationPassword,
+        string $binaryData,
+        string $filename,
+        string $altText,
+    ): array {
+        $resolved = $this->urlValidator->validateAndResolve($siteUrl);
+        $cleanPassword = str_replace(' ', '', $applicationPassword);
+        $endpoint = rtrim($resolved['normalized_url'], '/').'/wp-json/wp/v2/media';
+
+        $response = $this->executeRequest(function () use ($endpoint, $username, $cleanPassword, $binaryData, $filename, $altText, $resolved) {
+            return $this->newClient($resolved)
+                ->withBasicAuth($username, $cleanPassword)
+                ->withBody($binaryData, 'image/jpeg')
+                ->withHeaders([
+                    'Content-Disposition' => 'attachment; filename="'.basename($filename).'"',
+                ])
+                ->acceptJson()
+                ->post($endpoint.'?alt_text='.urlencode($altText));
+        }, 'WordPress media upload failed');
+
+        if (! $response->successful()) {
+            $errorBody = $response->json();
+            $wpMessage = is_array($errorBody) && isset($errorBody['message']) && is_string($errorBody['message'])
+                ? strip_tags($errorBody['message'])
+                : 'WordPress API returned HTTP '.$response->status().'.';
+
+            throw ValidationException::withMessages([
+                'wordpress' => "Failed to upload featured image to WordPress: {$wpMessage}",
+            ]);
+        }
+
+        $data = $response->json();
+        if (! is_array($data) || ! isset($data['id'])) {
+            throw ValidationException::withMessages([
+                'wordpress' => 'WordPress returned an invalid media response structure.',
+            ]);
+        }
+
+        return [
+            'id' => (int) $data['id'],
+            'source_url' => (string) ($data['source_url'] ?? ''),
+        ];
+    }
+
+    /**
      * Build client with pinned cURL resolution to prevent DNS rebinding.
      *
      * @param  array{normalized_url: string, host: string, port: int, pinned_ip: ?string}  $resolved

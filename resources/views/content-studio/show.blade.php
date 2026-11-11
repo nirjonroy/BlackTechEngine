@@ -163,6 +163,104 @@
             </aside>
         </section>
 
+        <!-- AI Featured Image Section -->
+        <section class="bte-card rounded-2xl p-5 sm:p-7">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 class="font-heading text-lg font-black">Featured Image</h2>
+                    <p class="mt-1 text-xs text-slate-500">
+                        AI-generated visual asset optimized for SEO, social sharing, and WordPress publication.
+                    </p>
+                </div>
+                @if($aiContentDraft->featuredImage)
+                    <form method="POST" action="{{ route('content-studio.drafts.featured-image.destroy', [$workspace, $brand, $aiContentDraft]) }}" onsubmit="return confirm('Remove featured image from this draft?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 dark:border-rose-800 dark:text-rose-400 dark:hover:bg-rose-950/40">
+                            <i data-lucide="trash-2" class="h-3.5 w-3.5"></i> Remove Image
+                        </button>
+                    </form>
+                @endif
+            </div>
+
+            @if($aiContentDraft->featuredImage)
+                <div class="mt-5 grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <div class="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900 md:col-span-1">
+                        <img src="{{ $aiContentDraft->featuredImage->url }}" alt="{{ $aiContentDraft->featuredImage->alt_text }}" class="h-auto w-full object-cover">
+                        <div class="p-3 text-xs text-slate-500 space-y-1">
+                            <div class="flex justify-between">
+                                <span>Dimensions:</span>
+                                <span class="font-mono font-bold">{{ $aiContentDraft->featuredImage->width }}x{{ $aiContentDraft->featuredImage->height }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Size:</span>
+                                <span class="font-mono font-bold">{{ number_format($aiContentDraft->featuredImage->file_size_bytes / 1024, 1) }} KB</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Format:</span>
+                                <span class="font-mono font-bold uppercase">{{ str_replace('image/', '', $aiContentDraft->featuredImage->mime_type) }}</span>
+                            </div>
+                            @if($aiContentDraft->featuredImage->wordpress_media_id)
+                                <div class="flex justify-between text-emerald-600 dark:text-emerald-400">
+                                    <span>WordPress Media ID:</span>
+                                    <span class="font-mono font-bold">#{{ $aiContentDraft->featuredImage->wordpress_media_id }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 md:col-span-2">
+                        <!-- Editable Alt Text Form -->
+                        <form method="POST" action="{{ route('content-studio.drafts.featured-image.alt-text', [$workspace, $brand, $aiContentDraft]) }}" class="space-y-2">
+                            @csrf
+                            @method('PATCH')
+                            <label for="image_alt_text" class="block text-xs font-bold text-slate-700 dark:text-slate-300">SEO Alt Text</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="image_alt_text" name="alt_text" value="{{ old('alt_text', $aiContentDraft->featuredImage->alt_text) }}" required maxlength="255" class="bte-surface w-full rounded-xl border border-slate-300 text-xs dark:border-slate-700">
+                                <button type="submit" class="shrink-0 rounded-xl bg-slate-800 px-4 py-2 text-xs font-bold text-white hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600">
+                                    Update Alt
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-slate-400">Descriptive alt text helps screen readers and search engine crawlers understand image context.</p>
+                        </form>
+
+                        <!-- Regenerate Image Form -->
+                        <form method="POST" action="{{ route('content-studio.drafts.featured-image.generate', [$workspace, $brand, $aiContentDraft]) }}" class="rounded-xl border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/40 space-y-3">
+                            @csrf
+                            <h3 class="text-xs font-bold text-slate-900 dark:text-white">Regenerate Featured Image</h3>
+                            <div>
+                                <label for="regenerate_instructions" class="block text-xs text-slate-500">Custom style instructions <span class="font-normal">(optional)</span></label>
+                                <input type="text" id="regenerate_instructions" name="instructions" placeholder="e.g. Minimalist isometric illustration, vibrant purple accents..." maxlength="500" class="bte-surface mt-1 w-full rounded-xl border border-slate-300 text-xs dark:border-slate-700">
+                            </div>
+                            <button type="submit" class="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-black text-white hover:bg-indigo-500">
+                                <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i> Regenerate with AI
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <div class="mt-4 rounded-xl border border-dashed border-slate-200 p-6 dark:border-slate-800">
+                    <form method="POST" action="{{ route('content-studio.drafts.featured-image.generate', [$workspace, $brand, $aiContentDraft]) }}" class="max-w-xl mx-auto text-center space-y-4">
+                        @csrf
+                        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+                            <i data-lucide="image" class="h-6 w-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading text-base font-bold">No featured image attached</h3>
+                            <p class="mt-1 text-xs text-slate-500">Generate an AI image tailored to this article's topic, title, and brand style.</p>
+                        </div>
+                        <div>
+                            <label for="generate_instructions" class="sr-only">Instructions</label>
+                            <input type="text" id="generate_instructions" name="instructions" placeholder="Optional style notes (e.g. Modern 3D render, dark background, professional)..." maxlength="500" class="bte-surface w-full rounded-xl border border-slate-300 text-xs dark:border-slate-700">
+                        </div>
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-black text-white hover:bg-indigo-500 shadow-sm">
+                            <i data-lucide="sparkles" class="h-4 w-4"></i> Generate Featured Image
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </section>
+
         <section class="bte-card min-w-0 rounded-2xl p-5 sm:p-7">
             <h2 class="font-heading text-lg font-black">{{ $reviewEnabled && in_array($aiContentDraft->status, [\App\Enums\AiContentDraftStatus::Approved, \App\Enums\AiContentDraftStatus::ExportReady], true) ? 'Approved content preview' : 'Content preview' }}</h2>
             @if($aiContentDraft->content)

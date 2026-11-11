@@ -105,6 +105,18 @@ class AiContentDraft extends Model
         return $this->hasOne(WordPressPublishedPost::class, 'ai_content_draft_id')->latestOfMany();
     }
 
+    /** @return HasMany<AiContentDraftImage, $this> */
+    public function featuredImages(): HasMany
+    {
+        return $this->hasMany(AiContentDraftImage::class);
+    }
+
+    /** @return HasOne<AiContentDraftImage, $this> */
+    public function featuredImage(): HasOne
+    {
+        return $this->hasOne(AiContentDraftImage::class)->where('is_active', true)->latestOfMany();
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

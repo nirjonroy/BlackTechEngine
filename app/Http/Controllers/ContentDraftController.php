@@ -137,7 +137,7 @@ class ContentDraftController extends Controller
     {
         Gate::authorize('view', $aiContentDraft);
         $reviewEnabled = $this->reviewGate->enabled();
-        $relations = ['creator', 'model.provider', 'generationAttempts' => fn ($query) => $query->latest()];
+        $relations = ['creator', 'model.provider', 'featuredImage', 'generationAttempts' => fn ($query) => $query->latest()];
 
         if ($reviewEnabled) {
             $relations[] = 'approver';

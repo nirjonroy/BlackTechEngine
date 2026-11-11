@@ -13,6 +13,9 @@ return [
     'autopilot_enabled' => env('AI_AUTOPILOT_ENABLED', false),
     'autopilot_batch_limit' => (int) env('AI_AUTOPILOT_BATCH_LIMIT', 10),
     'autopilot_max_retries' => (int) env('AI_AUTOPILOT_MAX_RETRIES', 3),
+    'image_generation_enabled' => env('AI_IMAGE_GENERATION_ENABLED', false),
+    'image_generation_workload' => env('AI_IMAGE_GENERATION_WORKLOAD', 'seo-featured-image-generation'),
+    'image_max_size_bytes' => (int) env('AI_IMAGE_MAX_SIZE_BYTES', 5242880),
     'first_generation_test' => [
         'enabled' => env('AI_FIRST_GENERATION_TEST_ENABLED', false),
         'user_id' => env('AI_FIRST_GENERATION_USER_ID'),
