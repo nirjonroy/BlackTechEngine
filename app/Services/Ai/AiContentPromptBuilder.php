@@ -15,19 +15,32 @@ class AiContentPromptBuilder
         $contentType = AiContentType::from($input['content_type']);
         $contentLength = AiContentLength::from($input['content_length']);
 
+        $brandData = [
+            'name' => $brand->name,
+            'website_url' => $brand->website_url,
+            'business_description' => $brand->business_description,
+            'industry' => $brand->industry,
+            'target_audience' => $brand->target_audience,
+            'primary_market' => $brand->primary_market,
+            'preferred_language' => $brand->preferred_language,
+            'voice_tone' => $brand->voice_tone,
+            'content_objectives' => $brand->content_objectives,
+            'seo_topic_categories' => $brand->seo_topic_categories,
+        ];
+
+        $dna = $brand->brandDna;
+        if ($dna !== null && $dna->is_approved) {
+            $brandData['brand_dna'] = [
+                'brand_identity' => $dna->brand_identity,
+                'key_services' => $dna->key_services,
+                'content_themes' => $dna->content_themes,
+                'brand_values' => $dna->brand_values,
+                'competitor_differentiation' => $dna->competitor_differentiation,
+            ];
+        }
+
         $context = [
-            'brand' => [
-                'name' => $brand->name,
-                'website_url' => $brand->website_url,
-                'business_description' => $brand->business_description,
-                'industry' => $brand->industry,
-                'target_audience' => $brand->target_audience,
-                'primary_market' => $brand->primary_market,
-                'preferred_language' => $brand->preferred_language,
-                'voice_tone' => $brand->voice_tone,
-                'content_objectives' => $brand->content_objectives,
-                'seo_topic_categories' => $brand->seo_topic_categories,
-            ],
+            'brand' => $brandData,
             'request' => [
                 'content_type' => $contentType->label(),
                 'topic' => $input['topic'],

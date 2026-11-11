@@ -113,6 +113,24 @@ class Brand extends Model
         return $this->hasMany(BrandIndexingAudit::class);
     }
 
+    /** @return HasMany<BrandDnaProfile, $this> */
+    public function brandDnaProfiles(): HasMany
+    {
+        return $this->hasMany(BrandDnaProfile::class);
+    }
+
+    /** @return HasOne<BrandDnaProfile, $this> */
+    public function brandDna(): HasOne
+    {
+        return $this->hasOne(BrandDnaProfile::class)->where('is_approved', true)->latestOfMany();
+    }
+
+    /** @return HasOne<BrandDnaProfile, $this> */
+    public function latestBrandDnaProfile(): HasOne
+    {
+        return $this->hasOne(BrandDnaProfile::class)->latestOfMany();
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

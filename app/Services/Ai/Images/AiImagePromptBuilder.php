@@ -29,6 +29,17 @@ class AiImagePromptBuilder
             if ($brand->voice_tone) {
                 $brandContext[] = "aesthetic and tone: {$brand->voice_tone}";
             }
+
+            $dna = $brand->brandDna;
+            if ($dna !== null && $dna->is_approved) {
+                if (! empty($dna->brand_values)) {
+                    $brandContext[] = 'brand values: '.implode(', ', $dna->brand_values);
+                }
+                if ($dna->brand_identity) {
+                    $brandContext[] = "brand identity: {$dna->brand_identity}";
+                }
+            }
+
             if ($brandContext !== []) {
                 $parts[] = 'Brand context: '.implode(', ', $brandContext).'.';
             }
@@ -69,4 +80,3 @@ class AiImagePromptBuilder
         return "Featured visual illustration for {$title}";
     }
 }
-

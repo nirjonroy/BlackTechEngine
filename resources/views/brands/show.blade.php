@@ -20,6 +20,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3">
             <a href="{{ route('workspaces.brands.index', $workspace) }}" class="inline-flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-indigo-600 dark:text-slate-300"><i data-lucide="arrow-left" class="h-4 w-4"></i>All brands</a>
             <div class="flex items-center gap-2">
+                <a href="{{ route('workspaces.brands.brand-dna.show', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-black text-indigo-700 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300"><i data-lucide="dna" class="h-4 w-4"></i>Brand DNA</a>
                 <a href="{{ route('workspaces.brands.keywords.index', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-black text-indigo-700 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300"><i data-lucide="key-round" class="h-4 w-4"></i>Keywords &amp; Clusters</a>
                 <a href="{{ route('workspaces.brands.edit', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white"><i data-lucide="pencil" class="h-4 w-4"></i>Edit profile</a>
             </div>
@@ -59,6 +60,29 @@
                         <span class="rounded-full bg-indigo-100 px-3 py-1.5 text-xs font-bold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">{{ $topic }}</span>
                     @endforeach
                 </div>
+            </div>
+        </section>
+
+        @php
+            $brandDna = $brand->brandDna;
+        @endphp
+        <section class="bte-card rounded-3xl p-5 sm:p-8" aria-labelledby="brand-dna-heading">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">Identity Intelligence</span>
+                        @if($brandDna && $brandDna->is_approved)
+                            <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-black text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Approved</span>
+                        @else
+                            <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-500 dark:bg-slate-800">Not Approved</span>
+                        @endif
+                    </div>
+                    <h2 id="brand-dna-heading" class="mt-1 font-heading text-2xl font-black">Brand DNA Profile</h2>
+                    <p class="mt-1 text-sm text-slate-500">Automated extraction from your website informing SEO prompts, topic themes, and image generation.</p>
+                </div>
+                <a href="{{ route('workspaces.brands.brand-dna.show', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    <i data-lucide="dna" class="h-4 w-4"></i> {{ $brandDna ? 'Manage Brand DNA' : 'Extract Brand DNA' }}
+                </a>
             </div>
         </section>
 

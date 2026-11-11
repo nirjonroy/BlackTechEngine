@@ -40,6 +40,7 @@ use App\Http\Controllers\ArticleCalendarController;
 use App\Http\Controllers\ArticleScheduleController;
 use App\Http\Controllers\BillingInvoiceController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BrandDnaController;
 use App\Http\Controllers\ContentApprovalController;
 use App\Http\Controllers\ContentChangeRequestController;
 use App\Http\Controllers\ContentDraftController;
@@ -153,6 +154,15 @@ if (config('customer.workspaces_enabled')) {
             ->scopeBindings()->name('workspaces.brands.internal-links.index');
         Route::post('/workspaces/{workspace}/brands/{brand}/internal-links/reindex', [InternalLinkingController::class, 'reindex'])
             ->scopeBindings()->name('workspaces.brands.internal-links.reindex');
+
+        Route::get('/workspaces/{workspace}/brands/{brand}/brand-dna', [BrandDnaController::class, 'show'])
+            ->scopeBindings()->name('workspaces.brands.brand-dna.show');
+        Route::post('/workspaces/{workspace}/brands/{brand}/brand-dna/analyze', [BrandDnaController::class, 'analyze'])
+            ->scopeBindings()->name('workspaces.brands.brand-dna.analyze');
+        Route::patch('/workspaces/{workspace}/brands/{brand}/brand-dna/{brandDnaProfile}', [BrandDnaController::class, 'update'])
+            ->scopeBindings()->name('workspaces.brands.brand-dna.update');
+        Route::post('/workspaces/{workspace}/brands/{brand}/brand-dna/{brandDnaProfile}/approve', [BrandDnaController::class, 'approve'])
+            ->scopeBindings()->name('workspaces.brands.brand-dna.approve');
 
         if (config('ai.content_studio_enabled')) {
             Route::get('/content-studio', [ContentDraftController::class, 'index'])->name('content-studio.index');

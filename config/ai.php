@@ -16,6 +16,11 @@ return [
     'image_generation_enabled' => env('AI_IMAGE_GENERATION_ENABLED', false),
     'image_generation_workload' => env('AI_IMAGE_GENERATION_WORKLOAD', 'seo-featured-image-generation'),
     'image_max_size_bytes' => (int) env('AI_IMAGE_MAX_SIZE_BYTES', 5242880),
+    'brand_dna_enabled' => env('AI_BRAND_DNA_ENABLED', true),
+    'brand_dna_generation_enabled' => env('AI_BRAND_DNA_GENERATION_ENABLED', false),
+    'brand_dna_workload' => env('AI_BRAND_DNA_WORKLOAD', 'brand-dna-analysis'),
+    'brand_dna_max_crawl_pages' => (int) env('AI_BRAND_DNA_MAX_CRAWL_PAGES', 5),
+    'brand_dna_crawl_timeout' => (int) env('AI_BRAND_DNA_CRAWL_TIMEOUT', 10),
     'first_generation_test' => [
         'enabled' => env('AI_FIRST_GENERATION_TEST_ENABLED', false),
         'user_id' => env('AI_FIRST_GENERATION_USER_ID'),

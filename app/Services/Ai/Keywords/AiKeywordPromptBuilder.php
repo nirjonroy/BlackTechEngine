@@ -10,18 +10,30 @@ class AiKeywordPromptBuilder
     /** @param array<string, mixed> $input */
     public function build(Brand $brand, array $input): string
     {
+        $brandData = [
+            'name' => $brand->name,
+            'website_url' => $brand->website_url,
+            'business_description' => $brand->business_description,
+            'industry' => $brand->industry,
+            'target_audience' => $brand->target_audience,
+            'primary_market' => $brand->primary_market,
+            'preferred_language' => $brand->preferred_language,
+            'voice_tone' => $brand->voice_tone,
+            'seo_topic_categories' => $brand->seo_topic_categories,
+        ];
+
+        $dna = $brand->brandDna;
+        if ($dna !== null && $dna->is_approved) {
+            $brandData['brand_dna'] = [
+                'key_services' => $dna->key_services,
+                'suggested_keywords' => $dna->suggested_keywords,
+                'content_themes' => $dna->content_themes,
+                'competitor_differentiation' => $dna->competitor_differentiation,
+            ];
+        }
+
         $context = [
-            'brand' => [
-                'name' => $brand->name,
-                'website_url' => $brand->website_url,
-                'business_description' => $brand->business_description,
-                'industry' => $brand->industry,
-                'target_audience' => $brand->target_audience,
-                'primary_market' => $brand->primary_market,
-                'preferred_language' => $brand->preferred_language,
-                'voice_tone' => $brand->voice_tone,
-                'seo_topic_categories' => $brand->seo_topic_categories,
-            ],
+            'brand' => $brandData,
             'request' => [
                 'seed_keyword' => $input['seed_keyword'],
                 'niche' => $input['niche'] ?? $brand->industry,
