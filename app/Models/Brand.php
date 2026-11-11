@@ -89,6 +89,18 @@ class Brand extends Model
         return $this->keywords();
     }
 
+    /** @return HasMany<ArticleSchedule, $this> */
+    public function articleSchedules(): HasMany
+    {
+        return $this->hasMany(ArticleSchedule::class);
+    }
+
+    /** @return HasMany<ArticleScheduleRun, $this> */
+    public function articleScheduleRuns(): HasMany
+    {
+        return $this->hasMany(ArticleScheduleRun::class);
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

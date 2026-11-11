@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <p class="text-xs font-bold uppercase tracking-[0.16em] text-indigo-500">Customer Studio</p>
-            <h1 class="font-heading text-xl font-black sm:text-2xl">AI Content Studio</h1>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-indigo-500">Customer Studio</p>
+                <h1 class="font-heading text-xl font-black sm:text-2xl">AI Content Studio</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('content-studio.calendar', request()->only(['workspace', 'brand'])) }}" class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-bold dark:border-slate-700">
+                    <i data-lucide="calendar" class="h-4 w-4" aria-hidden="true"></i>
+                    Article Calendar & Autopilot
+                </a>
+            </div>
         </div>
     </x-slot>
 

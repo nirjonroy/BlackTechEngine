@@ -61,6 +61,18 @@ class Workspace extends Model
         return $this->hasMany(BillingInvoice::class);
     }
 
+    /** @return HasMany<ArticleSchedule, $this> */
+    public function articleSchedules(): HasMany
+    {
+        return $this->hasMany(ArticleSchedule::class);
+    }
+
+    /** @return HasMany<ArticleScheduleRun, $this> */
+    public function articleScheduleRuns(): HasMany
+    {
+        return $this->hasMany(ArticleScheduleRun::class);
+    }
+
     public function isAccessibleBy(User $user): bool
     {
         return $this->owner_id === $user->getKey()

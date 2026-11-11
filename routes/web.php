@@ -35,6 +35,8 @@ use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionContro
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AiContentGenerationController;
 use App\Http\Controllers\AnalyticsExportController;
+use App\Http\Controllers\ArticleCalendarController;
+use App\Http\Controllers\ArticleScheduleController;
 use App\Http\Controllers\BillingInvoiceController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ContentApprovalController;
@@ -147,6 +149,17 @@ if (config('customer.workspaces_enabled')) {
 
         if (config('ai.content_studio_enabled')) {
             Route::get('/content-studio', [ContentDraftController::class, 'index'])->name('content-studio.index');
+            Route::get('/content-studio/calendar', ArticleCalendarController::class)->name('content-studio.calendar');
+            Route::get('/workspaces/{workspace}/brands/{brand}/calendar', ArticleCalendarController::class)
+                ->scopeBindings()->name('workspaces.brands.calendar');
+            Route::post('/workspaces/{workspace}/brands/{brand}/schedules', [ArticleScheduleController::class, 'store'])
+                ->scopeBindings()->name('workspaces.brands.schedules.store');
+            Route::patch('/workspaces/{workspace}/brands/{brand}/schedules/{articleSchedule}/toggle', [ArticleScheduleController::class, 'toggleActive'])
+                ->scopeBindings()->name('workspaces.brands.schedules.toggle');
+            Route::delete('/workspaces/{workspace}/brands/{brand}/schedules/{articleSchedule}', [ArticleScheduleController::class, 'destroy'])
+                ->scopeBindings()->name('workspaces.brands.schedules.destroy');
+            Route::post('/workspaces/{workspace}/brands/{brand}/schedules/{articleSchedule}/run-now', [ArticleScheduleController::class, 'runNow'])
+                ->scopeBindings()->name('workspaces.brands.schedules.run-now');
             Route::get('/workspaces/{workspace}/brands/{brand}/content-drafts/create', [ContentDraftController::class, 'create'])
                 ->scopeBindings()->name('content-studio.drafts.create');
             Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts', [ContentDraftController::class, 'store'])
