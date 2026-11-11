@@ -73,6 +73,18 @@ class Workspace extends Model
         return $this->hasMany(ArticleScheduleRun::class);
     }
 
+    /** @return HasMany<BrandIndexedPage, $this> */
+    public function indexedPages(): HasMany
+    {
+        return $this->hasMany(BrandIndexedPage::class);
+    }
+
+    /** @return HasMany<BrandIndexingAudit, $this> */
+    public function indexingAudits(): HasMany
+    {
+        return $this->hasMany(BrandIndexingAudit::class);
+    }
+
     public function isAccessibleBy(User $user): bool
     {
         return $this->owner_id === $user->getKey()

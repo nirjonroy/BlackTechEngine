@@ -53,6 +53,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PricingPageController as FrontendPricingPageController;
 use App\Http\Controllers\Frontend\RobotsController;
 use App\Http\Controllers\Frontend\SitemapController;
+use App\Http\Controllers\InternalLinkingController;
 use App\Http\Controllers\KeywordAiSuggestionController;
 use App\Http\Controllers\KeywordClusterController;
 use App\Http\Controllers\KeywordResearchController;
@@ -147,6 +148,11 @@ if (config('customer.workspaces_enabled')) {
         Route::post('/workspaces/{workspace}/brands/{brand}/keywords/import-suggestions', [KeywordAiSuggestionController::class, 'import'])
             ->scopeBindings()->name('workspaces.brands.keywords.import-suggestions');
 
+        Route::get('/workspaces/{workspace}/brands/{brand}/internal-links', [InternalLinkingController::class, 'index'])
+            ->scopeBindings()->name('workspaces.brands.internal-links.index');
+        Route::post('/workspaces/{workspace}/brands/{brand}/internal-links/reindex', [InternalLinkingController::class, 'reindex'])
+            ->scopeBindings()->name('workspaces.brands.internal-links.reindex');
+
         if (config('ai.content_studio_enabled')) {
             Route::get('/content-studio', [ContentDraftController::class, 'index'])->name('content-studio.index');
             Route::get('/content-studio/calendar', ArticleCalendarController::class)->name('content-studio.calendar');
@@ -170,6 +176,10 @@ if (config('customer.workspaces_enabled')) {
                 ->scopeBindings()->name('content-studio.drafts.edit');
             Route::patch('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}', [ContentDraftController::class, 'update'])
                 ->scopeBindings()->name('content-studio.drafts.update');
+            Route::get('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/internal-links/suggest', [InternalLinkingController::class, 'suggest'])
+                ->scopeBindings()->name('content-studio.drafts.internal-links.suggest');
+            Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/internal-links/apply', [InternalLinkingController::class, 'apply'])
+                ->scopeBindings()->name('content-studio.drafts.internal-links.apply');
             if (config('ai.content_review_enabled')) {
                 Route::post('/workspaces/{workspace}/brands/{brand}/content-drafts/{aiContentDraft}/review-requests', ContentReviewRequestController::class)
                     ->scopeBindings()->name('content-studio.drafts.review-requests.store');

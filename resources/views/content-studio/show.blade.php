@@ -176,6 +176,71 @@
             @endif
         </section>
 
+        <!-- Contextual Internal Linking Section -->
+        <section class="bte-card rounded-2xl p-5 sm:p-7">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 class="font-heading text-lg font-black">Contextual Internal Link Suggestions</h2>
+                    <p class="mt-1 text-xs text-slate-500">
+                        Automatically matched relevant pages from your indexed site. Select suggestions to insert natural anchor links.
+                    </p>
+                </div>
+                <a href="{{ route('workspaces.brands.internal-links.index', [$workspace, $brand]) }}" class="text-xs font-bold text-indigo-600 hover:underline dark:text-indigo-400">
+                    Manage Index ({{ $brand->indexedPages()->count() }} pages) &rarr;
+                </a>
+            </div>
+
+            @if(empty($internalLinkSuggestions))
+                <div class="mt-4 rounded-xl border border-dashed border-slate-200 p-6 text-center text-xs text-slate-500 dark:border-slate-800">
+                    No unmatched internal link opportunities detected in this draft.
+                </div>
+            @else
+                @php
+                    $isEditable = ! in_array($aiContentDraft->status, [\App\Enums\AiContentDraftStatus::Approved, \App\Enums\AiContentDraftStatus::ExportReady], true);
+                @endphp
+
+                @if(! $isEditable)
+                    <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
+                        <strong>Note:</strong> Internal links cannot modify approved or export-ready content automatically. Return to review or edit draft to apply new links.
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('content-studio.drafts.internal-links.apply', [$workspace, $brand, $aiContentDraft]) }}" class="mt-4 space-y-3">
+                    @csrf
+                    <div class="space-y-2">
+                        @foreach($internalLinkSuggestions as $idx => $sug)
+                            <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 p-3.5 text-xs dark:border-slate-800">
+                                <div class="flex items-start gap-3">
+                                    @if($isEditable)
+                                        <input type="checkbox" name="links[{{ $idx }}][anchor]" value="{{ $sug['anchor'] }}" checked class="mt-1 rounded text-indigo-600">
+                                        <input type="hidden" name="links[{{ $idx }}][url]" value="{{ $sug['url'] }}">
+                                    @endif
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-slate-900 dark:text-white">Anchor: "{{ $sug['anchor'] }}"</span>
+                                            <span class="rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
+                                                Relevance {{ $sug['relevance_score'] }}%
+                                            </span>
+                                        </div>
+                                        <p class="text-slate-500 mt-0.5">Target: <a href="{{ $sug['url'] }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 hover:underline">{{ $sug['title'] }}</a></p>
+                                        <p class="text-slate-400 font-mono text-[11px] mt-1">{{ $sug['context'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if($isEditable)
+                        <div class="flex justify-end pt-2">
+                            <button type="submit" class="rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-black text-white hover:bg-indigo-700">
+                                Insert Selected Internal Links
+                            </button>
+                        </div>
+                    @endif
+                </form>
+            @endif
+        </section>
+
         @if($aiContentDraft->faq_entries !== [])
             <section class="bte-card rounded-2xl p-5 sm:p-7">
                 <h2 class="font-heading text-lg font-black">FAQ content</h2>

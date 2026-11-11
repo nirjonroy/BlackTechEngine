@@ -16,6 +16,7 @@ use App\Models\Workspace;
 use App\Services\ContentDraftExporter;
 use App\Services\ContentEditorialWorkflow;
 use App\Services\ContentReviewGate;
+use App\Services\InternalLinking\InternalLinkMatcher;
 use App\Services\Subscriptions\EntitlementService;
 use App\Services\Subscriptions\UsageMeter;
 use Illuminate\Contracts\View\View;
@@ -33,6 +34,7 @@ class ContentDraftController extends Controller
         private readonly ContentReviewGate $reviewGate,
         private readonly EntitlementService $entitlements,
         private readonly UsageMeter $usage,
+        private readonly InternalLinkMatcher $linkMatcher,
     ) {}
 
     public function index(AiContentDraftIndexRequest $request): View
@@ -145,6 +147,7 @@ class ContentDraftController extends Controller
 
         $aiContentDraft->load($relations);
         $previewHtml = $reviewEnabled ? $this->exporter->previewHtml($aiContentDraft) : null;
+        $internalLinkSuggestions = $this->linkMatcher->suggestLinks($aiContentDraft);
 
         return view('content-studio.show', compact(
             'workspace',
@@ -152,6 +155,7 @@ class ContentDraftController extends Controller
             'aiContentDraft',
             'previewHtml',
             'reviewEnabled',
+            'internalLinkSuggestions',
         ));
     }
 

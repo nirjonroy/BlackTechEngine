@@ -101,6 +101,18 @@ class Brand extends Model
         return $this->hasMany(ArticleScheduleRun::class);
     }
 
+    /** @return HasMany<BrandIndexedPage, $this> */
+    public function indexedPages(): HasMany
+    {
+        return $this->hasMany(BrandIndexedPage::class);
+    }
+
+    /** @return HasMany<BrandIndexingAudit, $this> */
+    public function indexingAudits(): HasMany
+    {
+        return $this->hasMany(BrandIndexingAudit::class);
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

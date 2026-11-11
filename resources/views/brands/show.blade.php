@@ -128,6 +128,9 @@
                     @endif
 
                     <div class="mt-5 flex flex-wrap gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
+                        <a href="{{ route('workspaces.brands.internal-links.index', [$workspace, $brand]) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-50 px-3.5 py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:bg-indigo-950/60 dark:text-indigo-300">
+                            <i data-lucide="link" class="h-3.5 w-3.5"></i> Internal Linking Index
+                        </a>
                         <form method="POST" action="{{ route('workspaces.brands.wordpress.verify', [$workspace, $brand]) }}">
                             @csrf
                             <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-indigo-200 px-3.5 py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/50">
